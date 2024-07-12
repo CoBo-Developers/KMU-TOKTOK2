@@ -2,11 +2,7 @@ package cobo.auth.data.entity
 
 import cobo.auth.data.enums.RegisterStateEnum
 import cobo.auth.data.enums.RoleEnum
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
 data class User(
@@ -15,6 +11,8 @@ data class User(
     var id: Int?,
     @Column(unique = true)
     var studentId: String?,
+    @Enumerated(EnumType.ORDINAL)
     var role: RoleEnum,
+    @Enumerated(EnumType.ORDINAL)
     var registerState: RegisterStateEnum
 )
