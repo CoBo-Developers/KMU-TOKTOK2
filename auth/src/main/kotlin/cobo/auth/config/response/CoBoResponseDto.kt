@@ -2,7 +2,7 @@ package cobo.auth.config.response
 
 import java.time.LocalDateTime
 
-class CoBoResponseDto<T>(
+data class CoBoResponseDto<T>(
     val code: Int,
     val message: String,
     val time: LocalDateTime,
