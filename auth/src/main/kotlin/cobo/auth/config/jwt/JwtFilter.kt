@@ -30,5 +30,6 @@ class JwtFilter(
                     UsernamePasswordAuthenticationToken(id, null, listOf(SimpleGrantedAuthority("USER")))
             }
         }
+        filterChain.doFilter(request, response)
     }
 }
