@@ -16,7 +16,7 @@ data class Oauth(
     var id: Int?,
     @ManyToOne
     var user: User,
-    var oauthId: Int,
+    var oauthId: Long,
     @Enumerated(EnumType.ORDINAL)
     var oauthType: OauthTypeEnum,
     var accessToken: String?
