@@ -28,6 +28,15 @@ class AuthServiceImpl(
         redirectUri: String
     ): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
 
+        val oauthAccessToken = kakaoOauthServiceImpl.getAccessToken(
+            code = code,
+            redirectUri = redirectUri
+        )
+
+        val oauth = kakaoOauthServiceImpl.getOauth(oauthAccessToken)
+
+
+
         val accessToken = jwtTokenProvider.getAccessToken(1)
         val refreshToken = jwtTokenProvider.getRefreshToken(1)
 
