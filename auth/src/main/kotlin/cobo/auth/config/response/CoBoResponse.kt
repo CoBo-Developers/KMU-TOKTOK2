@@ -1,7 +1,6 @@
 package cobo.auth.config.response
 
 import cobo.auth.config.LogFilter
-import org.apache.logging.log4j.LogManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatusCode
