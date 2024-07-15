@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
 import java.net.URI
+import java.util.concurrent.CompletableFuture
 
 @Service
 class KakaoOauthServiceImpl(
@@ -45,10 +46,13 @@ class KakaoOauthServiceImpl(
         val optionalOauth = oauthRepository.findByOauthId(kakaoUserId)
 
         if (optionalOauth.isPresent) {
-            val oauth = optionalOauth.get()
-            oauth.accessToken = accessToken
-            oauthRepository.save(oauth)
-            return oauth
+            CompletableFuture.supplyAsync{
+                optionalOauth.get()
+            }.thenApply {
+                it.accessToken = accessToken
+                oauthRepository.save(it)
+            }
+            return optionalOauth.get()
         }
         else{
             return oauthRepository.save(Oauth(
