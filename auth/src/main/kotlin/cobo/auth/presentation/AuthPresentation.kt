@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @Tag(name = "인증 및 로그인 관련 API")
 class AuthPresentation(
     private val authService: AuthService
 ) {
 
-    @GetMapping("kakao-login")
+    @GetMapping("/kakao-login")
     @Operation(summary = "카카오 로그인 API")
     @Parameters(
         Parameter(name = "code", description = "카카오 로그인 code"),
