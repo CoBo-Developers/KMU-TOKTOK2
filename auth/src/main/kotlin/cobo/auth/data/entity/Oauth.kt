@@ -15,7 +15,7 @@ data class Oauth(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int?,
     @ManyToOne
-    var user: User,
+    var user: User?,
     var oauthId: Long,
     @Enumerated(EnumType.ORDINAL)
     var oauthType: OauthTypeEnum,
