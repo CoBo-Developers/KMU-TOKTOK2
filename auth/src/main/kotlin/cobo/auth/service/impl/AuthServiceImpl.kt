@@ -6,7 +6,9 @@ import cobo.auth.config.response.CoBoResponseDto
 import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.auth.GetLoginRes
 import cobo.auth.data.entity.Oauth
+import cobo.auth.data.entity.User
 import cobo.auth.data.enums.RegisterStateEnum
+import cobo.auth.data.enums.RoleEnum
 import cobo.auth.repository.UserRepository
 import cobo.auth.service.AuthService
 import cobo.auth.service.oauth.impl.GoogleOauthServiceImpl
@@ -33,12 +35,23 @@ class AuthServiceImpl(
 
         val oauth = kakaoOauthServiceImpl.getOauth(oauthAccessToken)
 
+        val user = if (oauth.user != null) {
+            oauth.user
+        } else{
+            userRepository.save(
+                User(
+                    id = null,
+                    studentId = null,
+                    role = RoleEnum.STUDENT,
+                    registerState = RegisterStateEnum.INACTIVE
+                )
+            )
+        }
 
+        val accessToken = jwtTokenProvider.getAccessToken(user?.id ?: throw NullPointerException())
+        val refreshToken = jwtTokenProvider.getRefreshToken(user.id ?: throw NullPointerException())
 
-        val accessToken = jwtTokenProvider.getAccessToken(1)
-        val refreshToken = jwtTokenProvider.getRefreshToken(1)
-
-        val coBoResponse = CoBoResponse(GetLoginRes(accessToken, refreshToken, RegisterStateEnum.ACTIVE), CoBoResponseStatus.SUCCESS)
+        val coBoResponse = CoBoResponse(GetLoginRes(accessToken, refreshToken, user.registerState), CoBoResponseStatus.SUCCESS)
 
         return coBoResponse.getResponseEntityWithLog()
     }

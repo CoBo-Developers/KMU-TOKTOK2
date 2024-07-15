@@ -1,6 +1,7 @@
 package cobo.auth.service.oauth.impl
 
 import cobo.auth.data.entity.Oauth
+import cobo.auth.data.enums.OauthTypeEnum
 import cobo.auth.repository.OauthRepository
 import cobo.auth.service.oauth.OauthService
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -41,7 +42,23 @@ class KakaoOauthServiceImpl(
 
         val kakaoUserId = kakaoUserInfo?.id ?: 0L
 
-        return oauthRepository.findByOauthId(kakaoUserId).orElseThrow()
+        val optionalOauth = oauthRepository.findByOauthId(kakaoUserId)
+
+        if (optionalOauth.isPresent) {
+            val oauth = optionalOauth.get()
+            oauth.accessToken = accessToken
+            oauthRepository.save(oauth)
+            return oauth
+        }
+        else{
+            return oauthRepository.save(Oauth(
+                id = null,
+                user = null,
+                oauthId = kakaoUserId,
+                oauthType = OauthTypeEnum.KAKAO,
+                accessToken = accessToken
+            ))
+        }
     }
 
     override fun getAccessToken(code: String): String {
@@ -86,6 +103,6 @@ class KakaoOauthServiceImpl(
     private data class Profile(
         @JsonProperty("nickname") val nickname: String,
         @JsonProperty("is_default_nickname") val isDefaultNickname: Boolean,
-        @JsonProperty("profile_image_url") val profileImageUrl:String
+        @JsonProperty("profile_image_url") val profileImageUrl:String?
     )
 }
