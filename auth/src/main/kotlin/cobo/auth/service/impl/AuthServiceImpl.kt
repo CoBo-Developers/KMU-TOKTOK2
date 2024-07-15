@@ -5,16 +5,23 @@ import cobo.auth.config.response.CoBoResponse
 import cobo.auth.config.response.CoBoResponseDto
 import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.auth.GetLoginRes
+import cobo.auth.data.entity.Oauth
 import cobo.auth.data.enums.RegisterStateEnum
 import cobo.auth.repository.UserRepository
 import cobo.auth.service.AuthService
+import cobo.auth.service.oauth.impl.GoogleOauthServiceImpl
+import cobo.auth.service.oauth.impl.KakaoOauthServiceImpl
+import cobo.auth.service.oauth.impl.NaverOauthServiceImpl
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
 class AuthServiceImpl(
     private val jwtTokenProvider: JwtTokenProvider,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val kakaoOauthServiceImpl: KakaoOauthServiceImpl,
+    private val googleOauthServiceImpl: GoogleOauthServiceImpl,
+    private val naverOauthServiceImpl: NaverOauthServiceImpl
 ) : AuthService {
     override fun getKakaoLogin(
         code: String,
