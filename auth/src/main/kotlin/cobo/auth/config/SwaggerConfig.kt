@@ -8,6 +8,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme
 import io.swagger.v3.oas.models.servers.Server
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.web.filter.ForwardedHeaderFilter
 import java.util.*
 
 
@@ -26,4 +27,10 @@ class SwaggerConfig {
             .security(Collections.singletonList(securityRequirement))
             .addServersItem(Server().url("/"))
     }
+
+    @Bean
+    fun forwardedHeaderFilter(): ForwardedHeaderFilter {
+        return ForwardedHeaderFilter()
+    }
+
 }

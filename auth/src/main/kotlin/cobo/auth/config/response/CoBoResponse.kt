@@ -1,6 +1,8 @@
 package cobo.auth.config.response
 
-import org.apache.logging.log4j.LogManager
+import cobo.auth.config.LogFilter
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
 
@@ -9,7 +11,7 @@ class CoBoResponse<T>(
 ){
 
     companion object {
-        private val logger = LogManager.getLogger(CoBoResponse::class.java)
+        private val logger: Logger = LoggerFactory.getLogger(LogFilter::class.java)
     }
 
     constructor(coBoResponseStatus: CoBoResponseStatus): this(CoBoResponseDto(coBoResponseStatus))
