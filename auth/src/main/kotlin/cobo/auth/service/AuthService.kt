@@ -5,5 +5,5 @@ import cobo.auth.data.dto.auth.GetLoginRes
 import org.springframework.http.ResponseEntity
 
 interface AuthService {
-    fun getKakaoLogin(code: String, redirectUri: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
+    fun getKakaoLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
 }

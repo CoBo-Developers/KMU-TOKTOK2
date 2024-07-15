@@ -18,6 +18,8 @@ import java.net.URI
 class KakaoOauthServiceImpl(
     @Value("\${kakao.auth.client_id}")
     private val clientId: String,
+    @Value("\${kakao.auth.redirect_uri}")
+    private val redirectUri: String,
     private val oauthRepository: OauthRepository
 ) : OauthService {
 
@@ -42,7 +44,7 @@ class KakaoOauthServiceImpl(
         return oauthRepository.findByOauthId(kakaoUserId).orElseThrow()
     }
 
-    override fun getAccessToken(code: String, redirectUri: String): String {
+    override fun getAccessToken(code: String): String {
 
         val restTemplate = RestTemplate()
 

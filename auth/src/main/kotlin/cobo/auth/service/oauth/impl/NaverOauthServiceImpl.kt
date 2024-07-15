@@ -10,7 +10,7 @@ class NaverOauthServiceImpl:OauthService{
         TODO("Not yet implemented")
     }
 
-    override fun getAccessToken(code: String, redirectUri: String): String {
+    override fun getAccessToken(code: String): String {
         return ""
     }
 }

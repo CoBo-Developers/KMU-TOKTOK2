@@ -27,9 +27,8 @@ class AuthPresentation(
         Parameter(name = "redirectUri", description = "카카오 로그인 redirect_uri")
     )
     fun getKakaoLogin(
-        @RequestParam code: String,
-        @RequestParam redirectUri: String
+        @RequestParam code: String
     ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
-        return authService.getKakaoLogin(code, redirectUri)
+        return authService.getKakaoLogin(code)
     }
 }

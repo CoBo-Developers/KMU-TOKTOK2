@@ -24,13 +24,11 @@ class AuthServiceImpl(
     private val naverOauthServiceImpl: NaverOauthServiceImpl
 ) : AuthService {
     override fun getKakaoLogin(
-        code: String,
-        redirectUri: String
+        code: String
     ): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
 
         val oauthAccessToken = kakaoOauthServiceImpl.getAccessToken(
-            code = code,
-            redirectUri = redirectUri
+            code = code
         )
 
         val oauth = kakaoOauthServiceImpl.getOauth(oauthAccessToken)
