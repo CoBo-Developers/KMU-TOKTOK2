@@ -28,7 +28,9 @@ class KakaoOauthServiceImpl(
     private final val kakaoAccessTokenServer = "https://kauth.kakao.com/oauth/token"
     private final val kakaoUserInfoServer =  "https://kapi.kakao.com/v2/user/me"
 
-    override fun getOauth(accessToken: String): Oauth {
+    override fun getOauth(code: String): Oauth {
+
+        val accessToken = getAccessToken(code)
 
         val restTemplate = RestTemplate()
 
@@ -41,7 +43,7 @@ class KakaoOauthServiceImpl(
             KakaoUserInfo::class.java
         ).body
 
-        val kakaoUserId = kakaoUserInfo?.id ?: 0L
+        val kakaoUserId = kakaoUserInfo?.id ?: ""
 
         val optionalOauth = oauthRepository.findByOauthId(kakaoUserId)
 
@@ -89,7 +91,7 @@ class KakaoOauthServiceImpl(
     )
 
     private data class KakaoUserInfo(
-        @JsonProperty("id") val id: Long,
+        @JsonProperty("id") val id: String,
         @JsonProperty("connected_at") val connectedAt: String,
         @JsonProperty("properties") val properties: Properties,
         @JsonProperty("kakao_account") val kakaoAccount: KakaoAccount

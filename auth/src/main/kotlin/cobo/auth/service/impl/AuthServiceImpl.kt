@@ -7,6 +7,7 @@ import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.auth.GetLoginRes
 import cobo.auth.data.entity.Oauth
 import cobo.auth.data.entity.User
+import cobo.auth.data.enums.OauthTypeEnum
 import cobo.auth.data.enums.RegisterStateEnum
 import cobo.auth.data.enums.RoleEnum
 import cobo.auth.repository.OauthRepository
@@ -32,14 +33,35 @@ class AuthServiceImpl(
         code: String
     ): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
 
-        val oauthAccessToken = kakaoOauthServiceImpl.getAccessToken(
-            code = code
-        )
+        val user = getUserByOauthCode(code, OauthTypeEnum.KAKAO)
 
-        val oauth = kakaoOauthServiceImpl.getOauth(oauthAccessToken)
+        val tokenList = getAccessTokenAndRefreshTokenByUser(user)
 
-        val user = if (oauth.user != null) {
-            oauth.user
+        val coBoResponse = CoBoResponse(GetLoginRes(tokenList[0], tokenList[1], user.registerState), CoBoResponseStatus.SUCCESS)
+
+        return coBoResponse.getResponseEntityWithLog()
+    }
+
+    override fun getNaverLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
+
+        val user = getUserByOauthCode(code, OauthTypeEnum.NAVER)
+
+        val tokenList = getAccessTokenAndRefreshTokenByUser(user)
+
+        val coBoResponse = CoBoResponse(GetLoginRes(tokenList[0], tokenList[1], user.registerState), CoBoResponseStatus.SUCCESS)
+
+        return coBoResponse.getResponseEntityWithLog()
+    }
+
+    private fun getUserByOauthCode(code: String, oauthTypeEnum: OauthTypeEnum): User {
+        val oauth = when(oauthTypeEnum) {
+            OauthTypeEnum.KAKAO -> kakaoOauthServiceImpl.getOauth(code)
+            OauthTypeEnum.NAVER -> naverOauthServiceImpl.getOauth(code)
+            OauthTypeEnum.GOOGLE -> throw NullPointerException()
+        }
+
+        if (oauth.user != null) {
+            return oauth.user ?: throw NullPointerException()
         } else{
             val user = userRepository.save(
                 User(
@@ -53,15 +75,15 @@ class AuthServiceImpl(
                 oauth.user = user
                 oauthRepository.save(oauth)
             }
-            user
+            return user
         }
+    }
 
-        val accessToken = jwtTokenProvider.getAccessToken(user?.id ?: throw NullPointerException())
-        val refreshToken = jwtTokenProvider.getRefreshToken(user.id ?: throw NullPointerException())
-
-        val coBoResponse = CoBoResponse(GetLoginRes(accessToken, refreshToken, user.registerState), CoBoResponseStatus.SUCCESS)
-
-        return coBoResponse.getResponseEntityWithLog()
+    private fun getAccessTokenAndRefreshTokenByUser(user: User): Array<String>{
+        return arrayOf(
+            jwtTokenProvider.getAccessToken(user.id ?: throw NullPointerException()),
+            jwtTokenProvider.getRefreshToken(user.id ?: throw NullPointerException())
+        )
     }
 
 }
