@@ -60,7 +60,7 @@ class KakaoOauthServiceImpl(
         httpBody.add("client_id", clientId)
         httpBody.add("code",code)
 
-        return restTemplate.postForObject(kakaoAccessTokenServer, HttpEntity(httpBody, httpHeaders), KakaoAccessToken::class.java)?.accessToken ?: ""
+        return restTemplate.postForObject(kakaoAccessTokenServer, this.getHttpEntity(httpBody), KakaoAccessToken::class.java)?.accessToken ?: ""
     }
 
     private data class KakaoAccessToken(

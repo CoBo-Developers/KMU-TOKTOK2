@@ -59,7 +59,7 @@ class NaverOauthServiceImpl(
         httpBody.add("client_secret", clientSecret)
         httpBody.add("code", code)
 
-        return restTemplate.postForObject(naverAccessTokenServer, HttpEntity(httpBody, httpHeaders), NaverAccessToken::class.java)?.accessToken ?: ""
+        return restTemplate.postForObject(naverAccessTokenServer, this.getHttpEntity(httpBody), NaverAccessToken::class.java)?.accessToken ?: ""
     }
 
     private data class NaverAccessToken(
