@@ -6,5 +6,5 @@ import java.util.*
 
 interface OauthRepository: JpaRepository<Oauth, Int>{
 
-    fun findByOauthId(oauthId: Long): Optional<Oauth>
+    fun findByOauthId(oauthId: String): Optional<Oauth>
 }
