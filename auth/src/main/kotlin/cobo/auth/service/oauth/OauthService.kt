@@ -4,6 +4,6 @@ import cobo.auth.data.entity.Oauth
 
 interface OauthService {
 
-    fun getOauth(accessToken: String): Oauth
+    fun getOauth(code: String): Oauth
     fun getAccessToken(code: String): String
 }

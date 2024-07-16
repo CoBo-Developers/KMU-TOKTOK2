@@ -28,7 +28,9 @@ class KakaoOauthServiceImpl(
     private final val kakaoAccessTokenServer = "https://kauth.kakao.com/oauth/token"
     private final val kakaoUserInfoServer =  "https://kapi.kakao.com/v2/user/me"
 
-    override fun getOauth(accessToken: String): Oauth {
+    override fun getOauth(code: String): Oauth {
+
+        val accessToken = getAccessToken(code)
 
         val restTemplate = RestTemplate()
 
