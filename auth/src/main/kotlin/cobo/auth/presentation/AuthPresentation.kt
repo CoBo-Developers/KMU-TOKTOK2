@@ -23,12 +23,22 @@ class AuthPresentation(
     @GetMapping("/kakao-login")
     @Operation(summary = "카카오 로그인 API")
     @Parameters(
-        Parameter(name = "code", description = "카카오 로그인 code"),
-        Parameter(name = "redirectUri", description = "카카오 로그인 redirect_uri")
+        Parameter(name = "code", description = "카카오 로그인 code")
     )
     fun getKakaoLogin(
         @RequestParam code: String
     ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
         return authService.getKakaoLogin(code)
+    }
+
+    @GetMapping("/naver-login")
+    @Operation(summary = "네이버 로그인 API")
+    @Parameters(
+        Parameter(name = "code", description = "네이버 로그인 code")
+    )
+    fun getNaverLogin(
+        @RequestParam code: String
+    ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
+        return authService.getNaverLogin(code)
     }
 }
