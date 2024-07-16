@@ -6,5 +6,5 @@ import org.springframework.http.ResponseEntity
 
 interface AuthService {
     fun getKakaoLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
-    fun getNaverLogin(code: String, state: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
+    fun getNaverLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
 }
