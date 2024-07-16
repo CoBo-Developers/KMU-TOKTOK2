@@ -62,7 +62,7 @@ class GoogleOauthServiceImpl(
             return oauthRepository.save(Oauth(
                 id = null,
                 user = null,
-                oauthId = googleUserInfoServer,
+                oauthId = googleUserId,
                 oauthType = OauthTypeEnum.GOOGLE,
                 accessToken = accessToken
             ))
