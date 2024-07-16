@@ -34,11 +34,13 @@ class AuthPresentation(
     @GetMapping("/naver-login")
     @Operation(summary = "네이버 로그인 API")
     @Parameters(
-        Parameter(name = "code", description = "네이버 로그인 code")
+        Parameter(name = "code", description = "네이버 로그인 code"),
+        Parameter(name = "state", description = "네이버 로그인 state")
     )
     fun getNaverLogin(
-        @RequestParam code: String
+        @RequestParam code: String,
+        @RequestParam state: String
     ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
-        return authService.getNaverLogin(code)
+        return authService.getNaverLogin(code, state)
     }
 }

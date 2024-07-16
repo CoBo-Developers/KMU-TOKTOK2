@@ -64,7 +64,13 @@ class AuthServiceImpl(
         return coBoResponse.getResponseEntityWithLog()
     }
 
-    override fun getNaverLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
+    override fun getNaverLogin(code: String, state: String): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
+
+        val oauthAccessToken = naverOauthServiceImpl.getAccessToken(
+            code = code,
+            state = state
+        )
+
         val accessToken = jwtTokenProvider.getAccessToken(1)
         val refreshToken = jwtTokenProvider.getRefreshToken(1)
 
