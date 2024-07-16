@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
 import java.net.URI
-import java.util.concurrent.CompletableFuture
 
 @Service
 class NaverOauthServiceImpl(
@@ -23,7 +22,7 @@ class NaverOauthServiceImpl(
     @Value("\${naver.auth.client_secret}")
     private val clientSecret: String,
     private val oauthRepository: OauthRepository
-): OauthService {
+): OauthService, OauthServiceImpl(oauthRepository) {
 
     private final val naverAccessTokenServer = "https://nid.naver.com/oauth2.0/token"
     private final val naverUserInfoServer = "https://openapi.naver.com/v1/nid/me"
@@ -34,38 +33,17 @@ class NaverOauthServiceImpl(
 
         val restTemplate = RestTemplate()
 
-        val httpHeaders = HttpHeaders()
-        httpHeaders.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
-        httpHeaders.add("Authorization", "Bearer $accessToken")
-
         val naverUserInfo = restTemplate.exchange(
-            RequestEntity<Any>(httpHeaders, HttpMethod.GET, URI.create(naverUserInfoServer)),
+            RequestEntity<Any>(this.getHttpHeadersWithAuthorization(accessToken), HttpMethod.GET, URI.create(naverUserInfoServer)),
             NaverUserInfo::class.java
         ).body
 
         val naverUserId = naverUserInfo?.response?.id ?: ""
 
-        val optionalOauth = oauthRepository.findByOauthId(naverUserId)
-
-        if (optionalOauth.isPresent) {
-            CompletableFuture.supplyAsync{
-                optionalOauth.get()
-            }.thenApply {
-                it.accessToken = accessToken
-                oauthRepository.save(it)
-            }
-            return optionalOauth.get()
-        }
-        else{
-            return oauthRepository.save(Oauth(
-                id = null,
-                user = null,
-                oauthId = naverUserId,
-                oauthType = OauthTypeEnum.NAVER,
-                accessToken = accessToken
-            ))
-        }
-
+        return this.getOauthFromOauthIdAndOauthType(
+            oauthId = naverUserId,
+            oauthTypeEnum = OauthTypeEnum.NAVER,
+            accessToken = accessToken)
     }
 
     override fun getAccessToken(code: String): String {
@@ -77,7 +55,6 @@ class NaverOauthServiceImpl(
 
         val httpBody = LinkedMultiValueMap<String, String>()
 
-        httpBody.add("grant_type", "authorization_code")
         httpBody.add("client_id", clientId)
         httpBody.add("client_secret", clientSecret)
         httpBody.add("code", code)

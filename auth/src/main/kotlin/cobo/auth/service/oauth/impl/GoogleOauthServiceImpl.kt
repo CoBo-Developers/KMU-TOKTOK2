@@ -6,15 +6,12 @@ import cobo.auth.repository.OauthRepository
 import cobo.auth.service.oauth.OauthService
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.RequestEntity
 import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
 import java.net.URI
-import java.util.concurrent.CompletableFuture
 
 @Service
 class GoogleOauthServiceImpl(
@@ -25,7 +22,7 @@ class GoogleOauthServiceImpl(
     @Value("\${google.auth.client_secret}")
     private val clientSecret: String,
     private val oauthRepository: OauthRepository
-): OauthService {
+): OauthService, OauthServiceImpl(oauthRepository) {
 
     private final val googleAccessTokenServer = "https://oauth2.googleapis.com/token"
     private final val googleUserInfoServer = "https://www.googleapis.com/oauth2/v2/userinfo"
@@ -36,56 +33,30 @@ class GoogleOauthServiceImpl(
 
         val restTemplate = RestTemplate()
 
-        val httpHeaders = HttpHeaders()
-        httpHeaders.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
-        httpHeaders.add("Authorization", "Bearer $accessToken")
-
         val googleUserInfo = restTemplate.exchange(
-            RequestEntity<Any>(httpHeaders, HttpMethod.GET, URI.create(googleUserInfoServer)),
+            RequestEntity<Any>(this.getHttpHeadersWithAuthorization(accessToken), HttpMethod.GET, URI.create(googleUserInfoServer)),
             GoogleUserInfo::class.java
         ).body
 
         val googleUserId = googleUserInfo?.id ?: ""
 
-        val optionalOauth = oauthRepository.findByOauthId(googleUserId)
-
-        if (optionalOauth.isPresent) {
-            CompletableFuture.supplyAsync{
-                optionalOauth.get()
-            }.thenApply {
-                it.accessToken = accessToken
-                oauthRepository.save(it)
-            }
-            return optionalOauth.get()
-        }
-        else{
-            return oauthRepository.save(Oauth(
-                id = null,
-                user = null,
-                oauthId = googleUserId,
-                oauthType = OauthTypeEnum.GOOGLE,
-                accessToken = accessToken
-            ))
-        }
+        return this.getOauthFromOauthIdAndOauthType(
+            oauthId = googleUserId,
+            oauthTypeEnum = OauthTypeEnum.GOOGLE,
+            accessToken = accessToken)
     }
 
     override fun getAccessToken(code: String): String {
         val restTemplate = RestTemplate()
 
-        val httpHeaders = HttpHeaders()
-
-        httpHeaders.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
-
         val httpBody = LinkedMultiValueMap<String, String>()
 
-        httpBody.add("grant_type","authorization_code")
         httpBody.add("client_id", clientId)
-        httpBody.add("redirect_uri", redirectUri)
         httpBody.add("code",code)
         httpBody.add("client_secret", clientSecret)
+        httpBody.add("redirect_uri", redirectUri)
 
-        val result =  restTemplate.postForObject(googleAccessTokenServer, HttpEntity(httpBody, httpHeaders), GoogleAccessToken::class.java)?.accessToken ?: ""
-
+        val result =  restTemplate.postForObject(googleAccessTokenServer, this.getHttpEntity(httpBody), GoogleAccessToken::class.java)?.accessToken ?: ""
 
         return result
     }

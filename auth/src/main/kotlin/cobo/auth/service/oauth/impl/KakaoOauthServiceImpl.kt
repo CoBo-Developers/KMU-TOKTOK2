@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
 import java.net.URI
-import java.util.concurrent.CompletableFuture
 
 @Service
 class KakaoOauthServiceImpl(
@@ -23,7 +22,7 @@ class KakaoOauthServiceImpl(
     @Value("\${kakao.auth.redirect_uri}")
     private val redirectUri: String,
     private val oauthRepository: OauthRepository
-) : OauthService {
+) : OauthService, OauthServiceImpl(oauthRepository) {
 
     private final val kakaoAccessTokenServer = "https://kauth.kakao.com/oauth/token"
     private final val kakaoUserInfoServer =  "https://kapi.kakao.com/v2/user/me"
@@ -34,37 +33,17 @@ class KakaoOauthServiceImpl(
 
         val restTemplate = RestTemplate()
 
-        val httpHeaders = HttpHeaders()
-        httpHeaders.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
-        httpHeaders.add("Authorization", "Bearer $accessToken")
-
         val kakaoUserInfo = restTemplate.exchange(
-            RequestEntity<Any>(httpHeaders, HttpMethod.POST, URI.create(kakaoUserInfoServer)),
+            RequestEntity<Any>(this.getHttpHeadersWithAuthorization(accessToken), HttpMethod.POST, URI.create(kakaoUserInfoServer)),
             KakaoUserInfo::class.java
         ).body
 
         val kakaoUserId = kakaoUserInfo?.id ?: ""
 
-        val optionalOauth = oauthRepository.findByOauthId(kakaoUserId)
-
-        if (optionalOauth.isPresent) {
-            CompletableFuture.supplyAsync{
-                optionalOauth.get()
-            }.thenApply {
-                it.accessToken = accessToken
-                oauthRepository.save(it)
-            }
-            return optionalOauth.get()
-        }
-        else{
-            return oauthRepository.save(Oauth(
-                id = null,
-                user = null,
-                oauthId = kakaoUserId,
-                oauthType = OauthTypeEnum.KAKAO,
-                accessToken = accessToken
-            ))
-        }
+        return this.getOauthFromOauthIdAndOauthType(
+            oauthId = kakaoUserId,
+            oauthTypeEnum = OauthTypeEnum.KAKAO,
+            accessToken = accessToken)
     }
 
     override fun getAccessToken(code: String): String {
@@ -77,9 +56,8 @@ class KakaoOauthServiceImpl(
 
         val httpBody = LinkedMultiValueMap<String, String>()
 
-        httpBody.add("grant_type","authorization_code")
-        httpBody.add("client_id", clientId)
         httpBody.add("redirect_uri", redirectUri)
+        httpBody.add("client_id", clientId)
         httpBody.add("code",code)
 
         return restTemplate.postForObject(kakaoAccessTokenServer, HttpEntity(httpBody, httpHeaders), KakaoAccessToken::class.java)?.accessToken ?: ""
