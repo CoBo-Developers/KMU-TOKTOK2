@@ -41,4 +41,16 @@ class AuthPresentation(
     ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
         return authService.getNaverLogin(code)
     }
+
+    @GetMapping("/google-login")
+    @Operation(summary = "구글 로그인 API")
+    @Parameters(
+        Parameter(name = "code", description = "구글 로그인 code")
+    )
+    fun getGoogleLogin(
+        @RequestParam code: String
+    ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
+        return authService.getGoogleLogin(code)
+    }
+
 }

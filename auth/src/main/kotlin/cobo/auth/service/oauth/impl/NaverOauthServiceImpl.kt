@@ -61,7 +61,7 @@ class NaverOauthServiceImpl(
                 id = null,
                 user = null,
                 oauthId = naverUserId,
-                oauthType = OauthTypeEnum.KAKAO,
+                oauthType = OauthTypeEnum.NAVER,
                 accessToken = accessToken
             ))
         }
