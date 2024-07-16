@@ -38,7 +38,7 @@ class KakaoOauthServiceImpl(
         httpHeaders.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
         httpHeaders.add("Authorization", "Bearer $accessToken")
 
-        val kakaoUserInfo =  restTemplate.exchange(
+        val kakaoUserInfo = restTemplate.exchange(
             RequestEntity<Any>(httpHeaders, HttpMethod.POST, URI.create(kakaoUserInfoServer)),
             KakaoUserInfo::class.java
         ).body
