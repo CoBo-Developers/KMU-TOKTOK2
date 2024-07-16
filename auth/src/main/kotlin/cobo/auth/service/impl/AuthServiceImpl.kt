@@ -53,11 +53,21 @@ class AuthServiceImpl(
         return coBoResponse.getResponseEntityWithLog()
     }
 
+    override fun getGoogleLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
+        val user = getUserByOauthCode(code, OauthTypeEnum.GOOGLE)
+
+        val tokenList = getAccessTokenAndRefreshTokenByUser(user)
+
+        val coBoResponse = CoBoResponse(GetLoginRes(tokenList[0], tokenList[1], user.registerState), CoBoResponseStatus.SUCCESS)
+
+        return coBoResponse.getResponseEntityWithLog()
+    }
+
     private fun getUserByOauthCode(code: String, oauthTypeEnum: OauthTypeEnum): User {
         val oauth = when(oauthTypeEnum) {
             OauthTypeEnum.KAKAO -> kakaoOauthServiceImpl.getOauth(code)
             OauthTypeEnum.NAVER -> naverOauthServiceImpl.getOauth(code)
-            OauthTypeEnum.GOOGLE -> throw NullPointerException()
+            OauthTypeEnum.GOOGLE -> googleOauthServiceImpl.getOauth(code)
         }
 
         if (oauth.user != null) {
