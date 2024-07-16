@@ -1,6 +1,7 @@
 package cobo.auth.service.oauth.impl
 
 import cobo.auth.data.entity.Oauth
+import cobo.auth.data.enums.OauthTypeEnum
 import cobo.auth.repository.OauthRepository
 import cobo.auth.service.oauth.OauthService
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
 import java.net.URI
+import java.util.concurrent.CompletableFuture
 
 @Service
 class NaverOauthServiceImpl(
@@ -40,9 +42,29 @@ class NaverOauthServiceImpl(
             NaverUserInfo::class.java
         ).body
 
-        println(naverUserInfo)
+        val naverUserId = naverUserInfo?.response?.id ?: ""
 
-        TODO()
+        val optionalOauth = oauthRepository.findByOauthId(naverUserId)
+
+        if (optionalOauth.isPresent) {
+            CompletableFuture.supplyAsync{
+                optionalOauth.get()
+            }.thenApply {
+                it.accessToken = accessToken
+                oauthRepository.save(it)
+            }
+            return optionalOauth.get()
+        }
+        else{
+            return oauthRepository.save(Oauth(
+                id = null,
+                user = null,
+                oauthId = naverUserId,
+                oauthType = OauthTypeEnum.KAKAO,
+                accessToken = accessToken
+            ))
+        }
+
     }
 
     override fun getAccessToken(code: String): String {
