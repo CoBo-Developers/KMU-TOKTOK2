@@ -70,12 +70,30 @@ class AuthServiceImpl(
             code = code
         )
 
-        naverOauthServiceImpl.getOauth(oauthAccessToken)
+        val oauth = naverOauthServiceImpl.getOauth(oauthAccessToken)
 
-        val accessToken = jwtTokenProvider.getAccessToken(1)
-        val refreshToken = jwtTokenProvider.getRefreshToken(1)
+        val user = if (oauth.user != null) {
+            oauth.user
+        } else{
+            val user = userRepository.save(
+                User(
+                    id = null,
+                    studentId = null,
+                    role = RoleEnum.STUDENT,
+                    registerState = RegisterStateEnum.INACTIVE
+                )
+            )
+            CompletableFuture.runAsync {
+                oauth.user = user
+                oauthRepository.save(oauth)
+            }
+            user
+        }
 
-        val coBoResponse = CoBoResponse(GetLoginRes(accessToken, refreshToken, RegisterStateEnum.INACTIVE), CoBoResponseStatus.SUCCESS)
+        val accessToken = jwtTokenProvider.getAccessToken(user?.id ?: throw NullPointerException())
+        val refreshToken = jwtTokenProvider.getRefreshToken(user.id ?: throw NullPointerException())
+
+        val coBoResponse = CoBoResponse(GetLoginRes(accessToken, refreshToken, user.registerState), CoBoResponseStatus.SUCCESS)
 
         return coBoResponse.getResponseEntityWithLog()
     }
