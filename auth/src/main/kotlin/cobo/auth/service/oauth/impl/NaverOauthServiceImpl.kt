@@ -20,8 +20,6 @@ import java.util.concurrent.CompletableFuture
 class NaverOauthServiceImpl(
     @Value("\${naver.auth.client_id}")
     private val clientId: String,
-    @Value("\${naver.auth.redirect_uri}")
-    private val redirectUri: String,
     @Value("\${naver.auth.client_secret}")
     private val clientSecret: String,
     private val oauthRepository: OauthRepository
