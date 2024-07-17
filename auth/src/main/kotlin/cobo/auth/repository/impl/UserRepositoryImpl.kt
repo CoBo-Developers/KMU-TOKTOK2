@@ -5,12 +5,36 @@ import cobo.auth.data.enums.RegisterStateEnum
 import cobo.auth.data.enums.RoleEnum
 import cobo.auth.repository.custom.UserRepositoryCustom
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.core.queryForObject
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
+import java.sql.ResultSet
+import java.util.*
 
 @Repository
 class UserRepositoryImpl(
     private val jdbcTemplate: JdbcTemplate
 ) : UserRepositoryCustom {
+    override fun findByStudentIdWithJDBC(studentId: String): Optional<User> {
+        val query = "SELECT * FROM user WHERE student_id = ?"
 
+        return Optional.ofNullable(
+            jdbcTemplate.queryForObject(query, {rs, _ -> userRowMapper(rs)}, studentId)
+        )
+    }
 
+    @Transactional
+    override fun updateStudentIdWithJDBC(id: Int, studentId: String) {
+        jdbcTemplate.update("UPDATE user SET student_id = ? WHERE id = ?", studentId, id)
+    }
+
+    private fun userRowMapper(resultSet: ResultSet): User {
+        return User(
+            id = resultSet.getInt("id"),
+            studentId = resultSet.getString("student_id"),
+            role = RoleEnum.from(resultSet.getShort("role")),
+            registerState = RegisterStateEnum.from(resultSet.getShort("register")) ?: RegisterStateEnum.ACTIVE
+        )
+    }
 }
