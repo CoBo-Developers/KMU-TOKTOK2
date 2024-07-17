@@ -33,7 +33,7 @@ class UserRepositoryImpl(
             id = resultSet.getInt("id"),
             studentId = resultSet.getString("student_id"),
             role = RoleEnum.from(resultSet.getShort("role")),
-            registerState = RegisterStateEnum.from(resultSet.getShort("register")) ?: RegisterStateEnum.ACTIVE
+            registerState = RegisterStateEnum.from(resultSet.getShort("register_state")) ?: RegisterStateEnum.ACTIVE
         )
     }
 }
