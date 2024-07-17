@@ -1,17 +1,19 @@
 package cobo.auth.presentation
 
 import cobo.auth.config.response.CoBoResponseDto
+import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.auth.GetLoginRes
+import cobo.auth.data.dto.auth.PostRegisterReq
 import cobo.auth.service.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.Parameters
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.security.core.Authentication
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/auth")
@@ -51,6 +53,12 @@ class AuthPresentation(
         @RequestParam code: String
     ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
         return authService.getGoogleLogin(code)
+    }
+
+    @PostMapping("/register")
+    @Operation(summary = "회원가입 API", description = "회원의 상태가 INACTIVE -> ACTIVE, 발급되는 토큰으로 다시 넣어줘야 합니다.")
+    fun postRegister(@Valid @RequestBody postRegisterReq: PostRegisterReq, @Parameter(hidden = true) authentication: Authentication): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
+        return authService.postRegister(postRegisterReq, authentication)
     }
 
 }

@@ -1,10 +1,12 @@
 package cobo.auth.service.impl
 
+import cobo.auth.config.LogFilter
 import cobo.auth.config.jwt.JwtTokenProvider
 import cobo.auth.config.response.CoBoResponse
 import cobo.auth.config.response.CoBoResponseDto
 import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.auth.GetLoginRes
+import cobo.auth.data.dto.auth.PostRegisterReq
 import cobo.auth.data.entity.Oauth
 import cobo.auth.data.entity.User
 import cobo.auth.data.enums.OauthTypeEnum
@@ -16,7 +18,10 @@ import cobo.auth.service.AuthService
 import cobo.auth.service.oauth.impl.GoogleOauthServiceImpl
 import cobo.auth.service.oauth.impl.KakaoOauthServiceImpl
 import cobo.auth.service.oauth.impl.NaverOauthServiceImpl
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.util.concurrent.CompletableFuture
 
@@ -29,6 +34,11 @@ class AuthServiceImpl(
     private val googleOauthServiceImpl: GoogleOauthServiceImpl,
     private val naverOauthServiceImpl: NaverOauthServiceImpl
 ) : AuthService {
+
+    companion object {
+        private val logger: Logger = LoggerFactory.getLogger(LogFilter::class.java)
+    }
+
     override fun getKakaoLogin(
         code: String
     ): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
@@ -63,6 +73,40 @@ class AuthServiceImpl(
         return coBoResponse.getResponseEntityWithLog()
     }
 
+    override fun postRegister(
+        postRegisterReq: PostRegisterReq,
+        authentication: Authentication
+    ): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
+
+        val userId = authentication.name.toInt()
+
+        val user = userRepository.findByStudentIdWithJDBC(postRegisterReq.studentId)
+
+        val tokenList: Array<String>
+
+        if(user.isPresent){
+
+            oauthRepository.updateUserIdByUserIdWithJDBC(
+                oldUserId = userId,
+                newUserId = user.get().id ?: userId)
+            userRepository.deleteById(userId)
+            tokenList = getAccessTokenAndRefreshTokenByUser(user.get())
+        }
+        else{
+            userRepository.updateStudentIdWithJDBC(
+                id = userId,
+                studentId = postRegisterReq.studentId,
+                registerStateEnum = RegisterStateEnum.ACTIVE
+            )
+
+            tokenList = getAccessTokenAndRefreshTokenByUser(User(userId))
+        }
+
+        val coBoResponse = CoBoResponse(GetLoginRes(tokenList[0], tokenList[1], RegisterStateEnum.ACTIVE), CoBoResponseStatus.SUCCESS)
+
+        return coBoResponse.getResponseEntityWithLog()
+    }
+
     private fun getUserByOauthCode(code: String, oauthTypeEnum: OauthTypeEnum): User {
         val oauth = when(oauthTypeEnum) {
             OauthTypeEnum.KAKAO -> kakaoOauthServiceImpl.getOauth(code)
@@ -84,6 +128,9 @@ class AuthServiceImpl(
             CompletableFuture.runAsync {
                 oauth.user = user
                 oauthRepository.save(oauth)
+            }.exceptionally {
+                logger.error("Failed to save user {} {}", code, oauthTypeEnum.name)
+                null
             }
             return user
         }
