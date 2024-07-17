@@ -5,6 +5,7 @@ import cobo.auth.config.response.CoBoResponse
 import cobo.auth.config.response.CoBoResponseDto
 import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.auth.GetLoginRes
+import cobo.auth.data.dto.auth.PostRegisterReq
 import cobo.auth.data.entity.Oauth
 import cobo.auth.data.entity.User
 import cobo.auth.data.enums.OauthTypeEnum
@@ -17,6 +18,7 @@ import cobo.auth.service.oauth.impl.GoogleOauthServiceImpl
 import cobo.auth.service.oauth.impl.KakaoOauthServiceImpl
 import cobo.auth.service.oauth.impl.NaverOauthServiceImpl
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.util.concurrent.CompletableFuture
 
@@ -61,6 +63,13 @@ class AuthServiceImpl(
         val coBoResponse = CoBoResponse(GetLoginRes(tokenList[0], tokenList[1], user.registerState), CoBoResponseStatus.SUCCESS)
 
         return coBoResponse.getResponseEntityWithLog()
+    }
+
+    override fun postRegister(
+        postRegisterReq: PostRegisterReq,
+        authentication: Authentication
+    ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        TODO("Not yet implemented")
     }
 
     private fun getUserByOauthCode(code: String, oauthTypeEnum: OauthTypeEnum): User {
