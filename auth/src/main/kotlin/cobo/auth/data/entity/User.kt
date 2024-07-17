@@ -15,4 +15,8 @@ data class User(
     var role: RoleEnum,
     @Enumerated(EnumType.ORDINAL)
     var registerState: RegisterStateEnum
-)
+){
+    constructor(id: Int):this(
+        id = id, studentId = null, role = RoleEnum.STUDENT, registerState = RegisterStateEnum.ACTIVE
+    )
+}
