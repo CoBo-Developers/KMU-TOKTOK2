@@ -1,5 +1,6 @@
 package cobo.auth.auth
 
+import cobo.auth.config.LogFilter
 import cobo.auth.config.jwt.JwtTokenProvider
 import cobo.auth.data.entity.Oauth
 import cobo.auth.data.entity.User
@@ -8,8 +9,11 @@ import cobo.auth.data.enums.RegisterStateEnum
 import cobo.auth.data.enums.RoleEnum
 import cobo.auth.repository.OauthRepository
 import cobo.auth.repository.UserRepository
+import cobo.auth.repository.impl.UserRepositoryImpl
 import cobo.auth.service.AuthService
 import org.junit.jupiter.api.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -21,64 +25,73 @@ class AuthRegisterTest(
     @Autowired private val userRepository: UserRepository
 ) {
 
-    private val kakaoUser = User(
-        id = -1,
-        studentId = null,
-        role = RoleEnum.STUDENT,
-        registerState = RegisterStateEnum.INACTIVE
-    )
-
-    private val naverUser = User(
-        id = -2,
-        studentId = null,
-        role = RoleEnum.STUDENT,
-        registerState = RegisterStateEnum.INACTIVE
-    )
-
-    private val googleUser = User(
-        id = -3,
-        studentId = null,
-        role = RoleEnum.STUDENT,
-        registerState = RegisterStateEnum.INACTIVE
-    )
-
-    private val kakaoOauth = Oauth(
-        id = -1,
-        user = kakaoUser,
-        oauthId = "testKakaoUser",
-        oauthType = OauthTypeEnum.KAKAO,
-        accessToken = null
-    )
-
-    private val naverOauth = Oauth(
-        id = -2,
-        user = naverUser,
-        oauthId = "testNaverUser",
-        oauthType = OauthTypeEnum.NAVER,
-        accessToken = null
-    )
-
-    private val googleOauth = Oauth(
-        id = -3,
-        user = googleUser,
-        oauthId = "testGoogleUser",
-        oauthType = OauthTypeEnum.GOOGLE,
-        accessToken = null
-    )
-
-
-
     companion object {
+
+        private val logger: Logger = LoggerFactory.getLogger(AuthRegisterTest::class.java)
+
+        private val kakaoUser = User(
+            id = null,
+            studentId = null,
+            role = RoleEnum.STUDENT,
+            registerState = RegisterStateEnum.INACTIVE
+        )
+
+        private val naverUser = User(
+            id = null,
+            studentId = null,
+            role = RoleEnum.STUDENT,
+            registerState = RegisterStateEnum.INACTIVE
+        )
+
+        private val googleUser = User(
+            id = null,
+            studentId = null,
+            role = RoleEnum.STUDENT,
+            registerState = RegisterStateEnum.INACTIVE
+        )
+
+        private val kakaoOauth = Oauth(
+            id = null,
+            user = kakaoUser,
+            oauthId = "testKakaoUser",
+            oauthType = OauthTypeEnum.KAKAO,
+            accessToken = null
+        )
+
+        private val naverOauth = Oauth(
+            id = null,
+            user = naverUser,
+            oauthId = "testNaverUser",
+            oauthType = OauthTypeEnum.NAVER,
+            accessToken = null
+        )
+
+        private val googleOauth = Oauth(
+            id = null,
+            user = googleUser,
+            oauthId = "testGoogleUser",
+            oauthType = OauthTypeEnum.GOOGLE,
+            accessToken = null
+        )
         @JvmStatic
         @BeforeAll
-        internal fun beforeAll() {
-
+        internal fun beforeAll(
+            @Autowired userRepository: UserRepository,
+            @Autowired oauthRepository: OauthRepository
+        ) {
+            userRepository.saveAll(listOf(kakaoUser, naverUser, googleUser))
+            logger.info("SAVE: {}", kakaoUser.toString())
+            oauthRepository.saveAll(listOf(kakaoOauth, naverOauth, googleOauth))
         }
 
         @JvmStatic
         @AfterAll
-        internal fun afterAll() {
-
+        internal fun afterAll(
+            @Autowired userRepository: UserRepository,
+            @Autowired oauthRepository: OauthRepository
+        ) {
+            oauthRepository.deleteAll(listOf(kakaoOauth, naverOauth, googleOauth))
+            userRepository.deleteAll(listOf(kakaoUser, naverUser, googleUser))
         }
     }
 
@@ -93,4 +106,7 @@ class AuthRegisterTest(
     }
 
 
+    @Test
+    fun test(){
+    }
 }
