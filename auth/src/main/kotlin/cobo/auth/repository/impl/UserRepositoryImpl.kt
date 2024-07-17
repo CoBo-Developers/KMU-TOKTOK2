@@ -17,10 +17,8 @@ class UserRepositoryImpl(
     private val jdbcTemplate: JdbcTemplate
 ) : UserRepositoryCustom {
     override fun findByStudentIdWithJDBC(studentId: String): Optional<User> {
-        val query = "SELECT * FROM user WHERE student_id = ?"
-
         return Optional.ofNullable(
-            jdbcTemplate.queryForObject(query, {rs, _ -> userRowMapper(rs)}, studentId)
+            jdbcTemplate.queryForObject("SELECT * FROM user WHERE student_id = ?", {rs, _ -> userRowMapper(rs)}, studentId)
         )
     }
 
