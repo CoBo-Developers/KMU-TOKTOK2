@@ -25,7 +25,7 @@ class JwtTokenProvider(
     fun isAccessToken(token: String): Boolean{
         return Jwts.parser()
             .setSigningKey(secret)
-            .parseClaimsJwt(token)
+            .parseClaimsJws(token)
             .header["type"].toString() == "access_token"
     }
 
