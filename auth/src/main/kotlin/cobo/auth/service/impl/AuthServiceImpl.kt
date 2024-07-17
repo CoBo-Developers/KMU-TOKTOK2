@@ -69,6 +69,9 @@ class AuthServiceImpl(
         postRegisterReq: PostRegisterReq,
         authentication: Authentication
     ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        val userId = authentication.name.toInt()
+
+
         TODO("Not yet implemented")
     }
 
