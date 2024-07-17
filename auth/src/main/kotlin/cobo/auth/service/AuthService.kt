@@ -14,5 +14,5 @@ interface AuthService {
     fun postRegister(
         postRegisterReq: PostRegisterReq,
         authentication: Authentication
-    ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>
+    ): ResponseEntity<CoBoResponseDto<GetLoginRes>>
 }

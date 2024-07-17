@@ -56,8 +56,8 @@ class AuthPresentation(
     }
 
     @PostMapping("/register")
-    @Operation(summary = "회원가입 API", description = "회원의 상태가 INACTIVE -> ACTIVE")
-    fun postRegister(@Valid @RequestBody postRegisterReq: PostRegisterReq, @Parameter(hidden = true) authentication: Authentication): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+    @Operation(summary = "회원가입 API", description = "회원의 상태가 INACTIVE -> ACTIVE, 발급되는 토큰으로 다시 넣어줘야 합니다.")
+    fun postRegister(@Valid @RequestBody postRegisterReq: PostRegisterReq, @Parameter(hidden = true) authentication: Authentication): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
         return authService.postRegister(postRegisterReq, authentication)
     }
 

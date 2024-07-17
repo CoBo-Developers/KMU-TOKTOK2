@@ -76,13 +76,21 @@ class AuthServiceImpl(
     override fun postRegister(
         postRegisterReq: PostRegisterReq,
         authentication: Authentication
-    ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+    ): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
 
         val userId = authentication.name.toInt()
 
         val user = userRepository.findByStudentIdWithJDBC(postRegisterReq.studentId)
 
+        val tokenList: Array<String>
+
         if(user.isPresent){
+
+            oauthRepository.updateUserIdByUserIdWithJDBC(
+                oldUserId = userId,
+                newUserId = user.get().id ?: userId)
+            userRepository.deleteById(userId)
+            tokenList = getAccessTokenAndRefreshTokenByUser(user.get())
         }
         else{
             userRepository.updateStudentIdWithJDBC(
@@ -90,13 +98,13 @@ class AuthServiceImpl(
                 studentId = postRegisterReq.studentId,
                 registerStateEnum = RegisterStateEnum.ACTIVE
             )
-//            oauthRepository.updateUserByUserIdWithJDBC(
-//                userId = userId,
-//
-//            )
+
+            tokenList = getAccessTokenAndRefreshTokenByUser(User(userId))
         }
 
-        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntityWithLog()
+        val coBoResponse = CoBoResponse(GetLoginRes(tokenList[0], tokenList[1], RegisterStateEnum.ACTIVE), CoBoResponseStatus.SUCCESS)
+
+        return coBoResponse.getResponseEntityWithLog()
     }
 
     private fun getUserByOauthCode(code: String, oauthTypeEnum: OauthTypeEnum): User {
