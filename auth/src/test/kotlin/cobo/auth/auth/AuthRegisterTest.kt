@@ -1,6 +1,5 @@
 package cobo.auth.auth
 
-import cobo.auth.config.LogFilter
 import cobo.auth.config.jwt.JwtTokenProvider
 import cobo.auth.data.dto.auth.PostRegisterReq
 import cobo.auth.data.entity.Oauth
@@ -10,7 +9,6 @@ import cobo.auth.data.enums.RegisterStateEnum
 import cobo.auth.data.enums.RoleEnum
 import cobo.auth.repository.OauthRepository
 import cobo.auth.repository.UserRepository
-import cobo.auth.repository.impl.UserRepositoryImpl
 import cobo.auth.service.AuthService
 import org.junit.jupiter.api.*
 import org.slf4j.Logger
