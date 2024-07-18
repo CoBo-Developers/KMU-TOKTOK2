@@ -105,7 +105,11 @@ class AuthRegisterTest(
 
     @AfterEach
     fun afterEach() {
-
+        userRepository.saveAll(
+        listOf(kakaoUser, naverUser, googleUser).map{
+            it.registerState = RegisterStateEnum.INACTIVE
+            it
+        }.toList())
     }
 
 
