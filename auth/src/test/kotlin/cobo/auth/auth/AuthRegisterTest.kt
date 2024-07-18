@@ -16,9 +16,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
-import org.springframework.security.authentication.DefaultAuthenticationEventPublisher
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 
@@ -29,9 +27,6 @@ class AuthRegisterTest(
     @Autowired private val oauthRepository: OauthRepository,
     @Autowired private val userRepository: UserRepository
 ) {
-
-    @Autowired
-    private lateinit var authenticationEventPublisher: DefaultAuthenticationEventPublisher
 
     companion object {
 
