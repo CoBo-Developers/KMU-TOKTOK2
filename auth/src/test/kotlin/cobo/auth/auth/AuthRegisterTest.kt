@@ -83,7 +83,6 @@ class AuthRegisterTest(
             @Autowired oauthRepository: OauthRepository
         ) {
             userRepository.saveAll(listOf(kakaoUser, naverUser, googleUser))
-            logger.info("SAVE: {}", kakaoUser.toString())
             oauthRepository.saveAll(listOf(kakaoOauth, naverOauth, googleOauth))
         }
 
@@ -98,11 +97,6 @@ class AuthRegisterTest(
         }
     }
 
-    @BeforeEach
-    fun beforeEach() {
-
-    }
-
     @AfterEach
     fun afterEach() {
         userRepository.saveAll(
@@ -110,6 +104,16 @@ class AuthRegisterTest(
             it.registerState = RegisterStateEnum.INACTIVE
             it
         }.toList())
+        println(oauthRepository.saveAll(
+            listOf(kakaoOauth, naverOauth, googleOauth).map{
+                it.user = when(it.oauthType){
+                    OauthTypeEnum.KAKAO -> kakaoUser
+                    OauthTypeEnum.NAVER -> naverUser
+                    OauthTypeEnum.GOOGLE -> googleUser
+                }
+                it
+            })
+        )
     }
 
 
@@ -124,7 +128,7 @@ class AuthRegisterTest(
                     SimpleGrantedAuthority("USER")))
 
             //when
-            val postRegisterReq = authService.postRegister(PostRegisterReq(it.studentId.toString(), "test"), securityContextHolder.authentication)
+            val postRegisterReq = authService.postRegister(PostRegisterReq(it.id.toString(), "test"), securityContextHolder.authentication)
 
             //then
             val user = userRepository.findById(it.id ?: throw NullPointerException("User Not Found")).orElseThrow ()
