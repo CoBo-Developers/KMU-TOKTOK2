@@ -5,5 +5,7 @@ enum class CoBoResponseStatus(
     val message: String
 ) {
 
-    SUCCESS(2000, "OK")
+    SUCCESS(2000, "OK"),
+
+    BAD_REQUEST(4000, "Bad Request"),
 }

@@ -99,21 +99,50 @@ class AuthRegisterTest(
 
     @AfterEach
     fun afterEach() {
-        userRepository.saveAll(
-        listOf(kakaoUser, naverUser, googleUser).map{
-            it.registerState = RegisterStateEnum.INACTIVE
-            it
-        }.toList())
-        println(oauthRepository.saveAll(
-            listOf(kakaoOauth, naverOauth, googleOauth).map{
-                it.user = when(it.oauthType){
-                    OauthTypeEnum.KAKAO -> kakaoUser
-                    OauthTypeEnum.NAVER -> naverUser
-                    OauthTypeEnum.GOOGLE -> googleUser
+        listOf(kakaoUser, naverUser, googleUser).forEach { user ->
+            user.studentId = null
+            user.registerState = RegisterStateEnum.INACTIVE
+            if (!(userRepository.existsById(user.id!!))){
+                user.id = null
+                userRepository.save(user)
+                if(user.id != kakaoUser.id && user.id != naverUser.id)
+                    googleUser.id = user.id
+                else if(user.id != naverUser.id && user.id != googleUser.id)
+                    kakaoUser.id = user.id
+                else
+                    naverUser.id = user.id
+            }
+            else{
+                userRepository.save(user)
+            }
+        }
+
+        listOf(kakaoOauth, naverOauth, googleOauth).forEach { oauth ->
+            oauth.user = when (oauth.oauthType) {
+                OauthTypeEnum.KAKAO -> kakaoUser
+                OauthTypeEnum.NAVER -> naverUser
+                OauthTypeEnum.GOOGLE -> googleUser
+            }
+            if(oauthRepository.findById(oauth.id ?: 0).isEmpty) {
+                oauth.id = null
+                when (oauth.oauthType) {
+                    OauthTypeEnum.KAKAO -> {
+                        kakaoOauth.id = oauth.id
+                        oauth.user = kakaoUser
+                    }
+                    OauthTypeEnum.NAVER -> {
+                        naverOauth.id = oauth.id
+                        oauth.user = naverUser
+                    }
+                    OauthTypeEnum.GOOGLE -> {
+                        googleOauth.id = oauth.id
+                        oauth.user = googleUser
+                    }
                 }
-                it
-            })
-        )
+            }
+            println(oauth)
+            oauthRepository.save(oauth)
+        }
     }
 
 
@@ -135,5 +164,127 @@ class AuthRegisterTest(
             assert(user.registerState == RegisterStateEnum.ACTIVE)
             assert(postRegisterReq.statusCode == HttpStatus.OK)
         }
+    }
+
+    @Test
+    fun combineWithKakaoAndNaver(){
+        //given
+        combineTwoSocial(kakaoUser, naverUser)
+    }
+
+    @Test
+    fun combineWithKakaoAndGoogle(){
+        combineTwoSocial(kakaoUser, googleUser)
+    }
+
+    @Test
+    fun combineWithNaverAndKakao(){
+        combineTwoSocial(naverUser, kakaoUser)
+    }
+
+    @Test
+    fun combineWithNaverAndGoogle(){
+        combineTwoSocial(naverUser, googleUser)
+    }
+
+    @Test
+    fun combineWithGoogleAndKakao(){
+        combineTwoSocial(googleUser, kakaoUser)
+    }
+
+    @Test
+    fun combineWithGoogleAndNaver(){
+        combineTwoSocial(googleUser, naverUser)
+    }
+
+
+    @Test
+    fun combineWithAllSocial(){
+        val securityContextHolder1 = SecurityContextHolder.createEmptyContext()
+        securityContextHolder1.authentication = UsernamePasswordAuthenticationToken(
+            kakaoUser.id, null, listOf(
+                SimpleGrantedAuthority("USER")))
+
+        val securityContextHolder2 = SecurityContextHolder.createEmptyContext()
+        securityContextHolder2.authentication = UsernamePasswordAuthenticationToken(
+            naverUser.id, null, listOf(
+                SimpleGrantedAuthority("USER")))
+
+        val securityContextHolder3 = SecurityContextHolder.createEmptyContext()
+        securityContextHolder3.authentication = UsernamePasswordAuthenticationToken(
+            googleUser.id, null, listOf(
+                SimpleGrantedAuthority("USER")
+            )
+        )
+
+        val sameStudentId = "test_studentId"
+
+        val postRegisterReq1 = authService.postRegister(PostRegisterReq(sameStudentId, "test"), securityContextHolder1.authentication)
+        val postRegisterReq2 = authService.postRegister(PostRegisterReq(sameStudentId, "test"), securityContextHolder2.authentication)
+        val postRegisterReq3 = authService.postRegister(PostRegisterReq(sameStudentId, "test"), securityContextHolder3.authentication)
+
+        //then
+        val findUser1 = userRepository.findById(kakaoUser.id ?: throw NullPointerException("User Not Found")).orElseThrow()
+        val findUser2 = userRepository.findById(naverUser.id ?: throw NullPointerException("User Not Found"))
+        val findUser3 = userRepository.findById(googleUser.id ?: throw NullPointerException("User Not Found"))
+
+        assert(findUser2.isEmpty)
+        assert(findUser3.isEmpty)
+        assert(findUser1.registerState == RegisterStateEnum.ACTIVE)
+        assert(findUser1.studentId == sameStudentId)
+
+        assert(postRegisterReq1.statusCode == HttpStatus.OK)
+        assert(postRegisterReq2.statusCode == HttpStatus.OK)
+
+        assert(jwtTokenProvider.getId(postRegisterReq1.body?.data?.accessToken ?: "").toInt() == kakaoUser.id)
+        assert(jwtTokenProvider.getId(postRegisterReq2.body?.data?.accessToken ?: "").toInt() == kakaoUser.id)
+    }
+
+    fun combineTwoSocial(user1: User, user2: User){
+        //given
+        val securityContextHolder1 = SecurityContextHolder.createEmptyContext()
+        securityContextHolder1.authentication = UsernamePasswordAuthenticationToken(
+            user1.id, null, listOf(
+                SimpleGrantedAuthority("USER")))
+
+        val securityContextHolder2 = SecurityContextHolder.createEmptyContext()
+        securityContextHolder2.authentication = UsernamePasswordAuthenticationToken(
+            user2.id, null, listOf(
+                SimpleGrantedAuthority("USER")))
+
+        val sameStudentId = "test_studentId"
+
+
+        //when
+        val postRegisterReq1 = authService.postRegister(PostRegisterReq(sameStudentId, "test"), securityContextHolder1.authentication)
+        val postRegisterReq2 = authService.postRegister(PostRegisterReq(sameStudentId, "test"), securityContextHolder2.authentication)
+
+        //then
+        val findUser1 = userRepository.findById(user1.id ?: throw NullPointerException("User Not Found")).orElseThrow()
+        val findUser2 = userRepository.findById(user2.id ?: throw NullPointerException("User Not Found"))
+
+        assert(findUser2.isEmpty)
+        assert(findUser1.registerState == RegisterStateEnum.ACTIVE)
+        assert(findUser1.studentId == sameStudentId)
+
+        assert(postRegisterReq1.statusCode == HttpStatus.OK)
+        assert(postRegisterReq2.statusCode == HttpStatus.OK)
+
+        assert(jwtTokenProvider.getId(postRegisterReq1.body?.data?.accessToken ?: "").toInt() == user1.id)
+        assert(jwtTokenProvider.getId(postRegisterReq2.body?.data?.accessToken ?: "").toInt() == user1.id)
+    }
+
+    @Test
+    fun duplicateRequestError(){
+        //given
+        val copyKakaoUser = kakaoUser.copy()
+
+        try{
+            combineTwoSocial(kakaoUser, copyKakaoUser)
+            assert(false)
+        }catch(e: IllegalAccessException){
+            assert(true)
+        }
+
     }
 }
