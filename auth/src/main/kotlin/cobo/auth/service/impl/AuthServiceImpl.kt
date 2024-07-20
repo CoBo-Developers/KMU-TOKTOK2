@@ -7,7 +7,6 @@ import cobo.auth.config.response.CoBoResponseDto
 import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.auth.GetLoginRes
 import cobo.auth.data.dto.auth.PostRegisterReq
-import cobo.auth.data.entity.Oauth
 import cobo.auth.data.entity.User
 import cobo.auth.data.enums.OauthTypeEnum
 import cobo.auth.data.enums.RegisterStateEnum
@@ -43,7 +42,7 @@ class AuthServiceImpl(
         code: String
     ): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
 
-        val user = getUserByOauthCode(code, OauthTypeEnum.KAKAO)
+        val user = getUserByOauthCode(code, OauthTypeEnum.KAKAO, true)
 
         val tokenList = getAccessTokenAndRefreshTokenByUser(user)
 
@@ -54,7 +53,7 @@ class AuthServiceImpl(
 
     override fun getNaverLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
 
-        val user = getUserByOauthCode(code, OauthTypeEnum.NAVER)
+        val user = getUserByOauthCode(code, OauthTypeEnum.NAVER, true)
 
         val tokenList = getAccessTokenAndRefreshTokenByUser(user)
 
@@ -64,7 +63,7 @@ class AuthServiceImpl(
     }
 
     override fun getGoogleLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
-        val user = getUserByOauthCode(code, OauthTypeEnum.GOOGLE)
+        val user = getUserByOauthCode(code, OauthTypeEnum.GOOGLE, true)
 
         val tokenList = getAccessTokenAndRefreshTokenByUser(user)
 
@@ -110,11 +109,31 @@ class AuthServiceImpl(
         return coBoResponse.getResponseEntityWithLog()
     }
 
-    private fun getUserByOauthCode(code: String, oauthTypeEnum: OauthTypeEnum): User {
+    override fun getKakaoLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
+        val user = getUserByOauthCode(code, OauthTypeEnum.KAKAO, false)
+
+        val tokenList = getAccessTokenAndRefreshTokenByUser(user)
+
+        val coBoResponse = CoBoResponse(GetLoginRes(tokenList[0], tokenList[1], user.registerState), CoBoResponseStatus.SUCCESS)
+
+        return coBoResponse.getResponseEntityWithLog()
+    }
+
+    override fun getGoogleLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
+        val user = getUserByOauthCode(code, OauthTypeEnum.GOOGLE, false)
+
+        val tokenList = getAccessTokenAndRefreshTokenByUser(user)
+
+        val coBoResponse = CoBoResponse(GetLoginRes(tokenList[0], tokenList[1], user.registerState), CoBoResponseStatus.SUCCESS)
+
+        return coBoResponse.getResponseEntityWithLog()
+    }
+
+    private fun getUserByOauthCode(code: String, oauthTypeEnum: OauthTypeEnum, isRemote: Boolean): User {
         val oauth = when(oauthTypeEnum) {
-            OauthTypeEnum.KAKAO -> kakaoOauthServiceImpl.getOauth(code)
-            OauthTypeEnum.NAVER -> naverOauthServiceImpl.getOauth(code)
-            OauthTypeEnum.GOOGLE -> googleOauthServiceImpl.getOauth(code)
+            OauthTypeEnum.KAKAO -> kakaoOauthServiceImpl.getOauth(code, isRemote)
+            OauthTypeEnum.NAVER -> naverOauthServiceImpl.getOauth(code, isRemote)
+            OauthTypeEnum.GOOGLE -> googleOauthServiceImpl.getOauth(code, isRemote)
         }
 
         if (oauth.user != null) {

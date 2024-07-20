@@ -1,7 +1,6 @@
 package cobo.auth.presentation
 
 import cobo.auth.config.response.CoBoResponseDto
-import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.auth.GetLoginRes
 import cobo.auth.data.dto.auth.PostRegisterReq
 import cobo.auth.service.AuthService
@@ -10,7 +9,6 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.Parameters
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
@@ -33,6 +31,17 @@ class AuthPresentation(
         return authService.getKakaoLogin(code)
     }
 
+    @GetMapping("/kakao-local-login")
+    @Operation(summary = "카카오 로컬 로그인 API")
+    @Parameters(
+        Parameter(name = "code", description = "카카오 로그인 code")
+    )
+    fun getKakaoLocalLogin(
+        @RequestParam code: String
+    ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
+        return authService.getKakaoLocalLogin(code)
+    }
+
     @GetMapping("/naver-login")
     @Operation(summary = "네이버 로그인 API")
     @Parameters(
@@ -53,6 +62,17 @@ class AuthPresentation(
         @RequestParam code: String
     ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
         return authService.getGoogleLogin(code)
+    }
+
+    @GetMapping("/google-local-login")
+    @Operation(summary = "구글 로그인 API")
+    @Parameters(
+        Parameter(name = "code", description = "구글 로그인 code")
+    )
+    fun getGoogleLocalLogin(
+        @RequestParam code: String
+    ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
+        return authService.getGoogleLocalLogin(code)
     }
 
     @PostMapping("/register")

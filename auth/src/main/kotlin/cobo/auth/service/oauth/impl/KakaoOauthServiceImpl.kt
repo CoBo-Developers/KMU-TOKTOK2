@@ -6,7 +6,6 @@ import cobo.auth.repository.OauthRepository
 import cobo.auth.service.oauth.OauthService
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.RequestEntity
@@ -21,15 +20,17 @@ class KakaoOauthServiceImpl(
     private val clientId: String,
     @Value("\${kakao.auth.redirect_uri}")
     private val redirectUri: String,
+    @Value("\${kakao.auth.local_redirect_uri}")
+    private val localRedirectUri: String,
     private val oauthRepository: OauthRepository
 ) : OauthService, OauthServiceImpl(oauthRepository) {
 
     private final val kakaoAccessTokenServer = "https://kauth.kakao.com/oauth/token"
     private final val kakaoUserInfoServer =  "https://kapi.kakao.com/v2/user/me"
 
-    override fun getOauth(code: String): Oauth {
+    override fun getOauth(code: String, isRemote: Boolean): Oauth {
 
-        val accessToken = getAccessToken(code)
+        val accessToken = getAccessToken(code, isRemote)
 
         val restTemplate = RestTemplate()
 
@@ -46,7 +47,7 @@ class KakaoOauthServiceImpl(
             accessToken = accessToken)
     }
 
-    override fun getAccessToken(code: String): String {
+    override fun getAccessToken(code: String, isRemote: Boolean): String {
 
         val restTemplate = RestTemplate()
 
@@ -56,7 +57,7 @@ class KakaoOauthServiceImpl(
 
         val httpBody = LinkedMultiValueMap<String, String>()
 
-        httpBody.add("redirect_uri", redirectUri)
+        httpBody.add("redirect_uri", if (isRemote) redirectUri else localRedirectUri)
         httpBody.add("client_id", clientId)
         httpBody.add("code",code)
 

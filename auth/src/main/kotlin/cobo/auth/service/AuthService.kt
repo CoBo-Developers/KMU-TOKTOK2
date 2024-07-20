@@ -1,7 +1,6 @@
 package cobo.auth.service
 
 import cobo.auth.config.response.CoBoResponseDto
-import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.auth.GetLoginRes
 import cobo.auth.data.dto.auth.PostRegisterReq
 import org.springframework.http.ResponseEntity
@@ -15,4 +14,7 @@ interface AuthService {
         postRegisterReq: PostRegisterReq,
         authentication: Authentication
     ): ResponseEntity<CoBoResponseDto<GetLoginRes>>
+
+    fun getKakaoLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
+    fun getGoogleLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
 }

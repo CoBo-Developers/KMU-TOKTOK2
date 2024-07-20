@@ -19,6 +19,8 @@ class GoogleOauthServiceImpl(
     private val clientId: String,
     @Value("\${google.auth.redirect_uri}")
     private val redirectUri: String,
+    @Value("\${google.auth.local_redirect_uri}")
+    private val localRedirectUri: String,
     @Value("\${google.auth.client_secret}")
     private val clientSecret: String,
     private val oauthRepository: OauthRepository
@@ -27,9 +29,9 @@ class GoogleOauthServiceImpl(
     private final val googleAccessTokenServer = "https://oauth2.googleapis.com/token"
     private final val googleUserInfoServer = "https://www.googleapis.com/oauth2/v2/userinfo"
 
-    override fun getOauth(code: String): Oauth {
+    override fun getOauth(code: String, isRemote: Boolean): Oauth {
 
-        val accessToken = getAccessToken(code)
+        val accessToken = getAccessToken(code, isRemote)
 
         val restTemplate = RestTemplate()
 
@@ -46,7 +48,7 @@ class GoogleOauthServiceImpl(
             accessToken = accessToken)
     }
 
-    override fun getAccessToken(code: String): String {
+    override fun getAccessToken(code: String, isRemote: Boolean): String {
         val restTemplate = RestTemplate()
 
         val httpBody = LinkedMultiValueMap<String, String>()
@@ -54,7 +56,7 @@ class GoogleOauthServiceImpl(
         httpBody.add("client_id", clientId)
         httpBody.add("code",code)
         httpBody.add("client_secret", clientSecret)
-        httpBody.add("redirect_uri", redirectUri)
+        httpBody.add("redirect_uri", if (isRemote) redirectUri else localRedirectUri)
 
         val result =  restTemplate.postForObject(googleAccessTokenServer, this.getHttpEntity(httpBody), GoogleAccessToken::class.java)?.accessToken ?: ""
 
