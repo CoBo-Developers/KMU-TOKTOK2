@@ -1,7 +1,6 @@
 package cobo.auth.presentation
 
 import cobo.auth.config.response.CoBoResponseDto
-import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.auth.GetLoginRes
 import cobo.auth.data.dto.auth.PostRegisterReq
 import cobo.auth.service.AuthService
@@ -10,7 +9,6 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.Parameters
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*

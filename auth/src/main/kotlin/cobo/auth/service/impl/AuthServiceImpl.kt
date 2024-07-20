@@ -7,7 +7,6 @@ import cobo.auth.config.response.CoBoResponseDto
 import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.auth.GetLoginRes
 import cobo.auth.data.dto.auth.PostRegisterReq
-import cobo.auth.data.entity.Oauth
 import cobo.auth.data.entity.User
 import cobo.auth.data.enums.OauthTypeEnum
 import cobo.auth.data.enums.RegisterStateEnum

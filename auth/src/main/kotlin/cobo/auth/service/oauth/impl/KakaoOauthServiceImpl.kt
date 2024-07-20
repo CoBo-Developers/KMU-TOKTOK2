@@ -6,7 +6,6 @@ import cobo.auth.repository.OauthRepository
 import cobo.auth.service.oauth.OauthService
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.RequestEntity
