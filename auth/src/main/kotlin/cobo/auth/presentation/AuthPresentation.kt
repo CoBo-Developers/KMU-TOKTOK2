@@ -1,8 +1,8 @@
 package cobo.auth.presentation
 
 import cobo.auth.config.response.CoBoResponseDto
-import cobo.auth.data.dto.auth.GetLoginRes
-import cobo.auth.data.dto.auth.PostRegisterReq
+import cobo.auth.data.dto.auth.GetAuthLoginRes
+import cobo.auth.data.dto.auth.PostAuthRegisterReq
 import cobo.auth.service.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -27,7 +27,7 @@ class AuthPresentation(
     )
     fun getKakaoLogin(
         @RequestParam code: String
-    ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
+    ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
         return authService.getKakaoLogin(code)
     }
 
@@ -38,7 +38,7 @@ class AuthPresentation(
     )
     fun getKakaoLocalLogin(
         @RequestParam code: String
-    ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
+    ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
         return authService.getKakaoLocalLogin(code)
     }
 
@@ -49,7 +49,7 @@ class AuthPresentation(
     )
     fun getNaverLogin(
         @RequestParam code: String
-    ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
+    ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
         return authService.getNaverLogin(code)
     }
 
@@ -60,7 +60,7 @@ class AuthPresentation(
     )
     fun getGoogleLogin(
         @RequestParam code: String
-    ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
+    ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
         return authService.getGoogleLogin(code)
     }
 
@@ -71,14 +71,14 @@ class AuthPresentation(
     )
     fun getGoogleLocalLogin(
         @RequestParam code: String
-    ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
+    ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
         return authService.getGoogleLocalLogin(code)
     }
 
     @PostMapping("/register")
     @Operation(summary = "회원가입 API", description = "회원의 상태가 INACTIVE -> ACTIVE, 발급되는 토큰으로 다시 넣어줘야 합니다.")
-    fun postRegister(@Valid @RequestBody postRegisterReq: PostRegisterReq, @Parameter(hidden = true) authentication: Authentication): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
-        return authService.postRegister(postRegisterReq, authentication)
+    fun postRegister(@Valid @RequestBody postAuthRegisterReq: PostAuthRegisterReq, @Parameter(hidden = true) authentication: Authentication): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
+        return authService.postRegister(postAuthRegisterReq, authentication)
     }
 
 }

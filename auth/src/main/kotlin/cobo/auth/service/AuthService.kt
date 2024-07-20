@@ -1,20 +1,20 @@
 package cobo.auth.service
 
 import cobo.auth.config.response.CoBoResponseDto
-import cobo.auth.data.dto.auth.GetLoginRes
-import cobo.auth.data.dto.auth.PostRegisterReq
+import cobo.auth.data.dto.auth.GetAuthLoginRes
+import cobo.auth.data.dto.auth.PostAuthRegisterReq
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 
 interface AuthService {
-    fun getKakaoLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
-    fun getNaverLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
-    fun getGoogleLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
+    fun getKakaoLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
+    fun getNaverLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
+    fun getGoogleLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
     fun postRegister(
-        postRegisterReq: PostRegisterReq,
+        postAuthRegisterReq: PostAuthRegisterReq,
         authentication: Authentication
-    ): ResponseEntity<CoBoResponseDto<GetLoginRes>>
+    ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
 
-    fun getKakaoLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
-    fun getGoogleLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
+    fun getKakaoLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
+    fun getGoogleLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
 }
