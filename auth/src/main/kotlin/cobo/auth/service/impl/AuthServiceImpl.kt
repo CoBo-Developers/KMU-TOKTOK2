@@ -119,6 +119,16 @@ class AuthServiceImpl(
         return coBoResponse.getResponseEntityWithLog()
     }
 
+    override fun getGoogleLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>> {
+        val user = getUserByOauthCode(code, OauthTypeEnum.GOOGLE, false)
+
+        val tokenList = getAccessTokenAndRefreshTokenByUser(user)
+
+        val coBoResponse = CoBoResponse(GetLoginRes(tokenList[0], tokenList[1], user.registerState), CoBoResponseStatus.SUCCESS)
+
+        return coBoResponse.getResponseEntityWithLog()
+    }
+
     private fun getUserByOauthCode(code: String, oauthTypeEnum: OauthTypeEnum, isRemote: Boolean): User {
         val oauth = when(oauthTypeEnum) {
             OauthTypeEnum.KAKAO -> kakaoOauthServiceImpl.getOauth(code, isRemote)

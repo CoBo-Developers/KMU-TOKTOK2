@@ -20,7 +20,7 @@ class KakaoOauthServiceImpl(
     private val clientId: String,
     @Value("\${kakao.auth.redirect_uri}")
     private val redirectUri: String,
-    @Value("\${kakao.auth.local-redirect-uri}")
+    @Value("\${kakao.auth.local_redirect_uri}")
     private val localRedirectUri: String,
     private val oauthRepository: OauthRepository
 ) : OauthService, OauthServiceImpl(oauthRepository) {

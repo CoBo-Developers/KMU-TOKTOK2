@@ -19,7 +19,7 @@ class GoogleOauthServiceImpl(
     private val clientId: String,
     @Value("\${google.auth.redirect_uri}")
     private val redirectUri: String,
-    @Value("\${google.auth.local-redirect_uri}")
+    @Value("\${google.auth.local_redirect_uri}")
     private val localRedirectUri: String,
     @Value("\${google.auth.client_secret}")
     private val clientSecret: String,

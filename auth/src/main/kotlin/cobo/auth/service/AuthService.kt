@@ -16,4 +16,5 @@ interface AuthService {
     ): ResponseEntity<CoBoResponseDto<GetLoginRes>>
 
     fun getKakaoLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
+    fun getGoogleLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
 }
