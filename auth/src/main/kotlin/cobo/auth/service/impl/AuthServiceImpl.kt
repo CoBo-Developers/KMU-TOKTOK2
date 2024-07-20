@@ -80,12 +80,15 @@ class AuthServiceImpl(
 
         val userId = authentication.name.toInt()
 
+        if (userRepository.findById(userId).orElseThrow().registerState == RegisterStateEnum.ACTIVE)
+            throw IllegalAccessException("ALREADY_REGISTERED")
+
+
         val user = userRepository.findByStudentIdWithJDBC(postRegisterReq.studentId)
 
         val tokenList: Array<String>
 
         if(user.isPresent){
-
             oauthRepository.updateUserIdByUserIdWithJDBC(
                 oldUserId = userId,
                 newUserId = user.get().id ?: userId)
