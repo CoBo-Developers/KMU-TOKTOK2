@@ -4,6 +4,7 @@ import cobo.auth.config.response.CoBoResponse
 import cobo.auth.config.response.CoBoResponseDto
 import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.user.GetUserListRes
+import cobo.auth.data.dto.user.UserRes
 import cobo.auth.repository.UserRepository
 import cobo.auth.service.UserService
 import org.springframework.data.domain.PageRequest
@@ -18,7 +19,9 @@ class UserServiceImpl(
         val pageUser = userRepository.findAll(PageRequest.of(page, pageSize))
         return CoBoResponse(
             GetUserListRes(
-                users = pageUser.toList(),
+                users = pageUser.toList().map{
+                    UserRes(it)
+                },
                 totalElements = pageUser.totalElements
             ), CoBoResponseStatus.SUCCESS).getResponseEntityWithLog()
     }

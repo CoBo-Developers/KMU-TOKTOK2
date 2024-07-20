@@ -12,22 +12,14 @@ data class UserRes(
     val registerState: String?
 ){
     constructor(user: User) : this(
-            studentId = user.studentId,
-            role = user.role.name,
-            registerState = user.registerState.name
-        )
+        studentId = user.studentId,
+        role = user.role.name,
+        registerState = user.registerState.name
+    )
 }
 
 data class GetUserListRes(
     val users: List<UserRes>,
     @Schema(description = "전체 유저의 수")
     val totalElements: Long
-){
-    constructor(
-        users: List<User>,
-        totalElements: Long
-    ) : this(
-        users = users.map{UserRes(it)},
-        totalElements = totalElements
-    )
-}
+)
