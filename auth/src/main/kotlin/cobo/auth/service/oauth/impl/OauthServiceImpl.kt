@@ -36,7 +36,6 @@ open class OauthServiceImpl(
             CompletableFuture.supplyAsync{
                 optionalOauth.get()
             }.thenApply {
-                it.accessToken = accessToken
                 oauthRepository.save(it)
             }
             return optionalOauth.get()
@@ -46,8 +45,7 @@ open class OauthServiceImpl(
                 id = null,
                 user = null,
                 oauthId = oauthId,
-                oauthType = oauthTypeEnum,
-                accessToken = accessToken
+                oauthType = oauthTypeEnum
             ))
         }
     }

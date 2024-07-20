@@ -19,6 +19,5 @@ data class Oauth(
     @Column(length = 100)
     var oauthId: String,
     @Enumerated(EnumType.ORDINAL)
-    var oauthType: OauthTypeEnum,
-    var accessToken: String?
+    var oauthType: OauthTypeEnum
 )
