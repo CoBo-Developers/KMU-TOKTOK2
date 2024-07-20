@@ -15,4 +15,6 @@ interface AuthService {
         postRegisterReq: PostRegisterReq,
         authentication: Authentication
     ): ResponseEntity<CoBoResponseDto<GetLoginRes>>
+
+    fun getKakaoLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetLoginRes>>
 }

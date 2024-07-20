@@ -33,6 +33,17 @@ class AuthPresentation(
         return authService.getKakaoLogin(code)
     }
 
+    @GetMapping("/kakao-local-login")
+    @Operation(summary = "카카오 로컬 로그인 API")
+    @Parameters(
+        Parameter(name = "code", description = "카카오 로그인 code")
+    )
+    fun getKakaoLocalLogin(
+        @RequestParam code: String
+    ): ResponseEntity<CoBoResponseDto<GetLoginRes>>{
+        return authService.getKakaoLocalLogin(code)
+    }
+
     @GetMapping("/naver-login")
     @Operation(summary = "네이버 로그인 API")
     @Parameters(

@@ -27,9 +27,9 @@ class NaverOauthServiceImpl(
     private final val naverAccessTokenServer = "https://nid.naver.com/oauth2.0/token"
     private final val naverUserInfoServer = "https://openapi.naver.com/v1/nid/me"
 
-    override fun getOauth(code: String): Oauth {
+    override fun getOauth(code: String, isRemote: Boolean): Oauth {
 
-        val accessToken = getAccessToken(code)
+        val accessToken = getAccessToken(code, isRemote)
 
         val restTemplate = RestTemplate()
 
@@ -46,7 +46,7 @@ class NaverOauthServiceImpl(
             accessToken = accessToken)
     }
 
-    override fun getAccessToken(code: String): String {
+    override fun getAccessToken(code: String, isRemote: Boolean): String {
         val restTemplate = RestTemplate()
 
         val httpHeaders = HttpHeaders()
