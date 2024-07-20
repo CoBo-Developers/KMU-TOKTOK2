@@ -55,24 +55,21 @@ class AuthRegisterTest(
             id = null,
             user = kakaoUser,
             oauthId = "testKakaoUser",
-            oauthType = OauthTypeEnum.KAKAO,
-            accessToken = null
+            oauthType = OauthTypeEnum.KAKAO
         )
 
         private val naverOauth = Oauth(
             id = null,
             user = naverUser,
             oauthId = "testNaverUser",
-            oauthType = OauthTypeEnum.NAVER,
-            accessToken = null
+            oauthType = OauthTypeEnum.NAVER
         )
 
         private val googleOauth = Oauth(
             id = null,
             user = googleUser,
             oauthId = "testGoogleUser",
-            oauthType = OauthTypeEnum.GOOGLE,
-            accessToken = null
+            oauthType = OauthTypeEnum.GOOGLE
         )
         @JvmStatic
         @BeforeAll
