@@ -30,8 +30,6 @@ class AuthRegisterTest(
 
     companion object {
 
-        private val logger: Logger = LoggerFactory.getLogger(AuthRegisterTest::class.java)
-
         private val kakaoUser = User(
             id = null,
             studentId = null,
@@ -235,9 +233,11 @@ class AuthRegisterTest(
 
         assert(postRegisterReq1.statusCode == HttpStatus.OK)
         assert(postRegisterReq2.statusCode == HttpStatus.OK)
+        assert(postRegisterReq3.statusCode == HttpStatus.OK)
 
         assert(jwtTokenProvider.getId(postRegisterReq1.body?.data?.accessToken ?: "").toInt() == kakaoUser.id)
         assert(jwtTokenProvider.getId(postRegisterReq2.body?.data?.accessToken ?: "").toInt() == kakaoUser.id)
+        assert(jwtTokenProvider.getId(postRegisterReq3.body?.data?.accessToken ?: "").toInt() == kakaoUser.id)
     }
 
     fun combineTwoSocial(user1: User, user2: User){
