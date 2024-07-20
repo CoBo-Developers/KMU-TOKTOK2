@@ -6,8 +6,7 @@ import jakarta.persistence.*
 @Entity
 @Table(
     indexes = [
-        Index(name = "idx_type_id", columnList = "oauthType, oauthId"),
-        Index(name = "idx_token", columnList = "accessToken")
+        Index(name = "idx_type_id", columnList = "oauthType, oauthId")
     ]
 )
 data class Oauth(

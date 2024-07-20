@@ -3,7 +3,7 @@ package cobo.auth.data.dto.auth
 import cobo.auth.data.enums.RegisterStateEnum
 import io.swagger.v3.oas.annotations.media.Schema
 
-data class GetLoginRes(
+data class GetAuthLoginRes(
 
     @Schema(description = "크무톡톡 자체 AccessToken")
     val  accessToken: String,

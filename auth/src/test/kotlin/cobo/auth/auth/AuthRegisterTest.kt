@@ -1,7 +1,7 @@
 package cobo.auth.auth
 
 import cobo.auth.config.jwt.JwtTokenProvider
-import cobo.auth.data.dto.auth.PostRegisterReq
+import cobo.auth.data.dto.auth.PostAuthRegisterReq
 import cobo.auth.data.entity.Oauth
 import cobo.auth.data.entity.User
 import cobo.auth.data.enums.OauthTypeEnum
@@ -11,8 +11,6 @@ import cobo.auth.repository.OauthRepository
 import cobo.auth.repository.UserRepository
 import cobo.auth.service.AuthService
 import org.junit.jupiter.api.*
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
@@ -152,12 +150,12 @@ class AuthRegisterTest(
                     SimpleGrantedAuthority("USER")))
 
             //when
-            val postRegisterReq = authService.postRegister(PostRegisterReq(it.id.toString(), "test"), securityContextHolder.authentication)
+            val postAuthRegisterReq = authService.postRegister(PostAuthRegisterReq(it.id.toString(), "test"), securityContextHolder.authentication)
 
             //then
             val user = userRepository.findById(it.id ?: throw NullPointerException("User Not Found")).orElseThrow ()
             assert(user.registerState == RegisterStateEnum.ACTIVE)
-            assert(postRegisterReq.statusCode == HttpStatus.OK)
+            assert(postAuthRegisterReq.statusCode == HttpStatus.OK)
         }
     }
 
@@ -214,9 +212,9 @@ class AuthRegisterTest(
 
         val sameStudentId = "test_studentId"
 
-        val postRegisterReq1 = authService.postRegister(PostRegisterReq(sameStudentId, "test"), securityContextHolder1.authentication)
-        val postRegisterReq2 = authService.postRegister(PostRegisterReq(sameStudentId, "test"), securityContextHolder2.authentication)
-        val postRegisterReq3 = authService.postRegister(PostRegisterReq(sameStudentId, "test"), securityContextHolder3.authentication)
+        val postAuthRegisterReq1 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "test"), securityContextHolder1.authentication)
+        val postAuthRegisterReq2 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "test"), securityContextHolder2.authentication)
+        val postAuthRegisterReq3 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "test"), securityContextHolder3.authentication)
 
         //then
         val findUser1 = userRepository.findById(kakaoUser.id ?: throw NullPointerException("User Not Found")).orElseThrow()
@@ -228,13 +226,13 @@ class AuthRegisterTest(
         assert(findUser1.registerState == RegisterStateEnum.ACTIVE)
         assert(findUser1.studentId == sameStudentId)
 
-        assert(postRegisterReq1.statusCode == HttpStatus.OK)
-        assert(postRegisterReq2.statusCode == HttpStatus.OK)
-        assert(postRegisterReq3.statusCode == HttpStatus.OK)
+        assert(postAuthRegisterReq1.statusCode == HttpStatus.OK)
+        assert(postAuthRegisterReq2.statusCode == HttpStatus.OK)
+        assert(postAuthRegisterReq3.statusCode == HttpStatus.OK)
 
-        assert(jwtTokenProvider.getId(postRegisterReq1.body?.data?.accessToken ?: "").toInt() == kakaoUser.id)
-        assert(jwtTokenProvider.getId(postRegisterReq2.body?.data?.accessToken ?: "").toInt() == kakaoUser.id)
-        assert(jwtTokenProvider.getId(postRegisterReq3.body?.data?.accessToken ?: "").toInt() == kakaoUser.id)
+        assert(jwtTokenProvider.getId(postAuthRegisterReq1.body?.data?.accessToken ?: "").toInt() == kakaoUser.id)
+        assert(jwtTokenProvider.getId(postAuthRegisterReq2.body?.data?.accessToken ?: "").toInt() == kakaoUser.id)
+        assert(jwtTokenProvider.getId(postAuthRegisterReq3.body?.data?.accessToken ?: "").toInt() == kakaoUser.id)
     }
 
     fun combineTwoSocial(user1: User, user2: User){
@@ -253,8 +251,8 @@ class AuthRegisterTest(
 
 
         //when
-        val postRegisterReq1 = authService.postRegister(PostRegisterReq(sameStudentId, "test"), securityContextHolder1.authentication)
-        val postRegisterReq2 = authService.postRegister(PostRegisterReq(sameStudentId, "test"), securityContextHolder2.authentication)
+        val postAuthRegisterReq1 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "test"), securityContextHolder1.authentication)
+        val postAuthRegisterReq2 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "test"), securityContextHolder2.authentication)
 
         //then
         val findUser1 = userRepository.findById(user1.id ?: throw NullPointerException("User Not Found")).orElseThrow()
@@ -264,11 +262,11 @@ class AuthRegisterTest(
         assert(findUser1.registerState == RegisterStateEnum.ACTIVE)
         assert(findUser1.studentId == sameStudentId)
 
-        assert(postRegisterReq1.statusCode == HttpStatus.OK)
-        assert(postRegisterReq2.statusCode == HttpStatus.OK)
+        assert(postAuthRegisterReq1.statusCode == HttpStatus.OK)
+        assert(postAuthRegisterReq2.statusCode == HttpStatus.OK)
 
-        assert(jwtTokenProvider.getId(postRegisterReq1.body?.data?.accessToken ?: "").toInt() == user1.id)
-        assert(jwtTokenProvider.getId(postRegisterReq2.body?.data?.accessToken ?: "").toInt() == user1.id)
+        assert(jwtTokenProvider.getId(postAuthRegisterReq1.body?.data?.accessToken ?: "").toInt() == user1.id)
+        assert(jwtTokenProvider.getId(postAuthRegisterReq2.body?.data?.accessToken ?: "").toInt() == user1.id)
     }
 
     @Test
