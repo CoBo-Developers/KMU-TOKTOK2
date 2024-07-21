@@ -7,6 +7,7 @@ import cobo.auth.service.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.Parameters
+import io.swagger.v3.oas.annotations.headers.Header
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -73,6 +74,12 @@ class AuthPresentation(
         @RequestParam code: String
     ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
         return authService.getGoogleLocalLogin(code)
+    }
+
+    @PatchMapping("/login")
+    @Operation(summary = "AccessToken 재발급 API")
+    fun patchLogin(@RequestHeader(name = "Authorization") authorization: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
+        return authService.patchLogin(authorization)
     }
 
     @PostMapping("/register")

@@ -109,6 +109,10 @@ class AuthServiceImpl(
         return coBoResponse.getResponseEntityWithLog()
     }
 
+    override fun patchLogin(authorization: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
+        TODO("Not yet implemented")
+    }
+
     override fun getKakaoLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
         val user = getUserByOauthCode(code, OauthTypeEnum.KAKAO, false)
 
