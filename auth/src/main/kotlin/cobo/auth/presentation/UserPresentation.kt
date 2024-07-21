@@ -1,6 +1,7 @@
 package cobo.auth.presentation
 
 import cobo.auth.config.response.CoBoResponseDto
+import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.user.GetUserListRes
 import cobo.auth.service.UserService
 import io.swagger.v3.oas.annotations.Operation
@@ -9,10 +10,7 @@ import io.swagger.v3.oas.annotations.Parameters
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/user")
@@ -30,5 +28,11 @@ class UserPresentation(
         @RequestParam page: Int,
         @RequestParam pageSize: Int): ResponseEntity<CoBoResponseDto<GetUserListRes>> {
         return userService.getList(page, pageSize)
+    }
+
+    @PatchMapping
+    @Operation(summary = "유저 정보 수정")
+    fun patch(): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        return userService.patch()
     }
 }

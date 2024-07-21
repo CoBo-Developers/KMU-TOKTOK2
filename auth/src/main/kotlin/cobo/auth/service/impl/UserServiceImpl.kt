@@ -25,4 +25,8 @@ class UserServiceImpl(
                 totalElements = pageUser.totalElements
             ), CoBoResponseStatus.SUCCESS).getResponseEntityWithLog()
     }
+
+    override fun patch(): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        TODO("Not yet implemented")
+    }
 }
