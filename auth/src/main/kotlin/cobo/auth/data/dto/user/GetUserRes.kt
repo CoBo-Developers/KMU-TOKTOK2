@@ -3,7 +3,7 @@ package cobo.auth.data.dto.user
 import cobo.auth.data.entity.User
 import io.swagger.v3.oas.annotations.media.Schema
 
-data class UserRes(
+data class GetUserRes(
     @Schema(description = "학번")
     val studentId: String?,
     @Schema(description = "권한")
@@ -19,7 +19,7 @@ data class UserRes(
 }
 
 data class GetUserListRes(
-    val users: List<UserRes>,
+    val users: List<GetUserRes>,
     @Schema(description = "전체 유저의 수")
     val totalElements: Long
 )

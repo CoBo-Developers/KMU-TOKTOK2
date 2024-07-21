@@ -4,6 +4,7 @@ import cobo.auth.config.response.CoBoResponseDto
 import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.user.GetUserListRes
 import cobo.auth.data.dto.user.PutUserReq
+import cobo.auth.data.dto.user.GetUserRes
 import cobo.auth.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -34,5 +35,12 @@ class UserPresentation(
     @Operation(summary = "유저 정보 수정")
     fun patch(@RequestBody putUserReq: PutUserReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         return userService.put(putUserReq)
+    }
+
+    @GetMapping
+    @Operation(summary = "유저 정보 조회")
+
+    fun get(@RequestParam studentId: String): ResponseEntity<CoBoResponseDto<GetUserRes>>{
+        return userService.get(studentId)
     }
 }
