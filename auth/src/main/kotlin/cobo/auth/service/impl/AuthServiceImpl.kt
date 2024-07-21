@@ -79,7 +79,7 @@ class AuthServiceImpl(
 
         val userId = authentication.name.toInt()
 
-        if (userRepository.findById(userId).orElseThrow().registerState == RegisterStateEnum.ACTIVE)
+        if (userRepository.findById(userId).orElseThrow{NullPointerException()}.registerState == RegisterStateEnum.ACTIVE)
             throw IllegalAccessException("ALREADY_REGISTERED")
 
 
