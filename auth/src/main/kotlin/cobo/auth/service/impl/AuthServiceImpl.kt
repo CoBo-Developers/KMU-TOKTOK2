@@ -109,6 +109,17 @@ class AuthServiceImpl(
         return coBoResponse.getResponseEntityWithLog()
     }
 
+    override fun patchLogin(authorization: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
+        val userId = jwtTokenProvider.getId(authorization).toInt()
+
+        return CoBoResponse(
+            GetAuthLoginRes(
+                accessToken = jwtTokenProvider.getAccessToken(userId),
+                refreshToken = authorization,
+                userRepository.findById(userId).orElseThrow{NullPointerException()}.registerState),
+            CoBoResponseStatus.SUCCESS).getResponseEntityWithLog()
+    }
+
     override fun getKakaoLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
         val user = getUserByOauthCode(code, OauthTypeEnum.KAKAO, false)
 
