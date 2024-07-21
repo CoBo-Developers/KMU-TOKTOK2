@@ -6,6 +6,8 @@ enum class CoBoResponseStatus(
 ) {
 
     SUCCESS(2000, "OK"),
+    NO_DATA_CHANGES(2001, "SUCCESS, BUT NO DATA CHANGES"),
 
-    BAD_REQUEST(4000, "Bad Request"),
+
+    BAD_REQUEST(4000, "BAD REQUEST"),
 }

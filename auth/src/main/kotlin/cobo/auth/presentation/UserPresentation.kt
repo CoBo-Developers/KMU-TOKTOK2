@@ -3,7 +3,7 @@ package cobo.auth.presentation
 import cobo.auth.config.response.CoBoResponseDto
 import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.user.GetUserListRes
-import cobo.auth.data.dto.user.PatchUserReq
+import cobo.auth.data.dto.user.PutUserReq
 import cobo.auth.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -30,9 +30,9 @@ class UserPresentation(
         return userService.getList(page, pageSize)
     }
 
-    @PatchMapping
+    @PutMapping
     @Operation(summary = "유저 정보 수정")
-    fun patch(@RequestBody patchUserReq: PatchUserReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
-        return userService.patch(patchUserReq)
+    fun patch(@RequestBody putUserReq: PutUserReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        return userService.put(putUserReq)
     }
 }
