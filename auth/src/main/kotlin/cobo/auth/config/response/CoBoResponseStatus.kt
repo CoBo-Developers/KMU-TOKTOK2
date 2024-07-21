@@ -10,4 +10,5 @@ enum class CoBoResponseStatus(
 
 
     BAD_REQUEST(4000, "BAD REQUEST"),
+    NOT_FOUND_USER(4041, "USER NOT FOUND"),
 }
