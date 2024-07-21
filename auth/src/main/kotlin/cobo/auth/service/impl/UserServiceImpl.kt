@@ -5,7 +5,7 @@ import cobo.auth.config.response.CoBoResponseDto
 import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.user.GetUserListRes
 import cobo.auth.data.dto.user.PutUserReq
-import cobo.auth.data.dto.user.UserRes
+import cobo.auth.data.dto.user.GetUserRes
 import cobo.auth.repository.UserRepository
 import cobo.auth.service.UserService
 import org.springframework.data.domain.PageRequest
@@ -22,10 +22,19 @@ class UserServiceImpl(
         return CoBoResponse(
             GetUserListRes(
                 users = pageUser.toList().map{
-                    UserRes(it)
+                    GetUserRes(it)
                 },
                 totalElements = pageUser.totalElements
             ), CoBoResponseStatus.SUCCESS).getResponseEntityWithLog()
+    }
+
+    override fun get(studentId: String): ResponseEntity<CoBoResponseDto<GetUserRes>> {
+        val user = userRepository.findByStudentId(studentId).orElseThrow {NullPointerException()}
+        return CoBoResponse(GetUserRes(
+            studentId = user.studentId,
+            role = user.role.name,
+            registerState = user.registerState.name,
+        ), CoBoResponseStatus.SUCCESS).getResponseEntityWithLog()
     }
 
     override fun put(putUserReq: PutUserReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
