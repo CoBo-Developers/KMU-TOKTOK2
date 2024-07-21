@@ -32,8 +32,8 @@ class UserServiceImpl(
         return CoBoResponse<CoBoResponseStatus>(
             if (userRepository.updateUserByStudentIdWithJDBC(
                     studentId = putUserReq.studentId,
-                    role = putUserReq.roleEnum,
-                    registerState = putUserReq.registerStateEnum) > 0)
+                    role = putUserReq.role,
+                    registerState = putUserReq.registerState) > 0)
                 CoBoResponseStatus.SUCCESS
             else
                 CoBoResponseStatus.NO_DATA_CHANGES).getResponseEntityWithLog()

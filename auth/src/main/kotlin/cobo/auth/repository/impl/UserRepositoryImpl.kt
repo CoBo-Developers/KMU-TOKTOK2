@@ -32,10 +32,10 @@ class UserRepositoryImpl(
     }
 
     @Transactional
-    override fun updateUserByStudentIdWithJDBC(studentId: String, role: RoleEnum, registerState: RegisterStateEnum): Int {
+    override fun updateUserByStudentIdWithJDBC(studentId: String, role: Short, registerState: Short): Int {
         return jdbcTemplate.update("UPDATE user " +
                 "SET role = ?, register_state = ? " +
-                "WHERE student_id = ?", role.value, registerState.value, studentId)
+                "WHERE student_id = ?", role, registerState, studentId)
     }
 
     private fun userRowMapper(resultSet: ResultSet): User {
