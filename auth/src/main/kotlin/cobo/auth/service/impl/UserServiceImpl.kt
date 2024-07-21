@@ -4,6 +4,7 @@ import cobo.auth.config.response.CoBoResponse
 import cobo.auth.config.response.CoBoResponseDto
 import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.data.dto.user.GetUserListRes
+import cobo.auth.data.dto.user.PatchUserReq
 import cobo.auth.data.dto.user.UserRes
 import cobo.auth.repository.UserRepository
 import cobo.auth.service.UserService
@@ -26,7 +27,7 @@ class UserServiceImpl(
             ), CoBoResponseStatus.SUCCESS).getResponseEntityWithLog()
     }
 
-    override fun patch(): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+    override fun patch(patchUserReq: PatchUserReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         TODO("Not yet implemented")
     }
 }
