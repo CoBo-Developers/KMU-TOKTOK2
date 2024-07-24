@@ -78,7 +78,7 @@ class AuthPresentation(
 
     @PatchMapping("/login")
     @Operation(summary = "AccessToken 재발급 API")
-    fun patchLogin(@RequestHeader(name = HttpHeaders.AUTHORIZATION) authorization: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
+    fun patchLogin(@Parameter(hidden = true) @RequestHeader(name = HttpHeaders.AUTHORIZATION) authorization: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
         return authService.patchLogin(authorization)
     }
 
