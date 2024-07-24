@@ -22,4 +22,9 @@ class AuthExceptionHandler {
     fun nullPointerExceptionHandler(): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.NOT_FOUND_USER).getResponseEntityWithLog()
     }
+
+    @ExceptionHandler(IndexOutOfBoundsException::class)
+    fun indexOutOfBoundsExceptionHandler(): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.NOT_AUTHORIZATION).getResponseEntityWithLog()
+    }
 }
