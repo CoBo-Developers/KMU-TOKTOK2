@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.Parameters
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
+import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
@@ -77,7 +78,7 @@ class AuthPresentation(
 
     @PatchMapping("/login")
     @Operation(summary = "AccessToken 재발급 API")
-    fun patchLogin(@RequestHeader(name = "Authorization") authorization: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
+    fun patchLogin(@Parameter(hidden = true) @RequestHeader(name = HttpHeaders.AUTHORIZATION) authorization: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
         return authService.patchLogin(authorization)
     }
 
