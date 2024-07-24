@@ -118,7 +118,7 @@ class AuthServiceImpl(
         return CoBoResponse(
             GetAuthLoginRes(
                 accessToken = jwtTokenProvider.getAccessToken(userId),
-                refreshToken = authorization,
+                refreshToken = token,
                 userRepository.findById(userId).orElseThrow{NullPointerException()}.registerState),
             CoBoResponseStatus.SUCCESS).getResponseEntityWithLog()
     }
