@@ -43,8 +43,7 @@ class KakaoOauthServiceImpl(
 
         return this.getOauthFromOauthIdAndOauthType(
             oauthId = kakaoUserId,
-            oauthTypeEnum = OauthTypeEnum.KAKAO,
-            accessToken = accessToken)
+            oauthTypeEnum = OauthTypeEnum.KAKAO)
     }
 
     override fun getAccessToken(code: String, isRemote: Boolean): String {

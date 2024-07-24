@@ -83,7 +83,7 @@ class AuthPresentation(
     @ApiResponses(
         ApiResponse(responseCode = "400", description = "TOKEN IS EMPTY")
     )
-    fun patchLogin(@Parameter(hidden = true) @RequestHeader(name = HttpHeaders.AUTHORIZATION) authorization: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
+    fun patchLogin(@Parameter(hidden = true, required = false) @RequestHeader(name = HttpHeaders.AUTHORIZATION) authorization: String?): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
         return authService.patchLogin(authorization)
     }
 

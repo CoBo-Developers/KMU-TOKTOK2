@@ -19,7 +19,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 
 @SpringBootTest
-class AuthRegisterTest(
+class AuthPostRegisterTest(
     @Autowired private val jwtTokenProvider: JwtTokenProvider,
     @Autowired private val authService: AuthService,
     @Autowired private val oauthRepository: OauthRepository,
