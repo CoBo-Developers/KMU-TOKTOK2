@@ -7,6 +7,8 @@ import cobo.auth.service.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.Parameters
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.HttpHeaders
@@ -78,7 +80,10 @@ class AuthPresentation(
 
     @PatchMapping("/login")
     @Operation(summary = "AccessToken 재발급 API")
-    fun patchLogin(@Parameter(hidden = true) @RequestHeader(name = HttpHeaders.AUTHORIZATION) authorization: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
+    @ApiResponses(
+        ApiResponse(responseCode = "400", description = "TOKEN IS EMPTY")
+    )
+    fun patchLogin(@Parameter(hidden = true, required = false) @RequestHeader(name = HttpHeaders.AUTHORIZATION) authorization: String?): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
         return authService.patchLogin(authorization)
     }
 

@@ -29,7 +29,7 @@ open class OauthServiceImpl(
         return httpHeaders
     }
 
-    fun getOauthFromOauthIdAndOauthType(oauthId: String, oauthTypeEnum: OauthTypeEnum, accessToken: String): Oauth {
+    fun getOauthFromOauthIdAndOauthType(oauthId: String, oauthTypeEnum: OauthTypeEnum): Oauth {
         val optionalOauth = oauthRepository.findByOauthIdAndOauthType(oauthId, oauthTypeEnum)
 
         if (optionalOauth.isPresent) {

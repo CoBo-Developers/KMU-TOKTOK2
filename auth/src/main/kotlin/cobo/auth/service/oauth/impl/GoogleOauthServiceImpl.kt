@@ -44,8 +44,7 @@ class GoogleOauthServiceImpl(
 
         return this.getOauthFromOauthIdAndOauthType(
             oauthId = googleUserId,
-            oauthTypeEnum = OauthTypeEnum.GOOGLE,
-            accessToken = accessToken)
+            oauthTypeEnum = OauthTypeEnum.GOOGLE)
     }
 
     override fun getAccessToken(code: String, isRemote: Boolean): String {

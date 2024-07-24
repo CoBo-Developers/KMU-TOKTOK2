@@ -41,8 +41,7 @@ class NaverOauthServiceImpl(
 
         return this.getOauthFromOauthIdAndOauthType(
             oauthId = naverUserId,
-            oauthTypeEnum = OauthTypeEnum.NAVER,
-            accessToken = accessToken)
+            oauthTypeEnum = OauthTypeEnum.NAVER)
     }
 
     override fun getAccessToken(code: String, isRemote: Boolean): String {
