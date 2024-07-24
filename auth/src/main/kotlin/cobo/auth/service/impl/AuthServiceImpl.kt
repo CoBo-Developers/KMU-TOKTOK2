@@ -110,7 +110,10 @@ class AuthServiceImpl(
     }
 
     override fun patchLogin(authorization: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
-        val userId = jwtTokenProvider.getId(authorization).toInt()
+
+        val token = authorization.split(" ")[1]
+
+        val userId = jwtTokenProvider.getId(token).toInt()
 
         return CoBoResponse(
             GetAuthLoginRes(
