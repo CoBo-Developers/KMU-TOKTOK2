@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.security.core.context.SecurityContextHolder
 import java.io.IOException
 
-@WebFilter(urlPatterns = ["/api/auth/**"])
+@WebFilter(urlPatterns = ["/api/auth/**", "/api/user/**"])
 class LogFilter : Filter {
 
     companion object {
