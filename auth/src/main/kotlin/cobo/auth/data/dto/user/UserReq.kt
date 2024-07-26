@@ -15,5 +15,8 @@ data class PutUserReq(
             "DEVELOPER(0),\n" +
             "PROFESSOR(1),\n" +
             "STUDENT(2)")
-    val role: Short
+    val role: Short,
+
+    @Schema(description = "변경하고 싶은 학생의 학번")
+    val newStudentId: String
 )
