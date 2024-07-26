@@ -12,4 +12,6 @@ interface UserRepository: JpaRepository<User, Int>, UserRepositoryCustom {
     fun findByStudentIdNotNullOrderByStudentIdAsc(pageable: Pageable): Page<User>
 
     fun findByStudentId(studentId: String): Optional<User>
+
+    fun findByStudentIdContaining(studentId: String, pageable: Pageable): Page<User>
 }

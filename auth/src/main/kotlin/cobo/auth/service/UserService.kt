@@ -10,5 +10,5 @@ import org.springframework.http.ResponseEntity
 interface UserService {
     fun getList(page: Int, pageSize: Int): ResponseEntity<CoBoResponseDto<GetUserListRes>>
     fun put(putUserReq: PutUserReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>
-    fun get(studentId: String): ResponseEntity<CoBoResponseDto<GetUserRes>>
+    fun getSearch(studentId: String, pageSize: Int, page: Int): ResponseEntity<CoBoResponseDto<GetUserListRes>>
 }
