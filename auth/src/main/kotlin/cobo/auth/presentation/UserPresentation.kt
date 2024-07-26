@@ -48,14 +48,14 @@ class UserPresentation(
         return userService.put(putUserReq)
     }
 
-    @GetMapping
+    @GetMapping("/search")
     @Operation(summary = "유저 정보 조회")
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "조회 성공"),
         ApiResponse(responseCode = "404", description = "해당하는 유저가 존재하지 않음",
             content = [Content(schema = Schema(implementation = CoBoResponseDto::class))])
     )
-    fun get(@RequestParam studentId: String): ResponseEntity<CoBoResponseDto<GetUserRes>>{
-        return userService.get(studentId)
+    fun getSearch(@RequestParam studentId: String, @RequestParam pageSize: Int, @RequestParam page: Int): ResponseEntity<CoBoResponseDto<GetUserListRes>>{
+        return userService.getSearch(studentId, pageSize, page)
     }
 }
