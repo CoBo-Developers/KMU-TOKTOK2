@@ -1,9 +1,7 @@
 package cobo.auth.repository.custom
 
-import cobo.auth.data.dto.user.PutUserReq
 import cobo.auth.data.entity.User
 import cobo.auth.data.enums.RegisterStateEnum
-import cobo.auth.data.enums.RoleEnum
 import java.util.*
 
 interface UserRepositoryCustom {

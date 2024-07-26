@@ -1,7 +1,5 @@
 package cobo.auth.data.dto.user
 
-import cobo.auth.data.enums.RegisterStateEnum
-import cobo.auth.data.enums.RoleEnum
 import io.swagger.v3.oas.annotations.media.Schema
 
 data class PutUserReq(
