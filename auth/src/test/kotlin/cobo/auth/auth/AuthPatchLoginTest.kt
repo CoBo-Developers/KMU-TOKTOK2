@@ -48,7 +48,7 @@ class AuthPatchLoginTest(
     @Test
     fun getTokenWithValidUser(){
         //given
-        val refreshToken = jwtTokenProvider.getRefreshToken(user.id ?: 0)
+        val refreshToken = jwtTokenProvider.getRefreshToken(user.id ?: 0, null)
 
         //when
         val patchLoginRes = authService.patchLogin("Bearer $refreshToken")
