@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class JwtTokenFilter(
+class JwtTokenProvider(
     @Value("\${jwt.secret}")
     private val secret: String
 ) {
@@ -15,5 +15,12 @@ class JwtTokenFilter(
             .setSigningKey(secret)
             .parseClaimsJws(token)
             .body.get("student_id", String::class.java)
+    }
+
+    fun isAccessToken(token: String): Boolean{
+        return Jwts.parser()
+            .setSigningKey(secret)
+            .parseClaimsJws(token)
+            .header["type"].toString() == "access_token"
     }
 }
