@@ -2,6 +2,8 @@ package cobo.chat.data.entity
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.DynamicInsert
+import org.springframework.data.annotation.CreatedDate
 import java.time.LocalDateTime
 
 @Entity
@@ -14,7 +16,7 @@ data class Chat(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    val id: Int?,
 
     @ManyToOne
     val chatRoom: ChatRoom,
@@ -24,6 +26,16 @@ data class Chat(
 
     val isQuestion: Boolean,
 
-    @CreationTimestamp
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     val createdAt: LocalDateTime?
-)
+){
+    constructor(
+        chatRoom: ChatRoom,
+        comment: String,
+        isQuestion: Boolean) : this(
+        id = null,
+        chatRoom = chatRoom,
+        comment = comment,
+        isQuestion = isQuestion,
+        createdAt = null)
+}

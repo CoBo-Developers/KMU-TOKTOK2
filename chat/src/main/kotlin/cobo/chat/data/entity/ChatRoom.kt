@@ -6,8 +6,8 @@ import jakarta.persistence.*
 @Entity
 data class ChatRoom(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    @Column(length = 20, unique = true, nullable = false)
+    val id: String,
 
     @Enumerated(EnumType.ORDINAL)
     val chatStateEnum: ChatStateEnum
