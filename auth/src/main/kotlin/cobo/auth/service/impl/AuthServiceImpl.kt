@@ -100,8 +100,7 @@ class AuthServiceImpl(
                 studentId = postAuthRegisterReq.studentId,
                 registerStateEnum = RegisterStateEnum.ACTIVE
             )
-
-            tokenList = getAccessTokenAndRefreshTokenByUser(User(userId))
+            tokenList = getAccessTokenAndRefreshTokenByUser(User(userId, postAuthRegisterReq.studentId))
         }
 
         val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], RegisterStateEnum.ACTIVE), CoBoResponseStatus.SUCCESS)
