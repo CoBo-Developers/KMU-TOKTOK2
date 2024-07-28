@@ -8,6 +8,7 @@ import cobo.chat.data.dto.prof.ProfGetListRes
 import cobo.chat.data.dto.prof.ProfGetRes
 import cobo.chat.data.dto.prof.ProfPostReq
 import cobo.chat.data.enum.ChatStateEnum
+import cobo.chat.service.ChatService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.Parameters
@@ -20,7 +21,9 @@ import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/api/prof")
-class ProfPresentation {
+class ProfPresentation(
+    private val chatService: ChatService
+) {
 
     @GetMapping
     @Operation(summary = "학생 질문 조회")
