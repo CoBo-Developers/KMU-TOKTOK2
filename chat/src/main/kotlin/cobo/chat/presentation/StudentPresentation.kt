@@ -6,6 +6,7 @@ import cobo.chat.config.response.CoBoResponseStatus
 import cobo.chat.data.dto.student.StudentGetRes
 import cobo.chat.data.dto.student.StudentPostReq
 import cobo.chat.data.enum.ChatStateEnum
+import cobo.chat.service.ChatService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -19,7 +20,7 @@ import java.time.LocalDateTime
 @RestController
 @RequestMapping("/api/student")
 class StudentPresentation(
-
+    private val chatService: ChatService
 ){
 
     @PostMapping
@@ -31,7 +32,7 @@ class StudentPresentation(
         @RequestBody studentPostReq: StudentPostReq,
         @Parameter(hidden = true) authentication: Authentication
     ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
-        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+        return chatService.studentPost(studentPostReq, authentication)
     }
 
     @GetMapping
