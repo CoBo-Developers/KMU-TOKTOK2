@@ -17,8 +17,10 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.test.annotation.DirtiesContext
 
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class AuthPostRegisterTest(
     @Autowired private val jwtTokenProvider: JwtTokenProvider,
     @Autowired private val authService: AuthService,
@@ -26,116 +28,62 @@ class AuthPostRegisterTest(
     @Autowired private val userRepository: UserRepository
 ) {
 
-    companion object {
+    private val kakaoUser = User(
+        id = null,
+        studentId = null,
+        role = RoleEnum.STUDENT,
+        registerState = RegisterStateEnum.INACTIVE
+    )
 
-        private val kakaoUser = User(
-            id = null,
-            studentId = null,
-            role = RoleEnum.STUDENT,
-            registerState = RegisterStateEnum.INACTIVE
-        )
+    private val naverUser = User(
+        id = null,
+        studentId = null,
+        role = RoleEnum.STUDENT,
+        registerState = RegisterStateEnum.INACTIVE
+    )
 
-        private val naverUser = User(
-            id = null,
-            studentId = null,
-            role = RoleEnum.STUDENT,
-            registerState = RegisterStateEnum.INACTIVE
-        )
+    private val googleUser = User(
+        id = null,
+        studentId = null,
+        role = RoleEnum.STUDENT,
+        registerState = RegisterStateEnum.INACTIVE
+    )
 
-        private val googleUser = User(
-            id = null,
-            studentId = null,
-            role = RoleEnum.STUDENT,
-            registerState = RegisterStateEnum.INACTIVE
-        )
+    private val kakaoOauth = Oauth(
+        id = null,
+        user = kakaoUser,
+        oauthId = "testKakaoUser",
+        oauthType = OauthTypeEnum.KAKAO
+    )
 
-        private val kakaoOauth = Oauth(
-            id = null,
-            user = kakaoUser,
-            oauthId = "testKakaoUser",
-            oauthType = OauthTypeEnum.KAKAO
-        )
+    private val naverOauth = Oauth(
+        id = null,
+        user = naverUser,
+        oauthId = "testNaverUser",
+        oauthType = OauthTypeEnum.NAVER
+    )
 
-        private val naverOauth = Oauth(
-            id = null,
-            user = naverUser,
-            oauthId = "testNaverUser",
-            oauthType = OauthTypeEnum.NAVER
-        )
+    private val googleOauth = Oauth(
+        id = null,
+        user = googleUser,
+        oauthId = "testGoogleUser",
+        oauthType = OauthTypeEnum.GOOGLE
+    )
 
-        private val googleOauth = Oauth(
-            id = null,
-            user = googleUser,
-            oauthId = "testGoogleUser",
-            oauthType = OauthTypeEnum.GOOGLE
-        )
-        @JvmStatic
-        @BeforeAll
-        internal fun beforeAll(
-            @Autowired userRepository: UserRepository,
-            @Autowired oauthRepository: OauthRepository
-        ) {
-            userRepository.saveAll(listOf(kakaoUser, naverUser, googleUser))
-            oauthRepository.saveAll(listOf(kakaoOauth, naverOauth, googleOauth))
-        }
-
-        @JvmStatic
-        @AfterAll
-        internal fun afterAll(
-            @Autowired userRepository: UserRepository,
-            @Autowired oauthRepository: OauthRepository
-        ) {
-            oauthRepository.deleteAll(listOf(kakaoOauth, naverOauth, googleOauth))
-            userRepository.deleteAll(listOf(kakaoUser, naverUser, googleUser))
-        }
+    @BeforeEach
+    fun init(){
+        userRepository.saveAll(listOf(kakaoUser, googleUser, naverUser))
+        oauthRepository.saveAll(listOf(kakaoOauth, googleOauth, naverOauth))
     }
+
 
     @AfterEach
     fun afterEach() {
-        listOf(kakaoUser, naverUser, googleUser).forEach { user ->
-            user.studentId = null
-            user.registerState = RegisterStateEnum.INACTIVE
-            if (!(userRepository.existsById(user.id!!))){
-                user.id = null
-                userRepository.save(user)
-                if(user.id != kakaoUser.id && user.id != naverUser.id)
-                    googleUser.id = user.id
-                else if(user.id != naverUser.id && user.id != googleUser.id)
-                    kakaoUser.id = user.id
-                else
-                    naverUser.id = user.id
-            }
-            else{
-                userRepository.save(user)
-            }
-        }
-
-        listOf(kakaoOauth, naverOauth, googleOauth).forEach { oauth ->
-            oauth.user = when (oauth.oauthType) {
-                OauthTypeEnum.KAKAO -> kakaoUser
-                OauthTypeEnum.NAVER -> naverUser
-                OauthTypeEnum.GOOGLE -> googleUser
-            }
-            if(oauthRepository.findById(oauth.id ?: 0).isEmpty) {
-                oauth.id = null
-                when (oauth.oauthType) {
-                    OauthTypeEnum.KAKAO -> {
-                        kakaoOauth.id = oauth.id
-                        oauth.user = kakaoUser
-                    }
-                    OauthTypeEnum.NAVER -> {
-                        naverOauth.id = oauth.id
-                        oauth.user = naverUser
-                    }
-                    OauthTypeEnum.GOOGLE -> {
-                        googleOauth.id = oauth.id
-                        oauth.user = googleUser
-                    }
-                }
-            }
-            println(oauth)
-            oauthRepository.save(oauth)
-        }
+        kakaoOauth.user = null
+        googleOauth.user = null
+        naverOauth.user = null
+        oauthRepository.deleteAll(listOf(kakaoOauth, googleOauth, naverOauth))
+        userRepository.deleteAll(listOf(kakaoUser, googleUser, naverUser))
     }
 
 
@@ -267,6 +215,9 @@ class AuthPostRegisterTest(
 
         assert(jwtTokenProvider.getId(postAuthRegisterReq1.body?.data?.accessToken ?: "").toInt() == user1.id)
         assert(jwtTokenProvider.getId(postAuthRegisterReq2.body?.data?.accessToken ?: "").toInt() == user1.id)
+
+        assert(jwtTokenProvider.getStudentId(postAuthRegisterReq1.body?.data?.accessToken!!) == sameStudentId)
+        assert(jwtTokenProvider.getStudentId(postAuthRegisterReq2.body?.data?.accessToken!!) == sameStudentId)
     }
 
     @Test
