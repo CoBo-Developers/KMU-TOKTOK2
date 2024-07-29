@@ -3,7 +3,6 @@ package cobo.chat.presentation
 import cobo.chat.config.response.CoBoResponse
 import cobo.chat.config.response.CoBoResponseDto
 import cobo.chat.config.response.CoBoResponseStatus
-import cobo.chat.data.dto.prof.ProfGetListElementRes
 import cobo.chat.data.dto.prof.ProfGetListRes
 import cobo.chat.data.dto.prof.ProfGetRes
 import cobo.chat.data.dto.prof.ProfPostReq
@@ -53,24 +52,14 @@ class ProfPresentation(
         ApiResponse(responseCode = "200", description = "조회 성공")
     )
     fun getList(@RequestParam page: Int, @RequestParam pageSize: Int): ResponseEntity<CoBoResponseDto<ProfGetListRes>> {
-        return CoBoResponse(
-            ProfGetListRes(
-                totalElement = 1L,
-                chatList = listOf(
-                    ProfGetListElementRes(
-                        studentId = "2021111222",
-                        comment = "DTH",
-                        chatState = ChatStateEnum.COMPLETE,
-                        localDateTime = LocalDateTime.now(),
-                    )
-                )
-            ),CoBoResponseStatus.SUCCESS).getResponseEntity()
+        return chatService.profGetList(page, pageSize)
     }
 
     @PostMapping
     @Operation(summary = "교수의 답변 작성")
     @ApiResponses(
-        ApiResponse(responseCode = "200", description = "성공")
+        ApiResponse(responseCode = "200", description = "성공"),
+        ApiResponse(responseCode = "404", description = "일치하는 학번이 존재하지 않음"),
     )
     fun post(@RequestBody profPostReq: ProfPostReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         return chatService.profPost(profPostReq)
