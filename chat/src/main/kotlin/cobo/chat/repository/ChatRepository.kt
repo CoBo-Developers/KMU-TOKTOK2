@@ -10,4 +10,5 @@ interface ChatRepository: JpaRepository<Chat, Int>, ChatRepositoryCustom {
     fun findByChatRoom(chatRoom: ChatRoom): List<Chat>
     @Transactional
     fun deleteByChatRoom(chatRoom: ChatRoom)
+    fun countByChatRoom(chatRoom: ChatRoom): Long
 }
