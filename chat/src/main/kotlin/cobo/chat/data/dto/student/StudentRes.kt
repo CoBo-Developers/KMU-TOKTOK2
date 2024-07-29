@@ -11,3 +11,11 @@ data class StudentGetRes(
 
     val chatStateEnum: ChatStateEnum
     )
+
+data class StudentGetElementRes(
+    val comment: String,
+
+    val isQuestion: Boolean,
+
+    val localDateTime: LocalDateTime
+)
