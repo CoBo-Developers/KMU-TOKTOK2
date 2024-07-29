@@ -1,6 +1,6 @@
-package cobo.chat.student
+package cobo.chat.prof
 
-import cobo.chat.data.dto.student.StudentPostReq
+import cobo.chat.data.dto.prof.ProfPostReq
 import cobo.chat.data.entity.Chat
 import cobo.chat.data.entity.ChatRoom
 import cobo.chat.data.enum.ChatStateEnum
@@ -23,11 +23,11 @@ import java.util.*
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class StudentPostTest @Autowired constructor(
+class ProfPostTest @Autowired constructor(
     private val chatRepository: ChatRepository,
     private val chatRoomRepository: ChatRoomRepository,
     private val chatService: ChatService
-) {
+){
 
     private val studentId = "test"
 
@@ -50,29 +50,24 @@ class StudentPostTest @Autowired constructor(
     }
 
     @Test
-    fun postStudentTest(){
-        chatRoomRepository.delete(chatRoom)
+    fun postProfTest(){
         val securityContextHolder = SecurityContextHolder.getContext()
         securityContextHolder.authentication = UsernamePasswordAuthenticationToken(
             studentId, null, listOf(
-                SimpleGrantedAuthority("USER")
+                SimpleGrantedAuthority("PROFESSOR")
             ))
-        val question = UUID.randomUUID().toString()
-        val existBefore = chatRoomRepository.existsById(studentId)
+        val comment = UUID.randomUUID().toString()
         val countBefore = chatRepository.countByChatRoom(ChatRoom(studentId))
 
         //when
-        val studentGetRes = chatService.studentPost(StudentPostReq(question = question),securityContextHolder.authentication)
-        val existAfter = chatRoomRepository.existsById(studentId)
+        val studentGetRes = chatService.profPost(ProfPostReq(studentId = studentId, comment = comment))
         val countAfter = chatRepository.countByChatRoom(ChatRoom(studentId))
 
         //then
-        assertFalse(existBefore)
         assert(countBefore == 0L)
 
         assert(studentGetRes.statusCode == HttpStatus.OK)
 
-        assert(existAfter)
         assertEquals(countAfter, countBefore + 1)
     }
 
@@ -84,12 +79,12 @@ class StudentPostTest @Autowired constructor(
         val securityContextHolder = SecurityContextHolder.getContext()
         securityContextHolder.authentication = UsernamePasswordAuthenticationToken(
             studentId, null, listOf(
-                SimpleGrantedAuthority("USER")
+                SimpleGrantedAuthority("PROFESSOR")
             ))
-        val question = UUID.randomUUID().toString()
+        val comment = UUID.randomUUID().toString()
 
         //when
-        val studentGetRes = chatService.studentPost(StudentPostReq(question = question),securityContextHolder.authentication)
+        val studentGetRes = chatService.profPost(ProfPostReq(studentId = studentId, comment = comment))
         now = LocalDateTime.now()
         val endTime = LocalDateTime.of(now.year, now.month, now.dayOfMonth, now.hour, now.minute, now.second)
 
@@ -101,51 +96,55 @@ class StudentPostTest @Autowired constructor(
         val newChatRoom = chatRoomRepository.findById(chatRoom.id!!).orElseThrow()
 
         assert((chat.createdAt!!.isAfter(startTime) || chat.createdAt!!.isEqual(startTime))&& (chat.createdAt!!.isBefore(endTime) || chat.createdAt!!.isEqual(endTime)))
-        assertTrue(chat.isQuestion)
-        assertEquals(chat.comment, question)
+        assertFalse(chat.isQuestion)
+        assertEquals(chat.comment, comment)
         assertEquals(chat.chatRoom.id, chatRoom.id)
-        assertEquals(newChatRoom.chatStateEnum, ChatStateEnum.WAITING)
+        assertEquals(newChatRoom.chatStateEnum, ChatStateEnum.COMPLETE)
     }
 
     @Test
     fun postChatInMidPoint(){
         //given
-        val testQuestion = UUID.randomUUID().toString()
+        val testComment = UUID.randomUUID().toString()
         val securityContextHolder = SecurityContextHolder.getContext()
         securityContextHolder.authentication = UsernamePasswordAuthenticationToken(
             studentId, null, listOf(
-                SimpleGrantedAuthority("USER")
+                SimpleGrantedAuthority("PROFESSOR")
             ))
 
         val startRandomCount = (5..10).random()
         val startChatList = mutableListOf<Chat>()
 
         for(i in 1..startRandomCount) {
-            startChatList.add(Chat(
+            startChatList.add(
+                Chat(
                 id = null,
                 chatRoom = chatRoom,
                 comment = i.toString(),
                 isQuestion = true,
                 createdAt = null
-            ))
+            )
+            )
         }
 
         val endRandomCount = (5..10).random()
         val endChatList = mutableListOf<Chat>()
 
         for(i in 1..endRandomCount) {
-            endChatList.add(Chat(
+            endChatList.add(
+                Chat(
                 id = null,
                 chatRoom = chatRoom,
                 comment = i.toString(),
                 isQuestion = true,
                 createdAt = null
-            ))
+            )
+            )
         }
         chatRepository.saveAll(startChatList)
 
         //when
-        val postStudent = chatService.studentPost(StudentPostReq(question = testQuestion), securityContextHolder.authentication)
+        val postStudent = chatService.profPost(ProfPostReq(studentId, testComment))
         chatRepository.saveAll(endChatList)
 
         //then
@@ -156,9 +155,9 @@ class StudentPostTest @Autowired constructor(
 
         assertNotNull(chat)
 
-        assertEquals(chat.chatRoom, chatRoom)
-        assertEquals(chat.comment, testQuestion)
-        assertEquals(chat.isQuestion, true)
+        assertEquals(chat.chatRoom.chatStateEnum, ChatStateEnum.COMPLETE)
+        assertEquals(chat.comment, testComment)
+        assertFalse(chat.isQuestion)
 
     }
 }
