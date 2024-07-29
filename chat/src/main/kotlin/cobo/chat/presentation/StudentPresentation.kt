@@ -1,12 +1,9 @@
 package cobo.chat.presentation
 
-import cobo.chat.config.response.CoBoResponse
 import cobo.chat.config.response.CoBoResponseDto
 import cobo.chat.config.response.CoBoResponseStatus
 import cobo.chat.data.dto.student.StudentGetElementRes
-import cobo.chat.data.dto.student.StudentGetRes
 import cobo.chat.data.dto.student.StudentPostReq
-import cobo.chat.data.enum.ChatStateEnum
 import cobo.chat.service.ChatService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -15,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDateTime
 
 
 @RestController

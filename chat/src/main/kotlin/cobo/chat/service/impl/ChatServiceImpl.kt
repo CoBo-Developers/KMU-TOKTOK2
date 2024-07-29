@@ -4,7 +4,6 @@ import cobo.chat.config.response.CoBoResponse
 import cobo.chat.config.response.CoBoResponseDto
 import cobo.chat.config.response.CoBoResponseStatus
 import cobo.chat.data.dto.student.StudentGetElementRes
-import cobo.chat.data.dto.student.StudentGetRes
 import cobo.chat.data.dto.student.StudentPostReq
 import cobo.chat.data.entity.Chat
 import cobo.chat.data.entity.ChatRoom
