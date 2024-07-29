@@ -44,7 +44,7 @@ class ChatServiceImpl(
 
         val chatRoom = ChatRoom(id = authentication.name)
 
-        return CoBoResponse(chatRepository.findByChatRoom(chatRoom).map{
+        return CoBoResponse(chatRepository.findByChatRoomWithJDBC(chatRoom).map{
             StudentGetElementRes(
                 comment = it.comment,
                 localDateTime = it.createdAt ?: LocalDateTime.now(),
