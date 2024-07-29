@@ -3,6 +3,7 @@ package cobo.chat.service.impl
 import cobo.chat.config.response.CoBoResponse
 import cobo.chat.config.response.CoBoResponseDto
 import cobo.chat.config.response.CoBoResponseStatus
+import cobo.chat.data.dto.prof.ProfPostReq
 import cobo.chat.data.dto.student.StudentGetElementRes
 import cobo.chat.data.dto.student.StudentPostReq
 import cobo.chat.data.entity.Chat
@@ -27,15 +28,13 @@ class ChatServiceImpl(
     ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
 
         val studentId: String = authentication.name
-        val chatRoom = ChatRoom(id = studentId, chatStateEnum = ChatStateEnum.WAITING)
-        val chat = Chat(
-            chatRoom = chatRoom,
-            comment = studentPostReq.question,
-            isQuestion = true
-        )
 
-        chatRoomRepository.ifExistUpdateElseInsert(chatRoom)
-        chatRepository.insert(chat)
+        this.post(
+            studentId = studentId,
+            comment = studentPostReq.question,
+            isQuestion = true,
+            chatStateEnum = ChatStateEnum.WAITING
+        )
 
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
@@ -51,5 +50,31 @@ class ChatServiceImpl(
                 isQuestion = it.isQuestion
             )
         },CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
+    override fun profPost(profPostReq: ProfPostReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+
+        this.post(
+            studentId = profPostReq.studentId,
+            comment = profPostReq.comment,
+            isQuestion = false,
+            chatStateEnum = ChatStateEnum.COMPLETE
+        )
+
+        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
+    private fun post(studentId: String, comment: String, isQuestion: Boolean, chatStateEnum: ChatStateEnum){
+
+        val chatRoom = ChatRoom(id = studentId, chatStateEnum = chatStateEnum)
+
+        val chat = Chat(
+            chatRoom = chatRoom,
+            comment = comment,
+            isQuestion = isQuestion
+        )
+
+        chatRoomRepository.ifExistUpdateElseInsert(chatRoom)
+        chatRepository.insert(chat)
     }
 }

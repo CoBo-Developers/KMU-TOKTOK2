@@ -73,7 +73,7 @@ class ProfPresentation(
         ApiResponse(responseCode = "200", description = "성공")
     )
     fun post(@RequestBody profPostReq: ProfPostReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
-        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+        return chatService.profPost(profPostReq)
     }
 
 }
