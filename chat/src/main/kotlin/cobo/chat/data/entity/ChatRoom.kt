@@ -11,4 +11,9 @@ data class ChatRoom(
 
     @Enumerated(EnumType.ORDINAL)
     val chatStateEnum: ChatStateEnum
-)
+) {
+    constructor(id: String) : this(
+        id = id,
+        chatStateEnum = ChatStateEnum.WAITING
+    )
+}
