@@ -74,7 +74,13 @@ class ChatServiceImpl(
             isQuestion = isQuestion
         )
 
-        chatRoomRepository.ifExistUpdateElseInsert(chatRoom)
+        if(isQuestion)
+            chatRoomRepository.ifExistUpdateElseInsert(chatRoom)
+        else{
+            if(chatRoomRepository.update(chatRoom) <= 0)
+                throw NullPointerException("Can't insert a new chat room")
+        }
+
         chatRepository.insert(chat)
     }
 }
