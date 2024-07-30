@@ -1,5 +1,6 @@
 package cobo.chat.config.jwt
 
+import cobo.chat.data.enum.RoleEnum
 import org.springframework.context.annotation.Bean
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
@@ -27,9 +28,10 @@ class SecurityConfig (
             }
             .httpBasic { obj: HttpBasicConfigurer<HttpSecurity> -> obj.disable() }
             .authorizeHttpRequests { authorize ->
-//                authorize.anyRequest().permitAll()
-                authorize.requestMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/api/auth/**").permitAll()
-                .anyRequest().authenticated()
+                authorize
+                    .requestMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/api/auth/**").permitAll()
+                    .requestMatchers("/api/prof**").hasAnyAuthority(RoleEnum.PROFESSOR.name, RoleEnum.DEVELOPER.name)
+                    .anyRequest().authenticated()
 
             }
             .formLogin { obj: FormLoginConfigurer<HttpSecurity> -> obj.disable() }
