@@ -1,11 +1,13 @@
 package cobo.auth.config.jwt
 
+import cobo.auth.data.enums.RoleEnum
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.Duration
 import java.util.*
+import javax.management.relation.Role
 
 @Component
 class JwtTokenProvider(
@@ -29,6 +31,13 @@ class JwtTokenProvider(
             .body.get("student_id", String::class.java)
     }
 
+    fun getRole(token: String): RoleEnum?{
+        return RoleEnum.from(Jwts.parser()
+            .setSigningKey(secret)
+            .parseClaimsJws(token)
+            .body.get("role", Short::class.java))
+    }
+
     fun isAccessToken(token: String): Boolean{
         return Jwts.parser()
             .setSigningKey(secret)
@@ -36,18 +45,19 @@ class JwtTokenProvider(
             .header["type"].toString() == "access_token"
     }
 
-    fun getAccessToken(id: Int, studentId: String?): String{
-        return getJwtToken(id, "access_token", studentId, accessTokenValidTime)
+    fun getAccessToken(id: Int, studentId: String?, roleEnum: RoleEnum): String{
+        return getJwtToken(id, "access_token", studentId, roleEnum, accessTokenValidTime)
     }
 
-    fun getRefreshToken(id: Int, studentId: String?): String{
-        return getJwtToken(id, "refresh_token", studentId, refreshTokenValidTime)
+    fun getRefreshToken(id: Int, studentId: String?, roleEnum: RoleEnum): String{
+        return getJwtToken(id, "refresh_token", studentId, roleEnum, refreshTokenValidTime)
     }
 
-    fun getJwtToken(id: Int, type: String, studentId: String?, tokenValidTime: Long): String{
+    fun getJwtToken(id: Int, type: String, studentId: String?, roleEnum: RoleEnum, tokenValidTime: Long): String{
         val claims = Jwts.claims()
         claims["id"] = id
         claims["student_id"] = studentId
+        claims["role"] = roleEnum.value
 
         return Jwts.builder()
             .setHeaderParam("type", type)

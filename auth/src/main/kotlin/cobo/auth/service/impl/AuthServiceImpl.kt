@@ -114,10 +114,11 @@ class AuthServiceImpl(
 
         val userId = jwtTokenProvider.getId(token).toInt()
         val studentId = jwtTokenProvider.getStudentId(token)
+        val roleEnum = jwtTokenProvider.getRole(token)
 
         return CoBoResponse(
             GetAuthLoginRes(
-                accessToken = jwtTokenProvider.getAccessToken(userId, studentId),
+                accessToken = jwtTokenProvider.getAccessToken(userId, studentId, roleEnum ?: RoleEnum.STUDENT),
                 refreshToken = token,
                 userRepository.findById(userId).orElseThrow{NullPointerException()}.registerState),
             CoBoResponseStatus.SUCCESS).getResponseEntityWithLog()
@@ -174,8 +175,8 @@ class AuthServiceImpl(
 
     private fun getAccessTokenAndRefreshTokenByUser(user: User): Array<String>{
         return arrayOf(
-            jwtTokenProvider.getAccessToken(user.id ?: throw NullPointerException(), user.studentId),
-            jwtTokenProvider.getRefreshToken(user.id ?: throw NullPointerException(), user.studentId)
+            jwtTokenProvider.getAccessToken(user.id ?: throw NullPointerException(), user.studentId, user.role),
+            jwtTokenProvider.getRefreshToken(user.id ?: throw NullPointerException(), user.studentId, user.role)
         )
     }
 
