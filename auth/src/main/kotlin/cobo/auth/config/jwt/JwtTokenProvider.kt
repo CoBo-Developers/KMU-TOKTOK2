@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.Duration
 import java.util.*
-import javax.management.relation.Role
 
 @Component
 class JwtTokenProvider(
