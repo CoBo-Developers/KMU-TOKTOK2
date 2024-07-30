@@ -1,5 +1,6 @@
 package cobo.auth.config.jwt
 
+import cobo.auth.data.enums.RoleEnum
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -27,7 +28,7 @@ class JwtFilter(
             if(jwtTokenProvider.isAccessToken(token)){
                 val id = jwtTokenProvider.getId(token)
                 SecurityContextHolder.getContext().authentication =
-                    UsernamePasswordAuthenticationToken(id, null, listOf(SimpleGrantedAuthority("USER")))
+                    UsernamePasswordAuthenticationToken(id, null, listOf(SimpleGrantedAuthority((jwtTokenProvider.getRole(token)?: RoleEnum.STUDENT).name)))
             }
         }
         filterChain.doFilter(request, response)
