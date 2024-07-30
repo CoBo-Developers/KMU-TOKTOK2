@@ -1,13 +1,11 @@
 package cobo.chat.data.dto.student
 
-import cobo.chat.data.enum.ChatStateEnum
 import java.time.LocalDateTime
 
-data class StudentGetRes(
-
+data class StudentGetElementRes(
     val comment: String,
 
-    val localDateTime: LocalDateTime,
+    val isQuestion: Boolean,
 
-    val chatStateEnum: ChatStateEnum
-    )
+    val localDateTime: LocalDateTime
+)

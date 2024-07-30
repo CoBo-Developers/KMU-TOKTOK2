@@ -3,6 +3,10 @@ package cobo.chat.service.impl
 import cobo.chat.config.response.CoBoResponse
 import cobo.chat.config.response.CoBoResponseDto
 import cobo.chat.config.response.CoBoResponseStatus
+import cobo.chat.data.dto.prof.ProfGetListRes
+import cobo.chat.data.dto.prof.ProfGetElementRes
+import cobo.chat.data.dto.prof.ProfPostReq
+import cobo.chat.data.dto.student.StudentGetElementRes
 import cobo.chat.data.dto.student.StudentPostReq
 import cobo.chat.data.entity.Chat
 import cobo.chat.data.entity.ChatRoom
@@ -13,6 +17,7 @@ import cobo.chat.service.ChatService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class ChatServiceImpl(
@@ -25,16 +30,77 @@ class ChatServiceImpl(
     ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
 
         val studentId: String = authentication.name
-        val chatRoom = ChatRoom(id = studentId, chatStateEnum = ChatStateEnum.WAITING)
-        val chat = Chat(
-            chatRoom = chatRoom,
+
+        this.post(
+            studentId = studentId,
             comment = studentPostReq.question,
-            isQuestion = true
+            isQuestion = true,
+            chatStateEnum = ChatStateEnum.WAITING
         )
 
-        chatRoomRepository.ifExistUpdateElseInsert(chatRoom)
-        chatRepository.insert(chat)
+        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
+    override fun studentGet(authentication: Authentication): ResponseEntity<CoBoResponseDto<List<StudentGetElementRes>>> {
+
+        val chatRoom = ChatRoom(id = authentication.name)
+
+        return CoBoResponse(chatRepository.findByChatRoomWithJDBC(chatRoom).map{
+            StudentGetElementRes(
+                comment = it.comment,
+                localDateTime = it.createdAt ?: LocalDateTime.now(),
+                isQuestion = it.isQuestion
+            )
+        },CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
+    override fun profGetList(page: Int, pageSize: Int): ResponseEntity<CoBoResponseDto<ProfGetListRes>> {
+
+        return CoBoResponse(ProfGetListRes(
+            totalElement = chatRoomRepository.count(),
+            chatList = chatRoomRepository.findByPagingWithJDBC(page = page, pageSize = pageSize)
+        ), CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
+    override fun profGet(studentId: String): ResponseEntity<CoBoResponseDto<List<ProfGetElementRes>>> {
+        return CoBoResponse(chatRepository.findByChatRoomWithJDBC(ChatRoom(id = studentId)).map{
+            ProfGetElementRes(
+                comment = it.comment,
+                localDateTime = it.createdAt ?: LocalDateTime.now(),
+                isQuestion = it.isQuestion
+            )
+        }, CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
+    override fun profPost(profPostReq: ProfPostReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+
+        this.post(
+            studentId = profPostReq.studentId,
+            comment = profPostReq.comment,
+            isQuestion = false,
+            chatStateEnum = ChatStateEnum.COMPLETE
+        )
 
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
+    private fun post(studentId: String, comment: String, isQuestion: Boolean, chatStateEnum: ChatStateEnum){
+
+        val chatRoom = ChatRoom(id = studentId, chatStateEnum = chatStateEnum)
+
+        val chat = Chat(
+            chatRoom = chatRoom,
+            comment = comment,
+            isQuestion = isQuestion
+        )
+
+        if(isQuestion)
+            chatRoomRepository.ifExistUpdateElseInsert(chatRoom)
+        else{
+            if(chatRoomRepository.update(chatRoom) <= 0)
+                throw NullPointerException("Can't insert a new chat room")
+        }
+
+        chatRepository.insert(chat)
     }
 }

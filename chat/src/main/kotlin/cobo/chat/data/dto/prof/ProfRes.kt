@@ -3,12 +3,12 @@ package cobo.chat.data.dto.prof
 import cobo.chat.data.enum.ChatStateEnum
 import java.time.LocalDateTime
 
-data class ProfGetRes(
+data class ProfGetElementRes(
     val comment: String,
 
     val localDateTime: LocalDateTime,
 
-    val chatStateEnum: ChatStateEnum
+    val isQuestion: Boolean
 )
 
 data class ProfGetListRes(

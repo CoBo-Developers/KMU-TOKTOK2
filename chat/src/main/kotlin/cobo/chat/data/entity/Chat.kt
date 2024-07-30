@@ -1,6 +1,7 @@
 package cobo.chat.data.entity
 
 import jakarta.persistence.*
+import org.hibernate.annotations.DynamicInsert
 import java.time.LocalDateTime
 
 @Entity
@@ -9,6 +10,7 @@ import java.time.LocalDateTime
         Index(name = "idx_chat_room", columnList = "chat_room_id")
     ]
 )
+@DynamicInsert
 data class Chat(
 
     @Id
