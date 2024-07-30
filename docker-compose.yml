@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  auth-server:
+    container_name: auth-server
+    build: ./auth
+    ports:
+      - "8080:8080"
+    networks:
+      - cobo
+  chat-server:
+    container_name: chat-server
+    build: ./chat
+    ports:
+      - "12041:12041"
+    networks:
+      - cobo
+
+  nginx:
+    build: ./nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - auth-server
+      - chat-server
+    networks:
+      - cobo
+
+networks:
+  cobo:
