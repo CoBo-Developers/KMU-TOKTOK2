@@ -34,7 +34,7 @@ class JwtTokenProvider(
         return RoleEnum.from(Jwts.parser()
             .setSigningKey(secret)
             .parseClaimsJws(token)
-            .body.get("role", Short::class.java))
+            .body.get("role", java.lang.Integer::class.java).toShort())
     }
 
     fun isAccessToken(token: String): Boolean{
