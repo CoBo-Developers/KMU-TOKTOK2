@@ -48,6 +48,22 @@ class ProfGetListTest @Autowired constructor(
     }
 
     @Test
+    fun testGet(){
+        //given
+        val count = chatRoomRepository.count()
+        val pageSize = 10
+
+        //when
+        val profGetListRes = chatService.profGetList(0, pageSize)
+
+        //then
+        assertEquals(profGetListRes.statusCode, HttpStatus.OK)
+        assertEquals(profGetListRes.body!!.data!!.totalElement, count)
+
+        assertEquals(profGetListRes.body!!.data!!.chatList.size, pageSize)
+    }
+
+    @Test
     fun testWaitingState(){
         testByState(ChatStateEnum.WAITING)
     }
@@ -83,7 +99,6 @@ class ProfGetListTest @Autowired constructor(
         for(i in 0..<chatRoomStateEnum.value){
             previousCount += chatRoomRepository.countByChatStateEnum(ChatStateEnum.from(i.toShort())!!)
         }
-        println(previousCount)
         val profGetListRes = chatService.profGetList(previousCount.toInt(), 1)
         now = LocalDateTime.now()
         val endTime = LocalDateTime.of(now.year, now.month, now.dayOfMonth, now.hour, now.minute, now.second)
@@ -99,5 +114,42 @@ class ProfGetListTest @Autowired constructor(
         assertEquals(profGetListElement.studentId, studentId)
         assertTrue(chat.createdAt!!.isAfter(startTime) || chat.createdAt!!.isEqual(startTime))
         assertTrue(chat.createdAt!!.isBefore(endTime) || chat.createdAt!!.isEqual(endTime))
+    }
+
+    @Test
+    fun testGetAll(){
+        //given
+        val count = chatRoomRepository.count()
+        chatRepository.save(Chat(
+            id = null,
+            chatRoom = chatRoom,
+            comment = "",
+            isQuestion = false,
+            createdAt = null
+        ))
+        val chatRoomList = chatRoomRepository.findAllByOrderByChatStateEnum()
+
+        //when
+        val profGetListRes = chatService.profGetList(0, count.toInt())
+
+        //then
+        assertEquals(profGetListRes.statusCode, HttpStatus.OK)
+        assertEquals(profGetListRes.body!!.data!!.totalElement, count)
+        assertEquals(count.toInt(), profGetListRes.body!!.data!!.chatList.size)
+
+        var i = 0
+
+        val hastSetOfStudentId = hashSetOf<String>()
+
+        profGetListRes.body!!.data!!.chatList.forEach {
+            if (hastSetOfStudentId.contains(it.studentId)){
+                assert(false)
+            }
+            else{
+                hastSetOfStudentId.add(it.studentId)
+                assertEquals(it.chatState, chatRoomList[i].chatStateEnum)
+            }
+            i++
+        }
     }
 }

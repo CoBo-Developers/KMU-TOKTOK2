@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface ChatRoomRepository: JpaRepository<ChatRoom, String>, ChatRoomRepositoryCustom {
 
+    fun findAllByOrderByChatStateEnum(): List<ChatRoom>
     fun countByChatStateEnum(chatStateEnum: ChatStateEnum): Long
 }
