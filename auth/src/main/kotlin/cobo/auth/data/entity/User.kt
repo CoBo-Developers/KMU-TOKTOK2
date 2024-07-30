@@ -19,4 +19,7 @@ data class User(
     constructor(id: Int):this(
         id = id, studentId = null, role = RoleEnum.STUDENT, registerState = RegisterStateEnum.ACTIVE
     )
+    constructor(id: Int, studentId: String?):this(
+        id = id, studentId = studentId, role = RoleEnum.STUDENT, registerState = RegisterStateEnum.ACTIVE
+    )
 }
