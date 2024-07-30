@@ -4,6 +4,7 @@ import cobo.chat.config.response.CoBoResponse
 import cobo.chat.config.response.CoBoResponseDto
 import cobo.chat.config.response.CoBoResponseStatus
 import cobo.chat.data.dto.prof.ProfGetListRes
+import cobo.chat.data.dto.prof.ProfGetElementRes
 import cobo.chat.data.dto.prof.ProfPostReq
 import cobo.chat.data.dto.student.StudentGetElementRes
 import cobo.chat.data.dto.student.StudentPostReq
@@ -59,6 +60,16 @@ class ChatServiceImpl(
             totalElement = chatRoomRepository.count(),
             chatList = chatRoomRepository.findByPagingWithJDBC(page = page, pageSize = pageSize)
         ), CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
+    override fun profGet(studentId: String): ResponseEntity<CoBoResponseDto<List<ProfGetElementRes>>> {
+        return CoBoResponse(chatRepository.findByChatRoomWithJDBC(ChatRoom(id = studentId)).map{
+            ProfGetElementRes(
+                comment = it.comment,
+                localDateTime = it.createdAt ?: LocalDateTime.now(),
+                isQuestion = it.isQuestion
+            )
+        }, CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 
     override fun profPost(profPostReq: ProfPostReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {

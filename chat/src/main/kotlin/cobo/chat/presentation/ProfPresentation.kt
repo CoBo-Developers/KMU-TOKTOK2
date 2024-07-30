@@ -1,12 +1,10 @@
 package cobo.chat.presentation
 
-import cobo.chat.config.response.CoBoResponse
 import cobo.chat.config.response.CoBoResponseDto
 import cobo.chat.config.response.CoBoResponseStatus
 import cobo.chat.data.dto.prof.ProfGetListRes
-import cobo.chat.data.dto.prof.ProfGetRes
+import cobo.chat.data.dto.prof.ProfGetElementRes
 import cobo.chat.data.dto.prof.ProfPostReq
-import cobo.chat.data.enum.ChatStateEnum
 import cobo.chat.service.ChatService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -15,7 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDateTime
 
 
 @RestController
@@ -32,14 +29,8 @@ class ProfPresentation(
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "조회 성공")
     )
-    fun get(@RequestParam studentId: String): ResponseEntity<CoBoResponseDto<List<ProfGetRes>>>{
-        return CoBoResponse(
-            listOf(
-                ProfGetRes(
-                    comment = "Hello1", localDateTime = LocalDateTime.now(), chatStateEnum = ChatStateEnum.COMPLETE),
-                ProfGetRes(
-                    comment = "Hello2", localDateTime = LocalDateTime.now(), chatStateEnum = ChatStateEnum.CONFIRMATION)
-            ),CoBoResponseStatus.SUCCESS).getResponseEntity()
+    fun get(@RequestParam studentId: String): ResponseEntity<CoBoResponseDto<List<ProfGetElementRes>>>{
+        return chatService.profGet(studentId)
     }
 
     @GetMapping("/list")
