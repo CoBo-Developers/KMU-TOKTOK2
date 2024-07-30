@@ -11,7 +11,7 @@ class FilterConfig {
     fun logFilterRegistration(): FilterRegistrationBean<LogFilter> {
         val registrationBean = FilterRegistrationBean<LogFilter>()
         registrationBean.filter = LogFilter()
-        registrationBean.addUrlPatterns("/api/auth/*", "/api/user/*")
+        registrationBean.addUrlPatterns("/api/*")
         registrationBean.order = 1
 
         return registrationBean

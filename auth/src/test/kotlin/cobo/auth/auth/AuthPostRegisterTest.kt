@@ -18,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.annotation.DirtiesContext
+import kotlin.test.assertEquals
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -218,6 +219,9 @@ class AuthPostRegisterTest(
 
         assert(jwtTokenProvider.getStudentId(postAuthRegisterReq1.body?.data?.accessToken!!) == sameStudentId)
         assert(jwtTokenProvider.getStudentId(postAuthRegisterReq2.body?.data?.accessToken!!) == sameStudentId)
+
+        assertEquals(jwtTokenProvider.getRole(postAuthRegisterReq1.body?.data?.accessToken!!), user1.role)
+        assertEquals(jwtTokenProvider.getRole(postAuthRegisterReq2.body?.data?.accessToken!!), user1.role)
     }
 
     @Test

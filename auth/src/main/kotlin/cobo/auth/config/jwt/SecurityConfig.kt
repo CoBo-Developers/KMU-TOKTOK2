@@ -1,5 +1,6 @@
 package cobo.auth.config.jwt
 
+import cobo.auth.data.enums.RoleEnum
 import org.springframework.context.annotation.Bean
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
@@ -27,9 +28,10 @@ class SecurityConfig(
             }
             .httpBasic { obj: HttpBasicConfigurer<HttpSecurity> -> obj.disable() }
             .authorizeHttpRequests { authorize ->
-                authorize.anyRequest().permitAll()
-//                authorize.requestMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/api/auth/**").permitAll()
-//                        .anyRequest().permitAll()
+                authorize
+                    .requestMatchers("/api/auth/register**").authenticated()
+                    .requestMatchers("/api/user/**").hasAnyAuthority(RoleEnum.PROFESSOR.name, RoleEnum.DEVELOPER.name)
+                    .requestMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/api/auth/**").permitAll()
             }
             .formLogin { obj: FormLoginConfigurer<HttpSecurity> -> obj.disable() }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
