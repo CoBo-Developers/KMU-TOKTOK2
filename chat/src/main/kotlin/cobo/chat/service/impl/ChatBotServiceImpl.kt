@@ -55,7 +55,7 @@ class ChatBotServiceImpl(
     }
 
     private fun getAnswerFromChatGPT(question: String): String{
-        return "IM DTH"
+        return question
     }
 
 }
