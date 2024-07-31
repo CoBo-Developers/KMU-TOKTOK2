@@ -1,9 +1,11 @@
 package cobo.chat.data.entity
 
 import jakarta.persistence.*
+import org.hibernate.annotations.DynamicInsert
 import java.time.LocalDateTime
 
 @Entity
+@DynamicInsert
 data class ChatBotChat(
 
     @Id
@@ -13,6 +15,7 @@ data class ChatBotChat(
     @Column(length = 20)
     val studentId: String,
 
+    @Column(length = 5000)
     val question: String,
 
     val answer: String,
