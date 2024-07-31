@@ -1,7 +1,7 @@
 package cobo.chat.service
 
-import cobo.chat.config.response.CoBoResponse
 import cobo.chat.config.response.CoBoResponseDto
+import cobo.chat.data.dto.chatBot.ChatBotGetElementRes
 import cobo.chat.data.dto.chatBot.ChatBotPostReq
 import cobo.chat.data.dto.chatBot.ChatBotPostRes
 import org.springframework.http.ResponseEntity
@@ -12,5 +12,8 @@ interface ChatBotService {
         chatBotPostReq: ChatBotPostReq,
         authentication: Authentication
     ): ResponseEntity<CoBoResponseDto<ChatBotPostRes>>
+
+    fun get(authentication: Authentication): ResponseEntity<CoBoResponseDto<List<ChatBotGetElementRes>>>
+    fun get(studentId: String): ResponseEntity<CoBoResponseDto<List<ChatBotGetElementRes>>>
 
 }

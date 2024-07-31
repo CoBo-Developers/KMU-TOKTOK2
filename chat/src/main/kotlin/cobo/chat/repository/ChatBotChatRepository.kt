@@ -5,4 +5,5 @@ import cobo.chat.repository.custom.ChatBotChatRepositoryCustom
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface ChatBotChatRepository: JpaRepository<ChatBotChat, Int>, ChatBotChatRepositoryCustom {
+    fun findByStudentId(studentId: String): List<ChatBotChat>
 }
