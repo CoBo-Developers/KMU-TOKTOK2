@@ -84,7 +84,7 @@ class ChatBotPostTest @Autowired constructor(
         val endTime = LocalDateTime.of(now.year, now.month, now.dayOfMonth, now.hour, now.minute, now.second)
 
         //then
-        val chatBotChat = chatBotChatRepository.findByStudentId(studentId = testStudentId).last()
+        val chatBotChat = chatBotChatRepository.findByStudentIdWithJDBC(studentId = testStudentId).last()
 
         assertTrue{
             chatBotChat.createdAt!!.isAfter(startTime) || chatBotChat.createdAt!!.isEqual(startTime)
