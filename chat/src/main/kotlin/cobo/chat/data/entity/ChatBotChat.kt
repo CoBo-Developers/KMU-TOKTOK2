@@ -1,9 +1,11 @@
 package cobo.chat.data.entity
 
 import jakarta.persistence.*
+import org.hibernate.annotations.DynamicInsert
 import java.time.LocalDateTime
 
 @Entity
+@DynamicInsert
 data class ChatBotChat(
 
     @Id
