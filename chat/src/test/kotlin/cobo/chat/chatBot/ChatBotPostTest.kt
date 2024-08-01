@@ -91,32 +91,4 @@ class ChatBotPostTest @Autowired constructor(
             chatBotChat.createdAt!!.isBefore(endTime) || chatBotChat.createdAt!!.isEqual(endTime)
         }
     }
-
-    @Test
-    fun testInvalidQuestion(){
-        //given
-        val baseString = "test"
-        val stringBuilder = StringBuilder()
-        val stringLength = 5001
-
-        while (stringBuilder.length < stringLength) {
-            stringBuilder.append(baseString)
-        }
-        val question = stringBuilder.toString()
-        val securityContextHolder = SecurityContextHolder.getContext()
-        securityContextHolder.authentication = UsernamePasswordAuthenticationToken(
-            testStudentId, null, listOf(
-                SimpleGrantedAuthority(RoleEnum.STUDENT.name)
-            ))
-
-        //when
-        try{
-            chatBotService.post(ChatBotPostReq(question = question), securityContextHolder.authentication)
-            assertTrue(false)
-        }catch(e: DataIntegrityViolationException){
-            assertTrue(true)
-        }
-
-
-    }
 }

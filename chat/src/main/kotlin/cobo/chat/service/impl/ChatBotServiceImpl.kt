@@ -49,7 +49,7 @@ class ChatBotServiceImpl(
 
     override fun get(studentId: String): ResponseEntity<CoBoResponseDto<List<ChatBotGetElementRes>>> {
         return CoBoResponse(
-            chatBotChatRepository.findByStudentId(studentId).map{
+            chatBotChatRepository.findByStudentIdWithJDBC(studentId).map{
                 ChatBotGetElementRes(
                     question = it.question,
                     answer = it.answer,
