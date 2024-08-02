@@ -1,17 +1,14 @@
 package cobo.chat.chatBot
 
-import cobo.chat.config.LogFilter
 import cobo.chat.data.dto.chatBot.ChatBotPostReq
-import cobo.chat.data.enum.RoleEnum
+import cobo.chat.data.enums.RoleEnum
 import cobo.chat.repository.ChatBotChatRepository
 import cobo.chat.service.ChatBotService
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority

@@ -1,4 +1,4 @@
-package cobo.chat.data.enum
+package cobo.writing.data.enums
 
 enum class RoleEnum(val value: Short) {
     DEVELOPER(0),

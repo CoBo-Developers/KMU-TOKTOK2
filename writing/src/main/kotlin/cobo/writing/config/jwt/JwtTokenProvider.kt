@@ -1,6 +1,6 @@
-package cobo.chat.config.jwt
+package cobo.writing.config.jwt
 
-import cobo.chat.data.enums.RoleEnum
+import cobo.writing.data.enums.RoleEnum
 import io.jsonwebtoken.Jwts
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -19,7 +19,8 @@ class JwtTokenProvider(
     }
 
     fun getRole(token: String): RoleEnum?{
-        return RoleEnum.from(Jwts.parser()
+        return RoleEnum.from(
+            Jwts.parser()
             .setSigningKey(secret)
             .parseClaimsJws(token)
             .body.get("role", java.lang.Integer::class.java).toShort())

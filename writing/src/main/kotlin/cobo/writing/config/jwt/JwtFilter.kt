@@ -1,6 +1,6 @@
-package cobo.chat.config.jwt
+package cobo.writing.config.jwt
 
-import cobo.chat.data.enums.RoleEnum
+import cobo.writing.data.enums.RoleEnum
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

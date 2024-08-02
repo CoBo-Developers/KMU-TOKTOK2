@@ -1,6 +1,6 @@
-package cobo.chat.config.jwt
+package cobo.writing.config.jwt
 
-import cobo.chat.data.enums.RoleEnum
+import cobo.writing.data.enums.RoleEnum
 import org.springframework.context.annotation.Bean
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
