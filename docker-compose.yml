@@ -15,6 +15,13 @@ services:
       - "12041:12041"
     networks:
       - cobo
+  writing-server:
+    container_name: writing-server
+    build: ./writing
+    ports:
+      - "12042:12042"
+    networks:
+      - cobo
 
   nginx:
     build: ./nginx
