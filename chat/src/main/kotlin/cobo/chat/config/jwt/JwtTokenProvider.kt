@@ -1,6 +1,6 @@
 package cobo.chat.config.jwt
 
-import cobo.chat.data.enum.RoleEnum
+import cobo.chat.data.enums.RoleEnum
 import io.jsonwebtoken.Jwts
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component

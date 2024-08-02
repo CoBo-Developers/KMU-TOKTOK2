@@ -1,6 +1,6 @@
 package cobo.chat.data.dto.prof
 
-import cobo.chat.data.enum.ChatStateEnum
+import cobo.chat.data.enums.ChatStateEnum
 import java.time.LocalDateTime
 
 data class ProfGetElementRes(

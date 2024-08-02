@@ -10,7 +10,7 @@ import cobo.chat.data.dto.student.StudentGetElementRes
 import cobo.chat.data.dto.student.StudentPostReq
 import cobo.chat.data.entity.Chat
 import cobo.chat.data.entity.ChatRoom
-import cobo.chat.data.enum.ChatStateEnum
+import cobo.chat.data.enums.ChatStateEnum
 import cobo.chat.repository.ChatRepository
 import cobo.chat.repository.ChatRoomRepository
 import cobo.chat.service.ChatService

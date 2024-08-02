@@ -1,6 +1,6 @@
 package cobo.chat.data.entity
 
-import cobo.chat.data.enum.ChatStateEnum
+import cobo.chat.data.enums.ChatStateEnum
 import jakarta.persistence.*
 
 @Entity
