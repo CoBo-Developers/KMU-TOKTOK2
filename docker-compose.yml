@@ -33,6 +33,7 @@ services:
     depends_on:
       - auth-server
       - chat-server
+      - writing-server
     networks:
       - cobo
 
