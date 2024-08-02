@@ -4,19 +4,21 @@ import cobo.chat.data.dto.chatGPT.ChatGPTReq
 import cobo.chat.data.dto.chatGPT.ChatGPTReqMessage
 import cobo.chat.data.dto.chatGPT.ChatGPTRes
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.server.ServerErrorException
 
 @Component
 class ChatGPTConfig(
-    @Value("\${chatGPT.api-key}")
-    private val apiKey: String
+    @Value("\${open-ai.api-key}")
+    private val apiKey: String,
+    @Value("\${open-ai.model}")
+    private val model: String,
+    @Value("\${open-ai.role}")
+    private val role: String,
 ) {
 
     private val chatGPTUrl = "https://api.openai.com/v1/chat/completions"
@@ -30,12 +32,12 @@ class ChatGPTConfig(
         httpHeaders.contentType = MediaType.APPLICATION_JSON
 
         val chatGPTReqMessage = ChatGPTReqMessage(
-            role = "user",
+            role = role,
             content = content
         )
 
         val chatGPTReq = ChatGPTReq(
-            model = "gpt-3.5-turbo-0125",
+            model = model,
             messages = listOf(chatGPTReqMessage),
             stream = false
         )
