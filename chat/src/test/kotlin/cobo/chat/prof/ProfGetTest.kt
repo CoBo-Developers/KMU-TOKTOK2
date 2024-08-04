@@ -65,6 +65,25 @@ class ProfGetTest @Autowired constructor(
         getState(isQuestion = false)
     }
 
+    @Test
+    fun testChangedChatRoomState(){
+        //given
+        chatRepository.save(Chat(
+            id = null,
+            chatRoom = chatRoom,
+            comment = "",
+            isQuestion = true,
+            createdAt = null))
+
+        //when
+        val profGetRes = chatService.profGet(studentId)
+
+        //then
+        assert(profGetRes.statusCode == HttpStatus.OK)
+        val chatRoom = chatRoomRepository.findById(studentId).orElseThrow()
+        assert(chatRoom.chatStateEnum == ChatStateEnum.CONFIRMATION)
+    }
+
 
     fun getState(isQuestion: Boolean){
         //given
