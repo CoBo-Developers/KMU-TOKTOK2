@@ -76,7 +76,7 @@ class AssignmentPostTest @Autowired constructor(
         //given
         val assignment = Assignment(
             id = null,
-            title = UUID.randomUUID().toString() + "TEST",
+            title = UUID.randomUUID().toString(),
             description = UUID.randomUUID().toString(),
             score = (1..10).random(),
             startDate = LocalDate.of(2024, (1..6).random(), (1..30).random()),
@@ -134,10 +134,34 @@ class AssignmentPostTest @Autowired constructor(
         assertEquals(assignment.score, targetAssignment.score)
         assertEquals(assignment.startDate, targetAssignment.startDate)
         assertEquals(assignment.endDate, targetAssignment.endDate)
+
+        assignmentList.add(targetAssignment)
     }
 
     @Test
     fun testPostInvalidDate(){
+        //given
+        val assignment = Assignment(
+            id = null,
+            title = UUID.randomUUID().toString(),
+            description = UUID.randomUUID().toString(),
+            score = (1..10).random(),
+            startDate = LocalDate.of(2024, (7..12).random(), (1..30).random()),
+            endDate = LocalDate.of(2024, (1..6).random(), (1..30).random())
+        )
+        val assignmentPostReq = AssignmentPostReq(
+            title = assignment.title ?: "",
+            description = assignment.description ?: "",
+            score = assignment.score,
+            startDate = assignment.startDate,
+            endDate = assignment.endDate
+        )
 
+
+        //when
+        val postRes = assignmentService.post(assignmentPostReq)
+
+        //then
+        assertEquals(HttpStatus.BAD_REQUEST, postRes.statusCode)
     }
 }
