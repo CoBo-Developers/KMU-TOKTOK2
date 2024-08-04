@@ -63,7 +63,7 @@ class ChatServiceImpl(
     }
 
     override fun profGet(studentId: String): ResponseEntity<CoBoResponseDto<List<ProfGetElementRes>>> {
-        return CoBoResponse(chatRepository.findByChatRoomWithJDBC(ChatRoom(id = studentId)).map{
+        return CoBoResponse(chatRepository.findByChatRoomAndUpdateWithJDBC(ChatRoom(id = studentId, chatStateEnum = ChatStateEnum.CONFIRMATION)).map{
             ProfGetElementRes(
                 comment = it.comment,
                 localDateTime = it.createdAt ?: LocalDateTime.now(),
