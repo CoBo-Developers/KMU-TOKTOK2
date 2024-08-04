@@ -16,6 +16,11 @@ class AssignmentServiceImpl(
 ): AssignmentService {
 
     override fun post(assignmentPostReq: AssignmentPostReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+
+        if(assignmentPostReq.startDate.isAfter(assignmentPostReq.endDate)) {
+            return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.INVALID_RANGE).getResponseEntity()
+        }
+
         val assignment = Assignment(
             id = null,
             title = assignmentPostReq.title,
