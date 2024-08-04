@@ -66,7 +66,7 @@ class ProfGetTest @Autowired constructor(
     }
 
     @Test
-    fun testChangedChatRoomState(){
+    fun testChangedChatRoomStateFromWaitingToConfirmation(){
         //given
         chatRepository.save(Chat(
             id = null,
@@ -82,6 +82,22 @@ class ProfGetTest @Autowired constructor(
         assert(profGetRes.statusCode == HttpStatus.OK)
         val chatRoom = chatRoomRepository.findById(studentId).orElseThrow()
         assert(chatRoom.chatStateEnum == ChatStateEnum.CONFIRMATION)
+    }
+
+    @Test
+    fun testChangedChatRoomStateFromCompleteToComplete(){
+        //given
+        val newChatRoom = chatRoomRepository.findById(studentId).orElseThrow()
+        newChatRoom.chatStateEnum = ChatStateEnum.COMPLETE
+        chatRoomRepository.save(newChatRoom)
+
+        //when
+        val profGetRes = chatService.profGet(studentId)
+
+        //then
+        assert(profGetRes.statusCode == HttpStatus.OK)
+        val chatRoom = chatRoomRepository.findById(studentId).orElseThrow()
+        assert(chatRoom.chatStateEnum == ChatStateEnum.COMPLETE)
     }
 
 

@@ -2,6 +2,7 @@ package cobo.chat.repository.impl
 
 import cobo.chat.data.entity.Chat
 import cobo.chat.data.entity.ChatRoom
+import cobo.chat.data.enums.ChatStateEnum
 import cobo.chat.repository.custom.ChatRepositoryCustom
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
@@ -32,8 +33,8 @@ class ChatRepositoryImpl(
     override fun findByChatRoomAndUpdateWithJDBC(chatRoom: ChatRoom): List<Chat> {
         val chatRoomUpdateCompletableFuture = CompletableFuture.runAsync {
             jdbcTemplate.update(
-                "UPDATE chat_room SET chat_state_enum = ? WHERE chat_room.id = ?",
-                chatRoom.chatStateEnum.value, chatRoom.id
+                "UPDATE chat_room SET chat_state_enum = ? WHERE chat_room.id = ? AND chat_state_enum = ?",
+                chatRoom.chatStateEnum.value, chatRoom.id, ChatStateEnum.WAITING.value
             )
         }
 
