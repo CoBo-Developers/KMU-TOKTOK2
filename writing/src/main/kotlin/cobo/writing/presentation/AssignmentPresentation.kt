@@ -7,7 +7,6 @@ import cobo.writing.service.AssignmentService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -27,7 +26,7 @@ class AssignmentPresentation(
     )
     fun post(
         @RequestBody assignmentPostReq: AssignmentPostReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+        return assignmentService.post(assignmentPostReq)
     }
 
 }
