@@ -42,7 +42,14 @@ class AssignmentServiceImpl(
     override fun put(assignmentPutReq: AssignmentPutReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         val assignment = assignmentRepository.findById(assignmentPutReq.id).orElseThrow { EntityNotFoundException("Could not find assignment with id ${assignmentPutReq.id}") }
 
-        TODO()
+        assignment.title = assignmentPutReq.title
+        assignment.description = assignmentPutReq.description
+        assignment.score = assignmentPutReq.score
+        assignment.startDate = assignmentPutReq.startDate
+        assignment.endDate = assignmentPutReq.endDate
+        assignmentRepository.save(assignment)
+
+        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 
     override fun getList(): ResponseEntity<CoBoResponseDto<AssignmentGetListRes>> {
