@@ -5,6 +5,7 @@ import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
 import cobo.writing.data.dto.assignment.AssignmentGetListRes
 import cobo.writing.data.dto.assignment.AssignmentPostReq
+import cobo.writing.data.dto.assignment.AssignmentPutReq
 import cobo.writing.service.AssignmentService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -43,7 +44,7 @@ class AssignmentPresentation(
         ApiResponse(responseCode = "200", description = "성공")
     )
     fun put(
-        @RequestBody int: Int): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
+        @RequestBody assignmentPutReq: AssignmentPutReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 
