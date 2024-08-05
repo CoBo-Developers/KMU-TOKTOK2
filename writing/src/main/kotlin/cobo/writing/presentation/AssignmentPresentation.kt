@@ -1,5 +1,6 @@
 package cobo.writing.presentation
 
+import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
 import cobo.writing.data.dto.assignment.AssignmentGetListRes
@@ -9,11 +10,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/assignment")
@@ -38,6 +35,16 @@ class AssignmentPresentation(
     )
     fun get(): ResponseEntity<CoBoResponseDto<AssignmentGetListRes>> {
         return assignmentService.getList()
+    }
+
+    @PutMapping
+    @Operation(summary = "과제 수정")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공")
+    )
+    fun put(
+        @RequestBody int: Int): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
+        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 
 }
