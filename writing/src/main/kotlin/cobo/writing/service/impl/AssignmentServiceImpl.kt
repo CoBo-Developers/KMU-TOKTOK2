@@ -53,7 +53,12 @@ class AssignmentServiceImpl(
     }
 
     override fun delete(id: Int): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
-        TODO("Not yet implemented")
+
+        val assignment = assignmentRepository.findById(id).orElseThrow { EntityNotFoundException("Could not find assignment with id $id") }
+
+        assignmentRepository.delete(assignment)
+
+        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 
     override fun getList(): ResponseEntity<CoBoResponseDto<AssignmentGetListRes>> {
