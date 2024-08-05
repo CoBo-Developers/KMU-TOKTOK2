@@ -1,6 +1,5 @@
 package cobo.writing.presentation
 
-import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
 import cobo.writing.data.dto.assignment.AssignmentGetListRes
@@ -48,4 +47,14 @@ class AssignmentPresentation(
         return assignmentService.put(assignmentPutReq)
     }
 
+    @DeleteMapping
+    @Operation(summary = "과제 삭제")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공")
+    )
+    fun delete(
+        @RequestParam id: Int
+    ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        return assignmentService.delete(id)
+    }
 }
