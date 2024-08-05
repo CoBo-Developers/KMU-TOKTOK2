@@ -34,7 +34,7 @@ class AssignmentServiceImpl(
 
         assignmentRepository.save(assignment)
 
-        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.CREATED).getResponseEntity()
     }
 
     override fun getList(): ResponseEntity<CoBoResponseDto<AssignmentGetListRes>> {
