@@ -1,9 +1,13 @@
 package cobo.writing.data.entity
 
 import jakarta.persistence.*
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import java.time.LocalDate
 
 @Entity
+@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE assignment SET deleted = true where id = ?")
 data class Assignment(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,5 +23,7 @@ data class Assignment(
 
     var startDate: LocalDate,
 
-    var endDate: LocalDate
+    var endDate: LocalDate,
+
+    var deleted: Boolean = false,
 )
