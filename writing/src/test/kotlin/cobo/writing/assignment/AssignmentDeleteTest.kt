@@ -3,12 +3,13 @@ package cobo.writing.assignment
 import cobo.writing.data.entity.Assignment
 import cobo.writing.repository.AssignmentRepository
 import cobo.writing.service.AssignmentService
+import jakarta.persistence.EntityNotFoundException
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import java.time.LocalDate
 import java.util.*
@@ -63,5 +64,50 @@ class AssignmentDeleteTest @Autowired constructor(
 
     }
 
+    @Test
+    fun testDeleteInvalidAssignment(){
+        //given
+        val previousCount = assignmentRepository.count()
 
+        //when
+        try{
+            assignmentService.delete(id = Int.MAX_VALUE / 2)
+            assert(false)
+        }catch(e: EntityNotFoundException){
+            //then
+            assertEquals(previousCount, assignmentRepository.count())
+        }
+
+    }
+
+    @Test
+    fun testDeleteAssignmentInMiddle(){
+        //given
+        val randomCount = (3..5).random()
+        val assignment = makeTestAssignment()
+        assignmentRepository.save(assignment)
+        assignmentList.add(assignment)
+
+        for(i in 1..randomCount) {
+            val curAssignment = makeTestAssignment()
+            assignmentRepository.save(curAssignment)
+            assignmentList.add(curAssignment)
+        }
+
+        val previousCount = assignmentRepository.count()
+
+        //when
+        val deleteAssignmentRes = assignmentService.delete(assignment.id ?: 0)
+
+        //then
+
+        assertEquals(HttpStatus.OK, deleteAssignmentRes.statusCode)
+        assertEquals(previousCount - 1, assignmentRepository.count())
+
+        val afterAssignment = assignmentRepository.findById(assignment.id ?: 0)
+
+        assertTrue(afterAssignment.isEmpty)
+
+        println(assignmentList)
+    }
 }
