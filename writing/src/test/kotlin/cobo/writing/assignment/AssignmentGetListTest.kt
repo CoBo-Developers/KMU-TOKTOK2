@@ -103,4 +103,26 @@ class AssignmentGetListTest @Autowired constructor(
             i++
         }
     }
+
+    @Test
+    fun testGetEmptyList(){
+        //given
+        val assignmentList = assignmentRepository.findAll()
+        assignmentRepository.deleteAll()
+
+        //when
+        val assignmentGetListRes = assignmentService.getList()
+
+
+        //then
+
+        assertEquals(HttpStatus.OK, assignmentGetListRes.statusCode)
+
+        assertNotNull(assignmentGetListRes.body)
+        assertNotNull(assignmentGetListRes.body!!.data)
+        assertEquals(0, assignmentGetListRes.body!!.data!!.assignments.size)
+
+
+        assignmentRepository.saveAll(assignmentList)
+    }
 }
