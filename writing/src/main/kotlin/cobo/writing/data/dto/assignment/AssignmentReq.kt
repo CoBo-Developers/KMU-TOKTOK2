@@ -13,3 +13,17 @@ data class AssignmentPostReq(
 
     val endDate: LocalDate,
 )
+
+data class AssignmentPutReq(
+    val id: Int,
+
+    val title: String,
+
+    val description: String,
+
+    val score: Int,
+
+    val startDate: LocalDate,
+
+    val endDate: LocalDate,
+)
