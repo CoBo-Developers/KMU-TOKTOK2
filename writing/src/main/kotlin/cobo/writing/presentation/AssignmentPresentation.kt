@@ -45,7 +45,7 @@ class AssignmentPresentation(
     )
     fun put(
         @RequestBody assignmentPutReq: AssignmentPutReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
-        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+        return assignmentService.put(assignmentPutReq)
     }
 
 }
