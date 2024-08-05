@@ -3,6 +3,8 @@ package cobo.writing.service.impl
 import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
+import cobo.writing.data.dto.assignment.AssignmentGetListElementRes
+import cobo.writing.data.dto.assignment.AssignmentGetListRes
 import cobo.writing.data.dto.assignment.AssignmentPostReq
 import cobo.writing.data.entity.Assignment
 import cobo.writing.repository.AssignmentRepository
@@ -33,5 +35,19 @@ class AssignmentServiceImpl(
         assignmentRepository.save(assignment)
 
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
+    override fun getList(): ResponseEntity<CoBoResponseDto<AssignmentGetListRes>> {
+        val assignmentGetListRes = AssignmentGetListRes(assignmentRepository.findAll().map{
+            AssignmentGetListElementRes(
+                id = it.id ?: 0,
+                title = it.title ?: "",
+                description = it.description ?: "",
+                score = it.score,
+                startDate = it.startDate,
+                endDate = it.endDate
+            )
+        })
+        return CoBoResponse(assignmentGetListRes, CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 }

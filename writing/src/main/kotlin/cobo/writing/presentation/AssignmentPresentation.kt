@@ -1,8 +1,8 @@
 package cobo.writing.presentation
 
-import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
+import cobo.writing.data.dto.assignment.AssignmentGetListRes
 import cobo.writing.data.dto.assignment.AssignmentPostReq
 import cobo.writing.service.AssignmentService
 import io.swagger.v3.oas.annotations.Operation
@@ -36,8 +36,8 @@ class AssignmentPresentation(
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "성공")
     )
-    fun get(): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
-        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+    fun get(): ResponseEntity<CoBoResponseDto<AssignmentGetListRes>> {
+        return assignmentService.getList()
     }
 
 }
