@@ -107,7 +107,7 @@ class AssignmentGetListTest @Autowired constructor(
     @Test
     fun testGetEmptyList(){
         //given
-        val assignmentList = assignmentRepository.findAll()
+        val allAssignmentList = assignmentRepository.findAll()
         assignmentRepository.deleteAll()
 
         //when
@@ -123,6 +123,6 @@ class AssignmentGetListTest @Autowired constructor(
         assertEquals(0, assignmentGetListRes.body!!.data!!.assignments.size)
 
 
-        assignmentRepository.saveAll(assignmentList)
+        assignmentRepository.saveAll(allAssignmentList)
     }
 }
