@@ -1,12 +1,18 @@
 package cobo.writing.assignment
 
+import cobo.writing.data.dto.assignment.AssignmentPutReq
 import cobo.writing.data.entity.Assignment
 import cobo.writing.repository.AssignmentRepository
 import cobo.writing.service.AssignmentService
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
+import java.time.LocalDate
+import java.util.*
+import kotlin.test.assertEquals
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -23,8 +29,48 @@ class AssignmentPutTest @Autowired constructor(
         assignmentList.clear()
     }
 
+    private fun makeTestAssignment():Assignment{
+        return Assignment(
+            id = null,
+            title = UUID.randomUUID().toString(),
+            description = UUID.randomUUID().toString(),
+            score = (1..20).random(),
+            startDate = LocalDate.of(2024, (1..7).random(), (1..20).random()),
+            endDate = LocalDate.of(2024, (8..12).random(), (1..20).random()),
+        )
+    }
 
-    //그냥
-    //중간
+    @Test
+     fun testPutAssignment(){
+         //given
+         val assignment = makeTestAssignment()
+        assignmentRepository.save(assignment)
+        assignmentList.add(assignment)
+
+        val assignmentPutReq = AssignmentPutReq(
+            id = assignment.id ?: throw NullPointerException("id"),
+            title = UUID.randomUUID().toString(),
+            description = UUID.randomUUID().toString(),
+            score = (1..20).random(),
+            startDate = LocalDate.of(2024, (1..7).random(), (1..20).random()),
+            endDate = LocalDate.of(2024, (8..12).random(), (1..20).random()),
+        )
+
+        //when
+        val putAssignment = assignmentService.put(assignmentPutReq)
+
+        //then
+        assertEquals(HttpStatus.OK, putAssignment.statusCode)
+
+        val newAssignment = assignmentRepository.findById(assignment.id!!).orElseThrow()
+        assertEquals(assignment.id, newAssignment.id)
+        assertEquals(assignmentPutReq.title, newAssignment.title)
+        assertEquals(assignmentPutReq.description, newAssignment.description)
+        assertEquals(assignmentPutReq.score, newAssignment.score)
+        assertEquals(assignmentPutReq.startDate, newAssignment.startDate)
+        assertEquals(assignmentPutReq.endDate, newAssignment.endDate)
+    }
+
+
     //없는거
 }
