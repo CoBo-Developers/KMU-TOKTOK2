@@ -3,10 +3,10 @@ package cobo.writing.service.impl
 import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
-import cobo.writing.data.dto.assignment.AssignmentGetListElementRes
-import cobo.writing.data.dto.assignment.AssignmentGetListRes
-import cobo.writing.data.dto.assignment.AssignmentPostReq
-import cobo.writing.data.dto.assignment.AssignmentPutReq
+import cobo.writing.data.dto.professor.AssignmentGetListElementRes
+import cobo.writing.data.dto.professor.AssignmentGetListRes
+import cobo.writing.data.dto.professor.AssignmentPostReq
+import cobo.writing.data.dto.professor.AssignmentPutReq
 import cobo.writing.data.entity.Assignment
 import cobo.writing.repository.AssignmentRepository
 import cobo.writing.service.AssignmentService
