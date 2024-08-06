@@ -14,4 +14,5 @@ interface AssignmentService {
     fun getList(): ResponseEntity<CoBoResponseDto<AssignmentGetListRes>>
     fun put(assignmentPutReq: AssignmentPutReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>
     fun studentGetList(authentication: Authentication): ResponseEntity<CoBoResponseDto<StudentGetListRes>>
+    fun delete(id: Int): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>
 }

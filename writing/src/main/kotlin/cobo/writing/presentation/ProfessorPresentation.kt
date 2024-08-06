@@ -47,4 +47,15 @@ class ProfessorPresentation(
         return assignmentService.put(assignmentPutReq)
     }
 
+    @DeleteMapping
+    @Operation(summary = "과제 삭제")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공"),
+        ApiResponse(responseCode = "404", description = "해당 데이터가 없음")
+    )
+    fun delete(
+        @RequestParam id: Int
+    ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        return assignmentService.delete(id)
+    }
 }
