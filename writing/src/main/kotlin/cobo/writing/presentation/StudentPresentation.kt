@@ -28,6 +28,6 @@ class StudentPresentation(
         ApiResponse(responseCode = "200", description = "OK"),
     )
     fun getList(@Parameter(hidden = true) authentication: Authentication): ResponseEntity<CoBoResponseDto<StudentGetListRes>> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+        return assignmentService.studentGetList(authentication)
     }
 }

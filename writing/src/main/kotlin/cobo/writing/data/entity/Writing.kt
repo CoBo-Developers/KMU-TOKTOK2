@@ -17,7 +17,8 @@ data class Writing(
 
     val studentId: String,
 
-    val week: Short,
+    @ManyToOne
+    val assignment: Assignment,
 
     @Column(length = 2000)
     val content: String,
