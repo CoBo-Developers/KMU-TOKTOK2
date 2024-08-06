@@ -74,8 +74,10 @@ class AssignmentServiceImpl(
 
         val assignmentList = assignmentRepository.findByUserWithJDBC(studentId)
 
-        println(assignmentList)
-
-        TODO("Not yet implemented")
+        return CoBoResponse(
+            StudentGetListRes(
+                assignmentList = assignmentList,
+            ), CoBoResponseStatus.SUCCESS
+        ).getResponseEntity()
     }
 }

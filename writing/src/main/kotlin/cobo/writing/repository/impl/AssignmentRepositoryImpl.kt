@@ -4,8 +4,10 @@ import cobo.writing.data.dto.student.StudentGetListResElement
 import cobo.writing.data.enums.WritingStateEnum
 import cobo.writing.repository.custom.AssignmentRepositoryCustom
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
+@Repository
 class AssignmentRepositoryImpl(
     private val jdbcTemplate: JdbcTemplate
 ) : AssignmentRepositoryCustom{
@@ -29,7 +31,7 @@ class AssignmentRepositoryImpl(
             score = resultSet.getInt("score"),
             startDate = resultSet.getTimestamp("start_date").toLocalDateTime().toLocalDate(),
             endDate = resultSet.getTimestamp("end_date").toLocalDateTime().toLocalDate(),
-            writingStateEnum = WritingStateEnum.from(resultSet.getShort("state")) ?: WritingStateEnum.NOT_SUBMITTED
+            writingState = resultSet.getShort("state")
         )
     }
 }

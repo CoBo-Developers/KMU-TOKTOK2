@@ -20,5 +20,5 @@ data class StudentGetListResElement(
 
     val endDate: LocalDate,
 
-    val writingStateEnum: WritingStateEnum
+    val writingState: Short
 )
