@@ -3,15 +3,17 @@ package cobo.writing.service.impl
 import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
-import cobo.writing.data.dto.assignment.AssignmentGetListElementRes
-import cobo.writing.data.dto.assignment.AssignmentGetListRes
-import cobo.writing.data.dto.assignment.AssignmentPostReq
-import cobo.writing.data.dto.assignment.AssignmentPutReq
+import cobo.writing.data.dto.professor.AssignmentGetListElementRes
+import cobo.writing.data.dto.professor.AssignmentGetListRes
+import cobo.writing.data.dto.professor.AssignmentPostReq
+import cobo.writing.data.dto.professor.AssignmentPutReq
+import cobo.writing.data.dto.student.StudentGetListRes
 import cobo.writing.data.entity.Assignment
 import cobo.writing.repository.AssignmentRepository
 import cobo.writing.service.AssignmentService
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 
 @Service
@@ -52,15 +54,6 @@ class AssignmentServiceImpl(
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 
-    override fun delete(id: Int): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
-
-        val assignment = assignmentRepository.findById(id).orElseThrow { EntityNotFoundException("Could not find assignment with id $id") }
-
-        assignmentRepository.delete(assignment)
-
-        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
-    }
-
     override fun getList(): ResponseEntity<CoBoResponseDto<AssignmentGetListRes>> {
         val assignmentGetListRes = AssignmentGetListRes(assignmentRepository.findAll().map{
             AssignmentGetListElementRes(
@@ -73,5 +66,18 @@ class AssignmentServiceImpl(
             )
         })
         return CoBoResponse(assignmentGetListRes, CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
+    override fun studentGetList(authentication: Authentication): ResponseEntity<CoBoResponseDto<StudentGetListRes>> {
+
+        val studentId = authentication.name
+
+        val assignmentList = assignmentRepository.findByUserWithJDBC(studentId)
+
+        return CoBoResponse(
+            StudentGetListRes(
+                assignmentList = assignmentList,
+            ), CoBoResponseStatus.SUCCESS
+        ).getResponseEntity()
     }
 }
