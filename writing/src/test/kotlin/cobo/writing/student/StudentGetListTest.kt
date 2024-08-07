@@ -156,4 +156,61 @@ class StudentGetListTest @Autowired constructor(
         testStudentGetListWithState(WritingStateEnum.SUBMITTED.value)
     }
 
+    @Test
+    fun testStudentGetListMoreThanOneElement(){
+        //given
+        val randomCount = (5..7).random()
+        val writingFlagList = mutableListOf<Boolean>()
+        for(i in 1 .. randomCount) {
+            val writingFlag = Random().nextBoolean()
+            writingFlagList.add(writingFlag)
+
+            val assignment = makeTestAssignment()
+            assignmentRepository.save(assignment)
+            assignmentList.add(assignment)
+
+            if (writingFlag) {
+                val writing = makeTestWriting(assignment, (1..2).random().toShort())
+
+                writingRepository.save(writing)
+                writingList.add(writing)
+            }
+        }
+
+        val securityContextHolder = makeTestStudent(studentId)
+
+        //when
+        val studentGetListRes = assignmentService.studentGetList(securityContextHolder.authentication)
+        val studentGetList = studentGetListRes.body!!.data!!.assignmentList.subList(
+            studentGetListRes.body!!.data!!.assignmentList.size - randomCount,
+            studentGetListRes.body!!.data!!.assignmentList.size)
+
+        //then
+        assertEquals(HttpStatus.OK, studentGetListRes.statusCode)
+
+        assertNotNull(studentGetListRes.body!!.data)
+        var writingIndex = 0
+
+        for(i in 0 ..< randomCount) {
+
+            val expectedStudentGetListResElement = StudentGetListResElement(
+                id = assignmentList[i].id!!,
+                title = assignmentList[i].title!!,
+                description = assignmentList[i].description!!,
+                score = assignmentList[i].score,
+                startDate = assignmentList[i].startDate,
+                endDate = assignmentList[i].endDate,
+                writingState = if(writingFlagList[i]){
+                    writingIndex++
+                    writingList[writingIndex-1].state.value
+                }else{
+                    0
+                }
+            )
+            assertEquals(expectedStudentGetListResElement, studentGetList[i])
+
+            println(expectedStudentGetListResElement)
+        }
+    }
+
 }
