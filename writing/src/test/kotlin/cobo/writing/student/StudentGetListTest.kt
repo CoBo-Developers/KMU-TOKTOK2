@@ -114,6 +114,12 @@ class StudentGetListTest @Autowired constructor(
     }
 
     @Test
+    fun testStudentGetListWithNoData(){
+        testStudentGetListWithState(0)
+    }
+
+
+    @Test
     fun testStudentGetListWithNotSubmitted(){
         testStudentGetListWithState(WritingStateEnum.NOT_SUBMITTED.value)
     }
