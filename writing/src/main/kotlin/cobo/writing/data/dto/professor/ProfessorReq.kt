@@ -1,4 +1,4 @@
-package cobo.writing.data.dto.assignment
+package cobo.writing.data.dto.professor
 
 import java.time.LocalDate
 
