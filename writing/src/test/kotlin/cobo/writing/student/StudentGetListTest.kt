@@ -208,8 +208,31 @@ class StudentGetListTest @Autowired constructor(
                 }
             )
             assertEquals(expectedStudentGetListResElement, studentGetList[i])
+        }
+    }
 
-            println(expectedStudentGetListResElement)
+    @Test
+    fun testStudentGetListWithDeletedAssignment(){
+        //given
+        val securityContextHolder = makeTestStudent(studentId)
+        val before = assignmentService.studentGetList(securityContextHolder.authentication)
+        val assignment = makeTestAssignment()
+        assignment.deleted = true
+        assignmentRepository.save(assignment)
+        assignmentList.add(assignment)
+
+
+        //when
+        val studentGetListRes = assignmentService.studentGetList(securityContextHolder.authentication)
+
+        //then
+        assertEquals(HttpStatus.OK, studentGetListRes.statusCode)
+        assertNotNull(studentGetListRes.body!!.data)
+
+        assertEquals(before.body!!.data!!.assignmentList.size, studentGetListRes.body!!.data!!.assignmentList.size)
+
+        if(studentGetListRes.body!!.data!!.assignmentList.isNotEmpty()){
+            assertEquals(before.body!!.data!!.assignmentList.last(), studentGetListRes.body!!.data!!.assignmentList.last())
         }
     }
 
