@@ -56,7 +56,7 @@ class AssignmentPostTest @Autowired constructor(
 
 
         //then
-        assertEquals(HttpStatus.OK, postRes.statusCode)
+        assertEquals(HttpStatus.CREATED, postRes.statusCode)
 
         val optionalSavedAssignment = assignmentRepository.findTopByOrderByIdDesc()
 
@@ -105,8 +105,8 @@ class AssignmentPostTest @Autowired constructor(
                 title = UUID.randomUUID().toString(),
                 description = UUID.randomUUID().toString(),
                 score = (1..10).random(),
-                startDate = LocalDate.of(2024, (1..6).random(), (1..30).random()),
-                endDate = LocalDate.of(2024, (7..12).random(), (1..30).random())
+                startDate = LocalDate.of(2024, (1..6).random(), (1..20).random()),
+                endDate = LocalDate.of(2024, (7..12).random(), (1..20).random())
             )
             assignmentList.add(curAssignment)
         }
