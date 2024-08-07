@@ -1,6 +1,6 @@
 package cobo.writing.assignment
 
-import cobo.writing.data.dto.assignment.AssignmentPutReq
+import cobo.writing.data.dto.professor.AssignmentPutReq
 import cobo.writing.data.entity.Assignment
 import cobo.writing.repository.AssignmentRepository
 import cobo.writing.service.AssignmentService
