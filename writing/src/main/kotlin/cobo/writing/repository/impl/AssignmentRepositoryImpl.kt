@@ -17,7 +17,8 @@ class AssignmentRepositoryImpl(
         val sql = "SELECT assignment.id, assignment.title, assignment.description, assignment.score, assignment.start_date, assignment.end_date, " +
                 "writing.state FROM assignment " +
                 "LEFT JOIN writing ON assignment.id = writing.assignment_id " +
-                "AND writing.student_id = ?"
+                "AND writing.student_id = ? " +
+                "WHERE assignment.deleted = false"
         return jdbcTemplate.query(
             sql, {rs, _ -> studentGetListResElementRowMapper(rs)}, studentId
         )
