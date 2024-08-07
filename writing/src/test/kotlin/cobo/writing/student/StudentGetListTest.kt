@@ -115,13 +115,45 @@ class StudentGetListTest @Autowired constructor(
 
     @Test
     fun testStudentGetListWithNoData(){
-        testStudentGetListWithState(0)
+        //given
+        val assignment = makeTestAssignment()
+        assignmentRepository.save(assignment)
+        assignmentList.add(assignment)
+
+        val securityContextHolder = makeTestStudent(studentId)
+
+        //when
+        val studentGetListRes = assignmentService.studentGetList(securityContextHolder.authentication)
+
+        //then
+
+        assertEquals(HttpStatus.OK, studentGetListRes.statusCode)
+
+        assertNotNull(studentGetListRes.body!!.data)
+
+        val expectedStudentGetListResElement =
+            StudentGetListResElement(
+                id = assignment.id!!,
+                title = assignment.title!!,
+                description = assignment.description!!,
+                score = assignment.score,
+                startDate = assignment.startDate,
+                endDate = assignment.endDate,
+                writingState = 0
+            )
+
+        assertEquals(expectedStudentGetListResElement, studentGetListRes.body!!.data!!.assignmentList.last())
     }
 
 
     @Test
     fun testStudentGetListWithNotSubmitted(){
         testStudentGetListWithState(WritingStateEnum.NOT_SUBMITTED.value)
+    }
+
+    @Test
+    fun testStudentGetListWithSubmitted(){
+        testStudentGetListWithState(WritingStateEnum.SUBMITTED.value)
     }
 
 }
