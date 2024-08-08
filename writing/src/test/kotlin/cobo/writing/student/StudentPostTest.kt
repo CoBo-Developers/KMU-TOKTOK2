@@ -84,6 +84,9 @@ class StudentPostTest @Autowired constructor(
         val koreaTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
         val curTime = LocalDateTime.now()
 
+        println("KOREA TIME: $koreaTime")
+        println("SERVER TIME: $koreaTime")
+
         assertTrue(koreaTime.minusMinutes(5).isBefore(curTime))
         assertTrue(koreaTime.plusMinutes(5).isAfter(curTime))
     }
