@@ -7,13 +7,16 @@ import java.time.LocalDateTime
 @Entity
 @Table(
     indexes = [
-        Index(name = "student_id_index", columnList = "studentId"),
+        Index(name = "student_id_index", columnList = "student_id"),
+    ],
+    uniqueConstraints = [
+        UniqueConstraint(columnNames = ["student_id", "assignment_id"])
     ]
 )
 data class Writing(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int?,
+    var id: Int?,
 
     val studentId: String,
 
