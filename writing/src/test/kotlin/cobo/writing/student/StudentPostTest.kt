@@ -288,8 +288,52 @@ class StudentPostTest @Autowired constructor(
         )
         val studentPostRes = writingService.studentPost(studentPostReq, securityContext.authentication)
 
+        //then
+        assertEquals(HttpStatus.BAD_REQUEST, studentPostRes.statusCode)
+    }
+
+    @Test
+    fun testStudentPostWithStartDateTomorrow(){
+        //given
+        val assignment = makeTestAssignment()
+        assignment.startDate = LocalDate.now().plusDays(1)
+        assignment.endDate = LocalDate.now().plusDays(2)
+
+        assignmentRepository.save(assignment)
+        assignmentList.add(assignment)
+
+        val securityContext = makeTestStudent(studentId = studentId)
+
+        val testContent = UUID.randomUUID().toString()
+
+        //when
+        val studentPostReq = StudentPostReq(
+            assignmentId = assignment.id!!,
+            content = testContent,
+            writingState = WritingStateEnum.SUBMITTED.value,
+        )
+        val studentPostRes = writingService.studentPost(studentPostReq, securityContext.authentication)
 
         //then
         assertEquals(HttpStatus.BAD_REQUEST, studentPostRes.statusCode)
+    }
+
+    @Test
+    fun testStudentPostWithInvalidAssignment(){
+        //given
+        val securityContext = makeTestStudent(studentId = studentId)
+        val testContent = UUID.randomUUID().toString()
+        val studentPostReq = StudentPostReq(
+            assignmentId = Int.MAX_VALUE,
+            content = testContent,
+            writingState = WritingStateEnum.SUBMITTED.value,
+        )
+
+        //when
+
+        val studentPostRes = writingService.studentPost(studentPostReq, securityContext.authentication)
+
+        //then
+        assertEquals(HttpStatus.NOT_FOUND, studentPostRes.statusCode)
     }
 }
