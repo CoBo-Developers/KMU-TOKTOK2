@@ -16,7 +16,7 @@ import java.time.LocalDateTime
 data class Writing(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int?,
+    var id: Int?,
 
     val studentId: String,
 
