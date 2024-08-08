@@ -21,7 +21,7 @@ class WritingRepositoryImpl(
                     "state = VALUES(state), " +
                     "updated_at = VALUES(updated_at)," +
                     "submitted_at = VALUES(submitted_at) ",
-            writing.studentId, writing.assignment.id, writing.content, writing.state, writing.createdAt, writing.updatedAt, writing.submittedAt
+            writing.studentId, writing.assignment.id, writing.content, writing.state.value, writing.createdAt, writing.updatedAt, writing.submittedAt
         )
     }
 }
