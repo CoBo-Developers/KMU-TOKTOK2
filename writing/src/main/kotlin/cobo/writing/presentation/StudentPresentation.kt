@@ -33,7 +33,9 @@ class StudentPresentation(
     @PostMapping
     @Operation(summary = "학생이 본인의 과제를 제출하는 API")
     @ApiResponses(
-        ApiResponse(responseCode = "201", description = "OK"),
+        ApiResponse(responseCode = "201", description = "저장 성공, 업데이트 성공"),
+        ApiResponse(responseCode = "400", description = "잘못된 state 요청, 기한 이외의 과제 제출"),
+        ApiResponse(responseCode = "404", description = "해당 과제가 존재하지 않음")
     )
     fun post(@RequestBody studentPostReq: StudentPostReq, @Parameter(hidden = true) authentication: Authentication): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
         return writingService.studentPost(studentPostReq, authentication)
