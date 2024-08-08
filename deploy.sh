@@ -32,9 +32,8 @@ function build_spring {
   local build_path="$1"
 
   echo "Building Spring Boot for $build_path"
-  ./"$build_path"/gradlew clean build
+  (cd "$build_path" && ./gradlew clean build)
 }
-
 # GIT 최신화
 git pull origin dev
 
