@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.annotation.DirtiesContext
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 import kotlin.test.assertTrue
 
@@ -76,6 +77,15 @@ class StudentPostTest @Autowired constructor(
                 SimpleGrantedAuthority("STUDENT")
             ))
         return securityContextHolder
+    }
+
+    @Test
+    fun testValidTime(){
+        val koreaTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
+        val curTime = LocalDateTime.now()
+
+        assertTrue(koreaTime.minusMinutes(5).isBefore(curTime))
+        assertTrue(koreaTime.plusMinutes(5).isAfter(curTime))
     }
 
     @Test
@@ -136,6 +146,35 @@ class StudentPostTest @Autowired constructor(
         assert((writing.submittedAt!!.isAfter(startTime) || writing.submittedAt!!.isEqual(startTime))&& (writing.submittedAt!!.isBefore(endTime) || writing.submittedAt!!.isEqual(endTime)))
 
         writingList.add(writing)
-
     }
+
+    @Test
+    fun testStudentPostWithInvalidState(){
+        listOf(0, 2, 3).forEach{
+            //given
+            val assignment = makeTestAssignment()
+            assignment.startDate = LocalDate.now().minusDays(1)
+            assignment.endDate = LocalDate.now().plusDays(1)
+
+            assignmentRepository.save(assignment)
+            assignmentList.add(assignment)
+
+            val securityContext = makeTestStudent(studentId = studentId)
+
+            val testContent = UUID.randomUUID().toString()
+
+            //when
+            val studentPostReq = StudentPostReq(
+                assignmentId = assignment.id!!,
+                content = testContent,
+                writingState = it.toShort(),
+            )
+            val studentPostRes = writingService.studentPost(studentPostReq, securityContext.authentication)
+
+            //then
+            assertEquals(HttpStatus.BAD_REQUEST, studentPostRes.statusCode)
+        }
+    }
+
+
 }
