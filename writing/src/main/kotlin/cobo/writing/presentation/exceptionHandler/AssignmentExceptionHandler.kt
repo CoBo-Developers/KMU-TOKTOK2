@@ -14,6 +14,6 @@ class AssignmentExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException::class)
     fun entityNotFoundExceptionHandler(e: EntityNotFoundException): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
-        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.NOT_FOUNT_DATA).getResponseEntity()
+        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.NOT_FOUND_DATA).getResponseEntity()
     }
 }
