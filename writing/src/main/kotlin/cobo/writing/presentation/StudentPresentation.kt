@@ -1,6 +1,5 @@
 package cobo.writing.presentation
 
-import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
 import cobo.writing.data.dto.student.StudentGetListRes
@@ -37,6 +36,6 @@ class StudentPresentation(
         ApiResponse(responseCode = "201", description = "OK"),
     )
     fun post(@RequestBody studentPostReq: StudentPostReq, @Parameter(hidden = true) authentication: Authentication): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
-        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.CREATED).getResponseEntity()
+        return writingService.studentPost(studentPostReq, authentication)
     }
 }
