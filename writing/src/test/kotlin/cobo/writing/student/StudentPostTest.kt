@@ -133,13 +133,7 @@ class StudentPostTest @Autowired constructor(
             submittedAt = writing.submittedAt
         )
 
-        println(writing)
-
         assertEquals(expectedWriting, writing)
-
-        println(writing.createdAt)
-        println(startTime)
-        println(endTime)
 
         assert((writing.createdAt!!.isAfter(startTime) || writing.createdAt!!.isEqual(startTime))&& (writing.createdAt!!.isBefore(endTime) || writing.createdAt!!.isEqual(endTime)))
         assert((writing.updatedAt!!.isAfter(startTime) || writing.updatedAt!!.isEqual(startTime))&& (writing.updatedAt!!.isBefore(endTime) || writing.updatedAt!!.isEqual(endTime)))
@@ -176,5 +170,99 @@ class StudentPostTest @Autowired constructor(
         }
     }
 
+    @Test
+    fun testStudentPostWithStartDateToday(){
+        //given
+        val assignment = makeTestAssignment()
+        assignment.startDate = LocalDate.now()
+        assignment.endDate = LocalDate.now().plusDays(1)
 
+        assignmentRepository.save(assignment)
+        assignmentList.add(assignment)
+
+        val securityContext = makeTestStudent(studentId = studentId)
+
+        val testContent = UUID.randomUUID().toString()
+
+        //when
+        val studentPostReq = StudentPostReq(
+            assignmentId = assignment.id!!,
+            content = testContent,
+            writingState = WritingStateEnum.SUBMITTED.value,
+        )
+        val studentPostRes = writingService.studentPost(studentPostReq, securityContext.authentication)
+
+
+        //then
+        assertEquals(HttpStatus.CREATED, studentPostRes.statusCode)
+
+        val optionalWriting = writingRepository.findTopByOrderByIdDesc()
+
+        assertTrue(optionalWriting.isPresent)
+
+        val writing = optionalWriting.get()
+
+        val expectedWriting = Writing(
+            id = writing.id,
+            studentId = studentId,
+            assignment = assignment,
+            content = testContent,
+            state = WritingStateEnum.SUBMITTED,
+            createdAt = writing.createdAt,
+            updatedAt = writing.updatedAt,
+            submittedAt = writing.submittedAt
+        )
+
+        assertEquals(expectedWriting, writing)
+
+        writingList.add(writing)
+    }
+
+    @Test
+    fun testStudentPostWithEndDateToday(){
+        //given
+        val assignment = makeTestAssignment()
+        assignment.startDate = LocalDate.now().minusDays(1)
+        assignment.endDate = LocalDate.now()
+
+        assignmentRepository.save(assignment)
+        assignmentList.add(assignment)
+
+        val securityContext = makeTestStudent(studentId = studentId)
+
+        val testContent = UUID.randomUUID().toString()
+
+        //when
+        val studentPostReq = StudentPostReq(
+            assignmentId = assignment.id!!,
+            content = testContent,
+            writingState = WritingStateEnum.SUBMITTED.value,
+        )
+        val studentPostRes = writingService.studentPost(studentPostReq, securityContext.authentication)
+
+
+        //then
+        assertEquals(HttpStatus.CREATED, studentPostRes.statusCode)
+
+        val optionalWriting = writingRepository.findTopByOrderByIdDesc()
+
+        assertTrue(optionalWriting.isPresent)
+
+        val writing = optionalWriting.get()
+
+        val expectedWriting = Writing(
+            id = writing.id,
+            studentId = studentId,
+            assignment = assignment,
+            content = testContent,
+            state = WritingStateEnum.SUBMITTED,
+            createdAt = writing.createdAt,
+            updatedAt = writing.updatedAt,
+            submittedAt = writing.submittedAt
+        )
+
+        assertEquals(expectedWriting, writing)
+
+        writingList.add(writing)
+    }
 }
