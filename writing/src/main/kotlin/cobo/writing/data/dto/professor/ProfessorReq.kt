@@ -28,7 +28,7 @@ data class AssignmentPutReq(
     val endDate: LocalDate,
 )
 
-data class AssignmentPutWritingReq(
+data class AssignmentPatchWritingReq(
     val assignmentId: Int,
 
     val studentId: String,

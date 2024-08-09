@@ -5,7 +5,7 @@ import cobo.writing.config.response.CoBoResponseStatus
 import cobo.writing.data.dto.professor.AssignmentGetListRes
 import cobo.writing.data.dto.professor.AssignmentPostReq
 import cobo.writing.data.dto.professor.AssignmentPutReq
-import cobo.writing.data.dto.professor.AssignmentPutWritingReq
+import cobo.writing.data.dto.professor.AssignmentPatchWritingReq
 import cobo.writing.service.AssignmentService
 import cobo.writing.service.WritingService
 import io.swagger.v3.oas.annotations.Operation
@@ -68,9 +68,9 @@ class ProfessorPresentation(
         ApiResponse(responseCode = "200", description = "성공")
     )
     fun patchWriting(
-        @RequestBody assignmentPutWritingReq: AssignmentPutWritingReq
+        @RequestBody assignmentPatchWritingReq: AssignmentPatchWritingReq
     ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
-        return writingService.assignmentPatchWriting(assignmentPutWritingReq)
+        return writingService.assignmentPatchWriting(assignmentPatchWritingReq)
     }
 
 }

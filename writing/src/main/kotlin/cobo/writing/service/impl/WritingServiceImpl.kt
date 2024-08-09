@@ -3,7 +3,7 @@ package cobo.writing.service.impl
 import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
-import cobo.writing.data.dto.professor.AssignmentPutWritingReq
+import cobo.writing.data.dto.professor.AssignmentPatchWritingReq
 import cobo.writing.data.dto.student.StudentGetRes
 import cobo.writing.data.dto.student.StudentPostReq
 import cobo.writing.data.entity.Assignment
@@ -90,13 +90,13 @@ class WritingServiceImpl(
         return CoBoResponse(studentGetRes, CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 
-    override fun assignmentPatchWriting(assignmentPutWritingReq: AssignmentPutWritingReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+    override fun assignmentPatchWriting(assignmentPatchWritingReq: AssignmentPatchWritingReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
 
         return CoBoResponse<CoBoResponseStatus>(
             if (writingRepository.updateStateByAssignmentIdAndStudentIdWithJDBC(
-                    writingState = assignmentPutWritingReq.writingState,
-                    assignmentId = assignmentPutWritingReq.assignmentId,
-                    studentId = assignmentPutWritingReq.studentId) > 0)
+                    writingState = assignmentPatchWritingReq.writingState,
+                    assignmentId = assignmentPatchWritingReq.assignmentId,
+                    studentId = assignmentPatchWritingReq.studentId) > 0)
                 CoBoResponseStatus.SUCCESS
             else
                 CoBoResponseStatus.NOT_FOUND_DATA).getResponseEntityWithLog()
