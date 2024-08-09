@@ -46,9 +46,9 @@ class AssignmentPostTest @Autowired constructor(
         val assignmentPostReq = AssignmentPostReq(
             title = assignment.title ?: "",
             description = assignment.description ?: "",
-            score = assignment.score,
-            startDate = assignment.startDate,
-            endDate = assignment.endDate,
+            score = assignment.score!!,
+            startDate = assignment.startDate!!,
+            endDate = assignment.endDate!!,
         )
 
         //when
@@ -114,9 +114,9 @@ class AssignmentPostTest @Autowired constructor(
         val assignmentPostReq = AssignmentPostReq(
             title = assignment.title ?: "",
             description = assignment.description ?: "",
-            score = assignment.score,
-            startDate = assignment.startDate,
-            endDate = assignment.endDate
+            score = assignment.score!!,
+            startDate = assignment.startDate!!,
+            endDate = assignment.endDate!!
         )
 
         assignmentService.post(assignmentPostReq)
@@ -152,9 +152,9 @@ class AssignmentPostTest @Autowired constructor(
         val assignmentPostReq = AssignmentPostReq(
             title = assignment.title ?: "",
             description = assignment.description ?: "",
-            score = assignment.score,
-            startDate = assignment.startDate,
-            endDate = assignment.endDate
+            score = assignment.score!!,
+            startDate = assignment.startDate!!,
+            endDate = assignment.endDate!!
         )
 
 

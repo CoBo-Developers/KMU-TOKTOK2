@@ -104,9 +104,9 @@ class StudentGetListTest @Autowired constructor(
                 id = assignment.id!!,
                 title = assignment.title!!,
                 description = assignment.description!!,
-                score = assignment.score,
-                startDate = assignment.startDate,
-                endDate = assignment.endDate,
+                score = assignment.score!!,
+                startDate = assignment.startDate!!,
+                endDate = assignment.endDate!!,
                 writingState = state
             )
 
@@ -136,9 +136,9 @@ class StudentGetListTest @Autowired constructor(
                 id = assignment.id!!,
                 title = assignment.title!!,
                 description = assignment.description!!,
-                score = assignment.score,
-                startDate = assignment.startDate,
-                endDate = assignment.endDate,
+                score = assignment.score!!,
+                startDate = assignment.startDate!!,
+                endDate = assignment.endDate!!,
                 writingState = 0
             )
 
@@ -197,9 +197,9 @@ class StudentGetListTest @Autowired constructor(
                 id = assignmentList[i].id!!,
                 title = assignmentList[i].title!!,
                 description = assignmentList[i].description!!,
-                score = assignmentList[i].score,
-                startDate = assignmentList[i].startDate,
-                endDate = assignmentList[i].endDate,
+                score = assignmentList[i].score!!,
+                startDate = assignmentList[i].startDate!!,
+                endDate = assignmentList[i].endDate!!,
                 writingState = if(writingFlagList[i]){
                     writingIndex++
                     writingList[writingIndex-1].state.value
