@@ -1,10 +1,13 @@
 package cobo.writing.repository.impl
 
+import cobo.writing.data.entity.Assignment
 import cobo.writing.data.entity.Writing
+import cobo.writing.data.enums.WritingStateEnum
 import cobo.writing.repository.custom.WritingRepositoryCustom
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.sql.ResultSet
 
 @Repository
 class WritingRepositoryImpl(
@@ -35,4 +38,27 @@ class WritingRepositoryImpl(
                     "WHERE assignment_id = ? AND student_id = ?",
             writingState, assignmentId, studentId)
     }
+
+    override fun findByAssignmentIdOrderByStatePagingWithJDBC(assignmentId: Int, page: Int, pageSize: Int): List<Writing> {
+        val sql = "SELECT writing.id, writing.student_id, writing.assignment_id, writing.content, writing.state, writing.created_at, writing.updated_at, writing.submitted_at " +
+                "FROM writing WHERE writing.assignment_id = ? ORDER BY writing.state LIMIT ?, ?"
+        return jdbcTemplate.query(
+            sql, {rs, _ -> writingRowMapper(rs)}, assignmentId, page, pageSize
+        )
+    }
+
+    private fun writingRowMapper(resultSet: ResultSet): Writing {
+        return Writing(
+            id = resultSet.getInt("id"),
+            studentId = resultSet.getString("student_id"),
+            assignment = Assignment(resultSet.getInt("assignment_id")),
+            content = resultSet.getString("content"),
+            state = WritingStateEnum.from(resultSet.getShort("state"))!!,
+            createdAt = resultSet.getTimestamp("created_at").toLocalDateTime(),
+            updatedAt = resultSet.getTimestamp("updated_at").toLocalDateTime(),
+            submittedAt = resultSet.getTimestamp("submitted_at").toLocalDateTime()
+        )
+    }
+
+
 }
