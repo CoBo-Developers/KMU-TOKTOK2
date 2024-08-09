@@ -8,13 +8,10 @@ import cobo.writing.repository.AssignmentRepository
 import cobo.writing.repository.WritingRepository
 import cobo.writing.service.WritingService
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.context.SecurityContext
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.annotation.DirtiesContext
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -68,15 +65,6 @@ class ProfessorPathWritingTest @Autowired constructor(
         )
     }
 
-    private fun makeTestStudent(studentId: String): SecurityContext {
-        val securityContextHolder = SecurityContextHolder.getContext()
-        securityContextHolder.authentication = UsernamePasswordAuthenticationToken(
-            studentId, null, listOf(
-                SimpleGrantedAuthority("STUDENT")
-            ))
-        return securityContextHolder
-    }
-
     private fun patchWritingWithState(
         startWritingState: WritingStateEnum,
         endWritingState: WritingStateEnum){
@@ -103,6 +91,78 @@ class ProfessorPathWritingTest @Autowired constructor(
         val savedWriting = writingRepository.findTopByOrderByIdDesc().orElseThrow()
 
         assertEquals(endWritingState, savedWriting.state)
+    }
+
+    @Test
+    fun testPatchWritingWithSubmittedToSubmitted(){
+        patchWritingWithState(
+            startWritingState = WritingStateEnum.SUBMITTED,
+            endWritingState = WritingStateEnum.SUBMITTED
+        )
+    }
+
+    @Test
+    fun testPatchWritingWithSubmittedToApproved(){
+        patchWritingWithState(
+            startWritingState = WritingStateEnum.SUBMITTED,
+            endWritingState = WritingStateEnum.APPROVED
+        )
+    }
+
+    @Test
+    fun testPatchWritingWithSubmittedToNotApproved(){
+        patchWritingWithState(
+            startWritingState = WritingStateEnum.SUBMITTED,
+            endWritingState = WritingStateEnum.NOT_APPROVED
+        )
+    }
+
+    @Test
+    fun testPatchWritingWithApprovedToSubmitted(){
+        patchWritingWithState(
+            startWritingState = WritingStateEnum.APPROVED,
+            endWritingState = WritingStateEnum.SUBMITTED
+        )
+    }
+
+    @Test
+    fun testPatchWritingWithApprovedToApproved(){
+        patchWritingWithState(
+            startWritingState = WritingStateEnum.APPROVED,
+            endWritingState = WritingStateEnum.APPROVED
+        )
+    }
+
+    @Test
+    fun testPatchWritingWithApprovedToNotApproved(){
+        patchWritingWithState(
+            startWritingState = WritingStateEnum.APPROVED,
+            endWritingState = WritingStateEnum.NOT_APPROVED
+        )
+    }
+
+    @Test
+    fun testPatchWritingWithNotApprovedToSubmitted(){
+        patchWritingWithState(
+            startWritingState = WritingStateEnum.NOT_APPROVED,
+            endWritingState = WritingStateEnum.SUBMITTED
+        )
+    }
+
+    @Test
+    fun testPatchWritingWithNotApprovedToApproved(){
+        patchWritingWithState(
+            startWritingState = WritingStateEnum.NOT_APPROVED,
+            endWritingState = WritingStateEnum.APPROVED
+        )
+    }
+
+    @Test
+    fun testPatchWritingWithNotApprovedToNotApproved(){
+        patchWritingWithState(
+            startWritingState = WritingStateEnum.NOT_APPROVED,
+            endWritingState = WritingStateEnum.NOT_APPROVED
+        )
     }
 
 }
