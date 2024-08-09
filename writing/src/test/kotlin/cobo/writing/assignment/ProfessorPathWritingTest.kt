@@ -165,4 +165,23 @@ class ProfessorPathWritingTest @Autowired constructor(
         )
     }
 
+    @Test
+    fun testPatchWithInvalidWriting(){
+        //given
+        val assignment = makeTestAssignment()
+        assignment.id = Int.MAX_VALUE
+
+        //when
+        val assignmentPatchReq = AssignmentPatchWritingReq(
+            assignmentId = Int.MAX_VALUE,
+            studentId = studentId,
+            writingState = WritingStateEnum.SUBMITTED.value
+        )
+        val patchWritingRes = writingService.assignmentPatchWriting(assignmentPatchReq)
+
+        //then
+        assertEquals(HttpStatus.NOT_FOUND, patchWritingRes.statusCode)
+
+    }
+
 }

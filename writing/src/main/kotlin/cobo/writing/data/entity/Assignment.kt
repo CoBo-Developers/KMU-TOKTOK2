@@ -11,7 +11,7 @@ import java.time.LocalDate
 data class Assignment(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int?,
+    var id: Int?,
 
     @Column(length = 200)
     var title: String?,
