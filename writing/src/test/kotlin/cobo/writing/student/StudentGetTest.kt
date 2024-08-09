@@ -1,5 +1,6 @@
 package cobo.writing.student
 
+import cobo.writing.data.dto.student.StudentGetRes
 import cobo.writing.data.entity.Assignment
 import cobo.writing.data.entity.Writing
 import cobo.writing.data.enums.WritingStateEnum
@@ -7,8 +8,15 @@ import cobo.writing.repository.AssignmentRepository
 import cobo.writing.repository.WritingRepository
 import cobo.writing.service.WritingService
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.annotation.DirtiesContext
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -61,5 +69,55 @@ class StudentGetTest @Autowired constructor(
         )
     }
 
+    private fun makeTestStudent(studentId: String): SecurityContext {
+        val securityContextHolder = SecurityContextHolder.getContext()
+        securityContextHolder.authentication = UsernamePasswordAuthenticationToken(
+            studentId, null, listOf(
+                SimpleGrantedAuthority("STUDENT")
+            ))
+        return securityContextHolder
+    }
 
+    private fun testStudentGetWithWritingState(writingStateEnum: WritingStateEnum){
+        //given
+        val assignment = makeTestAssignment()
+        assignmentRepository.save(assignment)
+        assignmentList.add(assignment)
+
+        val writing = makeTestWriting(assignment, writingStateEnum.value)
+        writingRepository.save(writing)
+        writingList.add(writing)
+
+        val securityContext = makeTestStudent(studentId)
+
+        //when
+        val studentGetRes = writingService.studentGet(assignment.id!!, securityContext.authentication)
+
+        //then
+        assertEquals(HttpStatus.OK, studentGetRes.statusCode)
+
+        val savedWriting = writingRepository.findTopByOrderByIdDesc().orElseThrow()
+
+        val expectedStudentGetRes = StudentGetRes(
+            assignmentId = savedWriting.assignment.id!!,
+            content = savedWriting.content,
+        )
+
+        assertEquals(expectedStudentGetRes, studentGetRes.body!!.data)
+    }
+
+    @Test
+    fun testStudentGetWithSubmitted(){
+        testStudentGetWithWritingState(WritingStateEnum.SUBMITTED)
+    }
+
+    @Test
+    fun testStudentGetWithNotApproved(){
+        testStudentGetWithWritingState(WritingStateEnum.NOT_APPROVED)
+    }
+
+    @Test
+    fun testStudentGetWithApproved(){
+        testStudentGetWithWritingState(WritingStateEnum.APPROVED)
+    }
 }

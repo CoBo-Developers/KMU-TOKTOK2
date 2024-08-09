@@ -60,9 +60,9 @@ class AssignmentServiceImpl(
                 id = it.id ?: 0,
                 title = it.title ?: "",
                 description = it.description ?: "",
-                score = it.score,
-                startDate = it.startDate,
-                endDate = it.endDate
+                score = it.score!!,
+                startDate = it.startDate!!,
+                endDate = it.endDate!!
             )
         })
         return CoBoResponse(assignmentGetListRes, CoBoResponseStatus.SUCCESS).getResponseEntity()
