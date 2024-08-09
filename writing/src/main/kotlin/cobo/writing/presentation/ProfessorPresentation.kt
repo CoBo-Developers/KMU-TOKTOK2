@@ -5,7 +5,9 @@ import cobo.writing.config.response.CoBoResponseStatus
 import cobo.writing.data.dto.professor.AssignmentGetListRes
 import cobo.writing.data.dto.professor.AssignmentPostReq
 import cobo.writing.data.dto.professor.AssignmentPutReq
+import cobo.writing.data.dto.professor.AssignmentPatchWritingReq
 import cobo.writing.service.AssignmentService
+import cobo.writing.service.WritingService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -15,7 +17,8 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/professor")
 class ProfessorPresentation(
-    private val assignmentService: AssignmentService
+    private val assignmentService: AssignmentService,
+    private val writingService: WritingService
 ) {
 
     @PostMapping
@@ -58,4 +61,16 @@ class ProfessorPresentation(
     ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         return assignmentService.delete(id)
     }
+
+    @PatchMapping("/writing")
+    @Operation(summary = "교수가 해당 글쓰기의 상태를 변경")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공")
+    )
+    fun patchWriting(
+        @RequestBody assignmentPatchWritingReq: AssignmentPatchWritingReq
+    ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        return writingService.assignmentPatchWriting(assignmentPatchWritingReq)
+    }
+
 }

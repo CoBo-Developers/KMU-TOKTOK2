@@ -3,6 +3,7 @@ package cobo.writing.service.impl
 import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
+import cobo.writing.data.dto.professor.AssignmentPatchWritingReq
 import cobo.writing.data.dto.student.StudentGetRes
 import cobo.writing.data.dto.student.StudentPostReq
 import cobo.writing.data.entity.Assignment
@@ -11,6 +12,7 @@ import cobo.writing.data.enums.WritingStateEnum
 import cobo.writing.repository.AssignmentRepository
 import cobo.writing.repository.WritingRepository
 import cobo.writing.service.WritingService
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
@@ -87,5 +89,23 @@ class WritingServiceImpl(
         )
 
         return CoBoResponse(studentGetRes, CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
+    override fun assignmentPatchWriting(assignmentPatchWritingReq: AssignmentPatchWritingReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        return try {
+            CoBoResponse<CoBoResponseStatus>(
+                if (writingRepository.updateStateByAssignmentIdAndStudentIdWithJDBC(
+                        writingState = assignmentPatchWritingReq.writingState,
+                        assignmentId = assignmentPatchWritingReq.assignmentId,
+                        studentId = assignmentPatchWritingReq.studentId
+                    ) > 0
+                )
+                    CoBoResponseStatus.SUCCESS
+                else
+                    CoBoResponseStatus.NOT_FOUND_DATA
+            ).getResponseEntityWithLog()
+        }catch(e: DataIntegrityViolationException){
+            CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.BAD_STATE_REQUEST).getResponseEntityWithLog()
+        }
     }
 }
