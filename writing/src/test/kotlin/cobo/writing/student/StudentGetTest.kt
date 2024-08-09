@@ -120,4 +120,27 @@ class StudentGetTest @Autowired constructor(
     fun testStudentGetWithApproved(){
         testStudentGetWithWritingState(WritingStateEnum.APPROVED)
     }
+
+    @Test
+    fun testStudentGetNotSubmitted(){
+        //given
+        val assignment = makeTestAssignment()
+        assignmentRepository.save(assignment)
+        assignmentList.add(assignment)
+
+        val securityContext = makeTestStudent(studentId)
+
+        //when
+        val studentGetRes = writingService.studentGet(assignment.id!!, securityContext.authentication)
+
+        //then
+        assertEquals(HttpStatus.OK, studentGetRes.statusCode)
+
+        val expectedStudentGetRes = StudentGetRes(
+            assignmentId = assignment.id!!,
+            content = "",
+        )
+
+        assertEquals(expectedStudentGetRes, studentGetRes.body!!.data)
+    }
 }
