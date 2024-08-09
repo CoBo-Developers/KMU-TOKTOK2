@@ -3,6 +3,7 @@ package cobo.writing.presentation
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
 import cobo.writing.data.dto.student.StudentGetListRes
+import cobo.writing.data.dto.student.StudentGetRes
 import cobo.writing.data.dto.student.StudentPostReq
 import cobo.writing.service.AssignmentService
 import cobo.writing.service.WritingService
@@ -39,5 +40,15 @@ class StudentPresentation(
     )
     fun post(@RequestBody studentPostReq: StudentPostReq, @Parameter(hidden = true) authentication: Authentication): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
         return writingService.studentPost(studentPostReq, authentication)
+    }
+
+    @GetMapping
+    @Operation(summary = "학생이 본인이 제출했던 과제를 조회하는 API")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "OK"),
+        ApiResponse(responseCode = "404", description = "해당 과제가 존재하지 않음")
+    )
+    fun get(@RequestParam assignmentId: Int, @Parameter(hidden = true) authentication: Authentication):ResponseEntity<CoBoResponseDto<StudentGetRes>> {
+        return writingService.studentGet(assignmentId, authentication)
     }
 }

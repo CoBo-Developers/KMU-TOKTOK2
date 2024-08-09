@@ -19,11 +19,15 @@ data class Assignment(
     @Column(length = 500)
     var description: String?,
 
-    var score: Int,
+    var score: Int?,
 
-    var startDate: LocalDate,
+    var startDate: LocalDate?,
 
-    var endDate: LocalDate,
+    var endDate: LocalDate?,
 
     var deleted: Boolean = false,
-)
+){
+    constructor(id: Int?): this(
+        id = id, title = null, description = null, score = null, startDate = null, endDate = null
+    )
+}

@@ -1,6 +1,5 @@
 package cobo.writing.data.dto.student
 
-import cobo.writing.data.enums.WritingStateEnum
 import java.time.LocalDate
 
 data class StudentGetListRes(
@@ -21,4 +20,11 @@ data class StudentGetListResElement(
     val endDate: LocalDate,
 
     val writingState: Short
+)
+
+data class StudentGetRes(
+
+    val assignmentId: Int,
+
+    val content: String
 )
