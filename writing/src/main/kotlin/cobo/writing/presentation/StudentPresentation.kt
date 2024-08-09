@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
@@ -39,5 +40,15 @@ class StudentPresentation(
     )
     fun post(@RequestBody studentPostReq: StudentPostReq, @Parameter(hidden = true) authentication: Authentication): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
         return writingService.studentPost(studentPostReq, authentication)
+    }
+
+    @GetMapping
+    @Operation(summary = "학생이 본인이 제출했던 과제를 조회하는 API")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "OK"),
+        ApiResponse(responseCode = "404", description = "해당 과제가 존재하지 않음")
+    )
+    fun get(@RequestParam assignmentId: Int, @Parameter(hidden = true) authentication: Authentication):ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }
