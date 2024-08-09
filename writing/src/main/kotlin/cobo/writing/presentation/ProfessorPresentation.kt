@@ -1,6 +1,5 @@
 package cobo.writing.presentation
 
-import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
 import cobo.writing.data.dto.professor.AssignmentGetListRes
@@ -8,6 +7,7 @@ import cobo.writing.data.dto.professor.AssignmentPostReq
 import cobo.writing.data.dto.professor.AssignmentPutReq
 import cobo.writing.data.dto.professor.AssignmentPutWritingReq
 import cobo.writing.service.AssignmentService
+import cobo.writing.service.WritingService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/professor")
 class ProfessorPresentation(
-    private val assignmentService: AssignmentService
+    private val assignmentService: AssignmentService,
+    private val writingService: WritingService
 ) {
 
     @PostMapping
@@ -69,7 +70,7 @@ class ProfessorPresentation(
     fun patchWriting(
         @RequestBody assignmentPutWritingReq: AssignmentPutWritingReq
     ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
-        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.UPDATED).getResponseEntity()
+        return writingService.assignmentPatchWriting(assignmentPutWritingReq)
     }
 
 }
