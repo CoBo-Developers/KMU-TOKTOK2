@@ -3,7 +3,9 @@ package cobo.writing.service.impl
 import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
+import cobo.writing.data.dto.student.StudentGetRes
 import cobo.writing.data.dto.student.StudentPostReq
+import cobo.writing.data.entity.Assignment
 import cobo.writing.data.entity.Writing
 import cobo.writing.data.enums.WritingStateEnum
 import cobo.writing.repository.AssignmentRepository
@@ -63,5 +65,27 @@ class WritingServiceImpl(
             CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.UPDATED).getResponseEntityWithLog()
         }
 
+    }
+
+    override fun studentGet(
+        assignmentId: Int,
+        authentication: Authentication
+    ): ResponseEntity<CoBoResponseDto<StudentGetRes>> {
+
+        val studentId = authentication.name
+
+        val assignment = Assignment(id = assignmentId)
+
+        val writing = writingRepository.findByAssignmentAndStudentId(
+            assignment = assignment,
+            studentId = studentId
+        )
+
+        val studentGetRes = StudentGetRes(
+            assignmentId = assignmentId,
+            content = if(writing.isPresent) writing.get().content else ""
+        )
+
+        return CoBoResponse(studentGetRes, CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 }
