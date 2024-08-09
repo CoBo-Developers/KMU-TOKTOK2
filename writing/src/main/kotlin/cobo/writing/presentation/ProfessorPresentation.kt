@@ -2,10 +2,7 @@ package cobo.writing.presentation
 
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
-import cobo.writing.data.dto.professor.AssignmentGetListRes
-import cobo.writing.data.dto.professor.AssignmentPostReq
-import cobo.writing.data.dto.professor.AssignmentPutReq
-import cobo.writing.data.dto.professor.AssignmentPatchWritingReq
+import cobo.writing.data.dto.professor.*
 import cobo.writing.service.AssignmentService
 import cobo.writing.service.WritingService
 import io.swagger.v3.oas.annotations.Operation
@@ -73,4 +70,17 @@ class ProfessorPresentation(
         return writingService.assignmentPatchWriting(assignmentPatchWritingReq)
     }
 
+
+    @GetMapping("/writing-list")
+    @Operation(summary = "교수가 글쓰기 목록을 조회")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공")
+    )
+    fun getWritingList(
+        @RequestParam assignmentId: Int,
+        @RequestParam page: Int,
+        @RequestParam pageSize: Int
+    ): ResponseEntity<CoBoResponseDto<ProfessorGetWritingListRes>> {
+        return writingService.professorGetWritingList(assignmentId, page, pageSize)
+    }
 }
