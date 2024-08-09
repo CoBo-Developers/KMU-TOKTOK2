@@ -27,3 +27,11 @@ data class AssignmentPutReq(
 
     val endDate: LocalDate,
 )
+
+data class AssignmentPutWritingReq(
+    val assignmentId: Int,
+
+    val studentId: String,
+
+    val writingState: Short
+)
