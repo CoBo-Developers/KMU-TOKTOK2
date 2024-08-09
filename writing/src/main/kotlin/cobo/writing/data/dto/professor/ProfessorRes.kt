@@ -2,6 +2,7 @@ package cobo.writing.data.dto.professor
 
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class AssignmentGetListElementRes(
     @Schema(description = "과제 ID", example = "1")
@@ -20,4 +21,18 @@ data class AssignmentGetListElementRes(
 
 data class AssignmentGetListRes(
     val assignments: List<AssignmentGetListElementRes>
+)
+
+data class ProfessorGetWritingListRes(
+    val writings: List<ProfessorGetWritingLisElementRes>
+)
+
+data class ProfessorGetWritingLisElementRes(
+    val studentId: String,
+
+    val createdAt: LocalDateTime,
+
+    val updatedAt: LocalDateTime,
+
+    val writingState: Short
 )
