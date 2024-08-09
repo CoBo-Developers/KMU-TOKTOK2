@@ -143,4 +143,24 @@ class StudentGetTest @Autowired constructor(
 
         assertEquals(expectedStudentGetRes, studentGetRes.body!!.data)
     }
+
+    @Test
+    fun testStudentGetInvalidAssignment(){
+        //given
+        val securityContext = makeTestStudent(studentId)
+        val assignmentId = Int.MAX_VALUE
+
+        //when
+        val studentGetRes = writingService.studentGet(assignmentId, securityContext.authentication)
+
+        //then
+        assertEquals(HttpStatus.OK, studentGetRes.statusCode)
+
+        val expectedStudentGetRes = StudentGetRes(
+            assignmentId = assignmentId,
+            content = "",
+        )
+
+        assertEquals(expectedStudentGetRes, studentGetRes.body!!.data)
+    }
 }
