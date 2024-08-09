@@ -1,10 +1,12 @@
 package cobo.writing.presentation
 
+import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
 import cobo.writing.data.dto.professor.AssignmentGetListRes
 import cobo.writing.data.dto.professor.AssignmentPostReq
 import cobo.writing.data.dto.professor.AssignmentPutReq
+import cobo.writing.data.dto.professor.AssignmentPutWritingReq
 import cobo.writing.service.AssignmentService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -58,4 +60,16 @@ class ProfessorPresentation(
     ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         return assignmentService.delete(id)
     }
+
+    @PatchMapping("/writing")
+    @Operation(summary = "교수가 해당 글쓰기의 상태를 변경")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공")
+    )
+    fun patchWriting(
+        @RequestBody assignmentPutWritingReq: AssignmentPutWritingReq
+    ): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.UPDATED).getResponseEntity()
+    }
+
 }
