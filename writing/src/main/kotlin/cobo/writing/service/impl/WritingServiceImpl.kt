@@ -4,6 +4,8 @@ import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
 import cobo.writing.data.dto.professor.AssignmentPatchWritingReq
+import cobo.writing.data.dto.professor.ProfessorGetWritingLisElementRes
+import cobo.writing.data.dto.professor.ProfessorGetWritingListRes
 import cobo.writing.data.dto.student.StudentGetRes
 import cobo.writing.data.dto.student.StudentPostReq
 import cobo.writing.data.entity.Assignment
@@ -107,5 +109,32 @@ class WritingServiceImpl(
         }catch(e: DataIntegrityViolationException){
             CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.BAD_STATE_REQUEST).getResponseEntityWithLog()
         }
+    }
+
+    override fun professorGetWritingList(
+        assignmentId: Int,
+        page: Int,
+        pageSize: Int
+    ): ResponseEntity<CoBoResponseDto<ProfessorGetWritingListRes>> {
+        val writings =
+            writingRepository.findByAssignmentIdOrderByStatePagingWithJDBC(
+                assignmentId = assignmentId,
+                page = page,
+                pageSize = pageSize
+            ).map{
+                ProfessorGetWritingLisElementRes(
+                    studentId = it.studentId,
+                    createdAt = it.createdAt!!,
+                    updatedAt = it.updatedAt!!,
+                    writingState = it.state.value
+                )
+            }
+
+        return CoBoResponse(
+            data = ProfessorGetWritingListRes(
+                writings = writings
+            ),
+            coBoResponseStatus = CoBoResponseStatus.SUCCESS
+        ).getResponseEntity()
     }
 }

@@ -8,7 +8,6 @@ import cobo.writing.service.WritingService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -78,8 +77,10 @@ class ProfessorPresentation(
         ApiResponse(responseCode = "200", description = "성공")
     )
     fun getWritingList(
-        @RequestParam assignmentId: Int
+        @RequestParam assignmentId: Int,
+        @RequestParam page: Int,
+        @RequestParam pageSize: Int
     ): ResponseEntity<CoBoResponseDto<ProfessorGetWritingListRes>> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+        return writingService.professorGetWritingList(assignmentId, page, pageSize)
     }
 }
