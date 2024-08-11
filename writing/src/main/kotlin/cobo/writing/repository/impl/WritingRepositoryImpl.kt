@@ -47,6 +47,11 @@ class WritingRepositoryImpl(
         )
     }
 
+    override fun countByAssignmentIdWithJDBC(assignmentId: Int): Long {
+        return jdbcTemplate.queryForObject("SELECT count(*) FROM writing WHERE assignment_id = ?", Long::class.java, assignmentId)
+
+    }
+
     private fun writingRowMapper(resultSet: ResultSet): Writing {
         return Writing(
             id = resultSet.getInt("id"),

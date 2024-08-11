@@ -24,10 +24,11 @@ data class AssignmentGetListRes(
 )
 
 data class ProfessorGetWritingListRes(
-    val writings: List<ProfessorGetWritingLisElementRes>
+    val totalElements: Long,
+    val writings: List<ProfessorGetWritingListElementRes>
 )
 
-data class ProfessorGetWritingLisElementRes(
+data class ProfessorGetWritingListElementRes(
     val studentId: String,
 
     val createdAt: LocalDateTime,

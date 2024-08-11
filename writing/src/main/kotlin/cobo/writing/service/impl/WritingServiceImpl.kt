@@ -4,7 +4,7 @@ import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
 import cobo.writing.data.dto.professor.AssignmentPatchWritingReq
-import cobo.writing.data.dto.professor.ProfessorGetWritingLisElementRes
+import cobo.writing.data.dto.professor.ProfessorGetWritingListElementRes
 import cobo.writing.data.dto.professor.ProfessorGetWritingListRes
 import cobo.writing.data.dto.student.StudentGetRes
 import cobo.writing.data.dto.student.StudentPostReq
@@ -20,6 +20,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.concurrent.CompletableFuture
 
 @Service
 class WritingServiceImpl(
@@ -116,25 +117,34 @@ class WritingServiceImpl(
         page: Int,
         pageSize: Int
     ): ResponseEntity<CoBoResponseDto<ProfessorGetWritingListRes>> {
-        val writings =
+
+        val writingsCompletableFuture = CompletableFuture.supplyAsync {
             writingRepository.findByAssignmentIdOrderByStatePagingWithJDBC(
                 assignmentId = assignmentId,
                 page = page,
                 pageSize = pageSize
             ).map{
-                ProfessorGetWritingLisElementRes(
+                ProfessorGetWritingListElementRes(
                     studentId = it.studentId,
                     createdAt = it.createdAt!!,
                     updatedAt = it.updatedAt!!,
                     writingState = it.state.value
                 )
             }
+        }
 
-        return CoBoResponse(
+        val totalElementsCompletableFuture = CompletableFuture.supplyAsync {
+            writingRepository.countByAssignmentIdWithJDBC(assignmentId)
+        }
+
+        val coboResponse = CoBoResponse(
             data = ProfessorGetWritingListRes(
-                writings = writings
+                totalElements = totalElementsCompletableFuture.get(),
+                writings = writingsCompletableFuture.get()
             ),
             coBoResponseStatus = CoBoResponseStatus.SUCCESS
-        ).getResponseEntity()
+        )
+
+        return coboResponse.getResponseEntity()
     }
 }
