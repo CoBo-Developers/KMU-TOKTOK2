@@ -53,7 +53,7 @@ class ProfessorGetWritingListTest @Autowired constructor(
         )
     }
 
-    private fun makeTestWriting(assignment: Assignment, state: Short): Writing {
+    private fun makeTestWriting(assignment: Assignment, state: Short, studentId: String): Writing {
         return Writing(
             id = null,
             studentId = studentId,
@@ -73,7 +73,7 @@ class ProfessorGetWritingListTest @Autowired constructor(
         assignmentRepository.save(assignment)
         assignmentList.add(assignment)
 
-        val writing = makeTestWriting(assignment, WritingStateEnum.SUBMITTED.value)
+        val writing = makeTestWriting(assignment, WritingStateEnum.SUBMITTED.value, studentId)
         writingRepository.save(writing)
         writingList.add(writing)
 
@@ -100,4 +100,50 @@ class ProfessorGetWritingListTest @Autowired constructor(
         assertEquals(expectedProfessorGetWritingListElementRes,
             professorGetWritingListRes.body!!.data!!.writings.last())
     }
+
+    @Test
+    fun testGetWritingListMoreThanOneElement(){
+        //given
+        val assignment = makeTestAssignment()
+        assignmentRepository.save(assignment)
+        assignmentList.add(assignment)
+
+        val randomCount = (5..7).random()
+
+        for(i in 1..randomCount) {
+            val writing = makeTestWriting(assignment, (1..3).random().toShort(), "${studentId}${i}")
+            writingRepository.save(writing)
+            writingList.add(writing)
+        }
+
+        writingList.sortBy{ it.state }
+
+        //when
+        val professorGetWritingListRes = writingService.professorGetWritingList(assignment.id!!, 0, randomCount)
+
+        println(professorGetWritingListRes)
+        println(writingList)
+
+        //then
+
+        assertEquals(HttpStatus.OK, professorGetWritingListRes.statusCode)
+
+        assertEquals(professorGetWritingListRes.body!!.data!!.totalElements, randomCount.toLong())
+
+        for (i in 0 ..< randomCount) {
+
+
+            val expectedProfessorGetWritingListElementRes =
+                ProfessorGetWritingListElementRes(
+                    studentId = writingList[i].studentId,
+                    createdAt = writingList[i].createdAt!!,
+                    updatedAt = writingList[i].updatedAt!!,
+                    writingState = writingList[i].state.value
+                )
+            println(expectedProfessorGetWritingListElementRes)
+
+            assertEquals(expectedProfessorGetWritingListElementRes, professorGetWritingListRes.body!!.data!!.writings[i])
+        }
+    }
+
 }
