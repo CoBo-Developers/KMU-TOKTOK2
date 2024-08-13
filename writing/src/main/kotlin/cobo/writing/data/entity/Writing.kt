@@ -28,7 +28,7 @@ data class Writing(
 
     val state: WritingStateEnum,
 
-    var score: Int? = null,
+    var score: Int? = 0,
 
     val createdAt: LocalDateTime?,
 

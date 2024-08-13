@@ -95,7 +95,8 @@ class ProfessorGetWritingListTest @Autowired constructor(
             studentId = writing.studentId,
             createdAt = writing.createdAt!!,
             updatedAt = writing.updatedAt!!,
-            writingState = writing.state.value
+            writingState = writing.state.value,
+            writingScore = writing.score!!
         )
 
         assertEquals(expectedProfessorGetWritingListElementRes,
@@ -136,7 +137,8 @@ class ProfessorGetWritingListTest @Autowired constructor(
                     studentId = writingList[i].studentId,
                     createdAt = writingList[i].createdAt!!,
                     updatedAt = writingList[i].updatedAt!!,
-                    writingState = writingList[i].state.value
+                    writingState = writingList[i].state.value,
+                    writingScore = writingList[i].score!!
                 )
             println(expectedProfessorGetWritingListElementRes)
 
@@ -178,14 +180,16 @@ class ProfessorGetWritingListTest @Autowired constructor(
             studentId = student1,
             createdAt = writing1.createdAt!!,
             updatedAt = writing1.updatedAt!!,
-            writingState = writing1.state.value
+            writingState = writing1.state.value,
+            writingScore = writing1.score!!
         )
 
         val expectedProfessorGetWritingListElementRes2 = ProfessorGetWritingListElementRes(
             studentId = student2,
             createdAt = writing2.createdAt!!,
             updatedAt = writing2.updatedAt!!,
-            writingState = writing2.state.value
+            writingState = writing2.state.value,
+            writingScore = writing2.score!!
         )
 
         assertEquals(expectedProfessorGetWritingListElementRes1,
@@ -227,7 +231,8 @@ class ProfessorGetWritingListTest @Autowired constructor(
                     studentId = writingList[i].studentId,
                     createdAt = writingList[i].createdAt!!,
                     updatedAt = writingList[i].updatedAt!!,
-                    writingState = writingList[i].state.value
+                    writingState = writingList[i].state.value,
+                    writingScore = writingList[i].score!!
                 )
 
 

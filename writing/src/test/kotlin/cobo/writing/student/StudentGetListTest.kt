@@ -66,7 +66,8 @@ class StudentGetListTest @Autowired constructor(
             state = WritingStateEnum.from(state) ?: WritingStateEnum.NOT_SUBMITTED,
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now(),
-            submittedAt = LocalDateTime.now()
+            submittedAt = LocalDateTime.now(),
+            score = (1..20).random(),
         )
     }
 
@@ -108,7 +109,8 @@ class StudentGetListTest @Autowired constructor(
                 score = assignment.score!!,
                 startDate = assignment.startDate!!,
                 endDate = assignment.endDate!!,
-                writingState = state
+                writingState = state,
+                writingScore = writing.score!!
             )
 
         assertEquals(expectedStudentGetListResElement, studentGetListRes.body!!.data!!.assignmentList.last())
@@ -140,7 +142,8 @@ class StudentGetListTest @Autowired constructor(
                 score = assignment.score!!,
                 startDate = assignment.startDate!!,
                 endDate = assignment.endDate!!,
-                writingState = 0
+                writingState = 0,
+                writingScore = 0
             )
 
         assertEquals(expectedStudentGetListResElement, studentGetListRes.body!!.data!!.assignmentList.last())
@@ -202,8 +205,12 @@ class StudentGetListTest @Autowired constructor(
                 startDate = assignmentList[i].startDate!!,
                 endDate = assignmentList[i].endDate!!,
                 writingState = if(writingFlagList[i]){
-                    writingIndex++
-                    writingList[writingIndex-1].state.value
+                    writingList[writingIndex].state.value
+                }else{
+                    0
+                },
+                writingScore = if(writingFlagList[i]){
+                    writingList[writingIndex++].score!!
                 }else{
                     0
                 }
