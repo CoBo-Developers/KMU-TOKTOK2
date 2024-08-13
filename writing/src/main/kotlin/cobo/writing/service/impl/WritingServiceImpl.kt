@@ -151,7 +151,11 @@ class WritingServiceImpl(
     ): ResponseEntity<CoBoResponseDto<ProfessorGetWriting>> {
         val writing = this.getWriting(studentId, assignmentId)
 
-        TODO("Not yet implemented")
+        val professorGetWriting = ProfessorGetWriting(
+            content = if(writing.isPresent) writing.get().content else ""
+        )
+
+        return CoBoResponse(professorGetWriting, CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 
     private fun getWriting(studentId: String, assignmentId: Int): Optional<Writing> {

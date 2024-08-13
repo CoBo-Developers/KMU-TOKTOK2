@@ -93,7 +93,6 @@ class ProfessorPresentation(
         @RequestParam assignmentId: Int,
         @RequestParam studentId: String
     ): ResponseEntity<CoBoResponseDto<ProfessorGetWriting>>{
-        TODO()
-//        return writingService.professorGetWriting(assignmentId, studentId)
+        return writingService.professorGetWriting(assignmentId, studentId)
     }
 }
