@@ -201,7 +201,7 @@ class ProfessorGetWritingListTest @Autowired constructor(
         assignmentList.add(assignment)
 
         val randomCount = (5..7).random()
-        for(i in 1..randomCount) {
+        for(i in 0..<randomCount) {
             val writing = makeTestWriting(assignment, (1..3).random().toShort(), "${studentId}${i}")
             writingRepository.save(writing)
             writingList.add(writing)
