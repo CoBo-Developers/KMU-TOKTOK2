@@ -38,6 +38,7 @@ class AssignmentPutTest @Autowired constructor(
             score = (1..20).random(),
             startDate = LocalDate.of(2024, (1..7).random(), (1..20).random()),
             endDate = LocalDate.of(2024, (8..12).random(), (1..20).random()),
+            prompt = UUID.randomUUID().toString()
         )
     }
 
@@ -55,6 +56,7 @@ class AssignmentPutTest @Autowired constructor(
             score = (1..20).random(),
             startDate = LocalDate.of(2024, (1..7).random(), (1..20).random()),
             endDate = LocalDate.of(2024, (8..12).random(), (1..20).random()),
+            prompt = UUID.randomUUID().toString()
         )
 
         //when
@@ -70,6 +72,7 @@ class AssignmentPutTest @Autowired constructor(
         assertEquals(assignmentPutReq.score, newAssignment.score)
         assertEquals(assignmentPutReq.startDate, newAssignment.startDate)
         assertEquals(assignmentPutReq.endDate, newAssignment.endDate)
+        assertEquals(assignmentPutReq.prompt, newAssignment.prompt)
     }
 
     @Test
@@ -97,7 +100,8 @@ class AssignmentPutTest @Autowired constructor(
             description = UUID.randomUUID().toString(),
             score = (1..20).random(),
             startDate = LocalDate.of(2024, (1..7).random(), (1..20).random()),
-            endDate = LocalDate.of(2024, (8..12).random(), (1..20).random())
+            endDate = LocalDate.of(2024, (8..12).random(), (1..20).random()),
+            prompt = UUID.randomUUID().toString()
         )
         assignmentService.put(assignmentPutReq)
 
@@ -111,6 +115,7 @@ class AssignmentPutTest @Autowired constructor(
         assertEquals(assignmentPutReq.score, newAssignment.score)
         assertEquals(assignmentPutReq.startDate, newAssignment.startDate)
         assertEquals(assignmentPutReq.endDate, newAssignment.endDate)
+        assertEquals(assignmentPutReq.prompt, newAssignment.prompt)
 
     }
 
@@ -124,6 +129,7 @@ class AssignmentPutTest @Autowired constructor(
             score = (1..20).random(),
             startDate = LocalDate.of(2024, (1..7).random(), (1..20).random()),
             endDate = LocalDate.of(2024, (8..12).random(), (1..20).random()),
+            prompt = UUID.randomUUID().toString()
         )
 
         //when

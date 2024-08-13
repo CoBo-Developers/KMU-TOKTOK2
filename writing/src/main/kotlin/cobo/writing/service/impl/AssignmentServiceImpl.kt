@@ -33,7 +33,8 @@ class AssignmentServiceImpl(
             description = assignmentPostReq.description,
             score = assignmentPostReq.score,
             startDate = assignmentPostReq.startDate,
-            endDate = assignmentPostReq.endDate
+            endDate = assignmentPostReq.endDate,
+            prompt = assignmentPostReq.prompt,
         )
 
         assignmentRepository.save(assignment)
@@ -49,6 +50,7 @@ class AssignmentServiceImpl(
         assignment.score = assignmentPutReq.score
         assignment.startDate = assignmentPutReq.startDate
         assignment.endDate = assignmentPutReq.endDate
+        assignment.prompt = assignmentPutReq.prompt
         assignmentRepository.save(assignment)
 
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
@@ -62,7 +64,8 @@ class AssignmentServiceImpl(
                 description = it.description ?: "",
                 score = it.score!!,
                 startDate = it.startDate!!,
-                endDate = it.endDate!!
+                endDate = it.endDate!!,
+                prompt = it.prompt!!,
             )
         })
         return CoBoResponse(assignmentGetListRes, CoBoResponseStatus.SUCCESS).getResponseEntity()

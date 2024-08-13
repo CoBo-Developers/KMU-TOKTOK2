@@ -12,6 +12,8 @@ data class AssignmentPostReq(
     val startDate: LocalDate,
 
     val endDate: LocalDate,
+
+    val prompt: String
 )
 
 data class AssignmentPutReq(
@@ -26,6 +28,8 @@ data class AssignmentPutReq(
     val startDate: LocalDate,
 
     val endDate: LocalDate,
+
+    val prompt: String
 )
 
 data class AssignmentPatchWritingReq(

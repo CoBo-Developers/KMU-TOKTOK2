@@ -40,7 +40,8 @@ class AssignmentPostTest @Autowired constructor(
             description = UUID.randomUUID().toString(),
             score = (1..10).random(),
             startDate = LocalDate.of(2024, (1..6).random(), (1..30).random()),
-            endDate = LocalDate.of(2024, (7..12).random(), (1..30).random())
+            endDate = LocalDate.of(2024, (7..12).random(), (1..30).random()),
+            prompt = UUID.randomUUID().toString(),
         )
 
         val assignmentPostReq = AssignmentPostReq(
@@ -49,6 +50,7 @@ class AssignmentPostTest @Autowired constructor(
             score = assignment.score!!,
             startDate = assignment.startDate!!,
             endDate = assignment.endDate!!,
+            prompt = assignment.prompt ?: "",
         )
 
         //when
@@ -68,6 +70,7 @@ class AssignmentPostTest @Autowired constructor(
         assertEquals(assignment.score, savedAssignment.score)
         assertEquals(assignment.startDate, savedAssignment.startDate)
         assertEquals(assignment.endDate, savedAssignment.endDate)
+        assertEquals(assignment.prompt, savedAssignment.prompt)
         assignmentList.add(savedAssignment)
     }
 
@@ -80,7 +83,8 @@ class AssignmentPostTest @Autowired constructor(
             description = UUID.randomUUID().toString(),
             score = (1..10).random(),
             startDate = LocalDate.of(2024, (1..6).random(), (1..30).random()),
-            endDate = LocalDate.of(2024, (7..12).random(), (1..30).random())
+            endDate = LocalDate.of(2024, (7..12).random(), (1..30).random()),
+            prompt = UUID.randomUUID().toString(),
         )
 
         val startRandomCount = (5..10).random()
@@ -91,7 +95,8 @@ class AssignmentPostTest @Autowired constructor(
                 description = UUID.randomUUID().toString(),
                 score = (1..10).random(),
                 startDate = LocalDate.of(2024, (1..6).random(), (1..20).random()),
-                endDate = LocalDate.of(2024, (7..12).random(), (1..20).random())
+                endDate = LocalDate.of(2024, (7..12).random(), (1..20).random()),
+                prompt = UUID.randomUUID().toString(),
             )
             assignmentList.add(curAssignment)
         }
@@ -106,7 +111,8 @@ class AssignmentPostTest @Autowired constructor(
                 description = UUID.randomUUID().toString(),
                 score = (1..10).random(),
                 startDate = LocalDate.of(2024, (1..6).random(), (1..20).random()),
-                endDate = LocalDate.of(2024, (7..12).random(), (1..20).random())
+                endDate = LocalDate.of(2024, (7..12).random(), (1..20).random()),
+                prompt = UUID.randomUUID().toString(),
             )
             assignmentList.add(curAssignment)
         }
@@ -116,7 +122,8 @@ class AssignmentPostTest @Autowired constructor(
             description = assignment.description ?: "",
             score = assignment.score!!,
             startDate = assignment.startDate!!,
-            endDate = assignment.endDate!!
+            endDate = assignment.endDate!!,
+            prompt = assignment.prompt ?: "",
         )
 
         assignmentService.post(assignmentPostReq)
@@ -134,6 +141,7 @@ class AssignmentPostTest @Autowired constructor(
         assertEquals(assignment.score, targetAssignment.score)
         assertEquals(assignment.startDate, targetAssignment.startDate)
         assertEquals(assignment.endDate, targetAssignment.endDate)
+        assertEquals(assignment.prompt, targetAssignment.prompt)
 
         assignmentList.add(targetAssignment)
     }
@@ -147,14 +155,16 @@ class AssignmentPostTest @Autowired constructor(
             description = UUID.randomUUID().toString(),
             score = (1..10).random(),
             startDate = LocalDate.of(2024, (7..12).random(), (1..30).random()),
-            endDate = LocalDate.of(2024, (1..6).random(), (1..30).random())
+            endDate = LocalDate.of(2024, (1..6).random(), (1..30).random()),
+            prompt = UUID.randomUUID().toString()
         )
         val assignmentPostReq = AssignmentPostReq(
             title = assignment.title ?: "",
             description = assignment.description ?: "",
             score = assignment.score!!,
             startDate = assignment.startDate!!,
-            endDate = assignment.endDate!!
+            endDate = assignment.endDate!!,
+            prompt = UUID.randomUUID().toString(),
         )
 
 
