@@ -146,4 +146,52 @@ class ProfessorGetWritingListTest @Autowired constructor(
         }
     }
 
+    @Test
+    fun testGetWritingListAdd(){
+        //given
+        val student1 = studentId + "1"
+        val student2 = studentId + "2"
+        val assignment = makeTestAssignment()
+        assignmentRepository.save(assignment)
+        assignmentList.add(assignment)
+
+        val writing1 = makeTestWriting(assignment, WritingStateEnum.APPROVED.value, student1)
+        writingRepository.save(writing1)
+        writingList.add(writing1)
+
+        val previousCount = writingRepository.countByAssignmentIdWithJDBC(assignmentId = assignment.id!!)
+
+        //when
+        val writing2 = makeTestWriting(assignment, WritingStateEnum.SUBMITTED.value, student2)
+        writingRepository.save(writing2)
+        writingList.add(writing2)
+
+        val professorGetWritingListRes = writingService.professorGetWritingList(assignment.id!!, 0, 2)
+
+        //then
+
+        assertEquals(HttpStatus.OK, professorGetWritingListRes.statusCode)
+
+        assertEquals(professorGetWritingListRes.body!!.data!!.totalElements, 2L)
+
+        val expectedProfessorGetWritingListElementRes1 = ProfessorGetWritingListElementRes(
+            studentId = student1,
+            createdAt = writing1.createdAt!!,
+            updatedAt = writing1.updatedAt!!,
+            writingState = writing1.state.value
+        )
+
+        val expectedProfessorGetWritingListElementRes2 = ProfessorGetWritingListElementRes(
+            studentId = student2,
+            createdAt = writing2.createdAt!!,
+            updatedAt = writing2.updatedAt!!,
+            writingState = writing2.state.value
+        )
+
+        assertEquals(expectedProfessorGetWritingListElementRes1,
+            professorGetWritingListRes.body!!.data!!.writings[1])
+        assertEquals(expectedProfessorGetWritingListElementRes2,
+            professorGetWritingListRes.body!!.data!!.writings[0])
+    }
+
 }
