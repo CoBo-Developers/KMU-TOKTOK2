@@ -2,17 +2,13 @@ package cobo.writing.presentation
 
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
-import cobo.writing.data.dto.student.StudentGetListRes
-import cobo.writing.data.dto.student.StudentGetRes
-import cobo.writing.data.dto.student.StudentPostFeedBackReq
-import cobo.writing.data.dto.student.StudentPostReq
+import cobo.writing.data.dto.student.*
 import cobo.writing.service.AssignmentService
 import cobo.writing.service.WritingService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
@@ -59,7 +55,7 @@ class StudentPresentation(
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "OK")
     )
-    fun postFeedback(@RequestBody studentPostFeedBackReq: StudentPostFeedBackReq): ResponseEntity<CoBoResponseDto<StudentPostFeedBackReq>>{
+    fun postFeedback(@RequestBody studentPostFeedBackReq: StudentPostFeedbackReq): ResponseEntity<CoBoResponseDto<StudentPostFeedbackRes>>{
         return writingService.postFeedback(studentPostFeedBackReq)
     }
 }
