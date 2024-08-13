@@ -174,6 +174,8 @@ class ProfessorGetWritingListTest @Autowired constructor(
 
         assertEquals(professorGetWritingListRes.body!!.data!!.totalElements, 2L)
 
+        assertEquals(previousCount + 1, professorGetWritingListRes.body!!.data!!.totalElements)
+
         val expectedProfessorGetWritingListElementRes1 = ProfessorGetWritingListElementRes(
             studentId = student1,
             createdAt = writing1.createdAt!!,
@@ -193,5 +195,6 @@ class ProfessorGetWritingListTest @Autowired constructor(
         assertEquals(expectedProfessorGetWritingListElementRes2,
             professorGetWritingListRes.body!!.data!!.writings[0])
     }
+
 
 }
