@@ -4,10 +4,12 @@ import cobo.writing.data.entity.Assignment
 import cobo.writing.data.entity.Writing
 import cobo.writing.data.enums.WritingStateEnum
 import cobo.writing.repository.custom.WritingRepositoryCustom
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.sql.ResultSet
+import java.util.*
 
 @Repository
 class WritingRepositoryImpl(
@@ -37,6 +39,21 @@ class WritingRepositoryImpl(
             "UPDATE writing SET writing.state = ? " +
                     "WHERE assignment_id = ? AND student_id = ?",
             writingState, assignmentId, studentId)
+    }
+
+    override fun findByAssignmentAndStudentIdWithJDBC(assignment: Assignment, studentId: String): Optional<Writing> {
+        return try {
+            Optional.ofNullable(jdbcTemplate.queryForObject(
+                "SELECT writing.id, writing.student_id, writing.assignment_id, writing.content, writing.state, writing.created_at, writing.updated_at, writing.submitted_at" +
+                        " FROM writing " +
+                        "WHERE writing.assignment_id = ? AND writing.student_id = ?",
+                { rs, _ -> writingRowMapper(rs) },
+                assignment.id,
+                studentId))
+        }catch (emptyResultDataAccessException: EmptyResultDataAccessException){
+            Optional.empty()
+        }
+
     }
 
     override fun findByAssignmentIdOrderByStatePagingWithJDBC(assignmentId: Int, page: Int, pageSize: Int): List<Writing> {
