@@ -4,6 +4,7 @@ import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
 import cobo.writing.data.dto.professor.AssignmentPatchWritingReq
+import cobo.writing.data.dto.professor.ProfessorGetWriting
 import cobo.writing.data.dto.professor.ProfessorGetWritingListElementRes
 import cobo.writing.data.dto.professor.ProfessorGetWritingListRes
 import cobo.writing.data.dto.student.StudentGetRes
@@ -79,19 +80,7 @@ class WritingServiceImpl(
 
         val studentId = authentication.name
 
-        val assignment = Assignment(id = assignmentId)
-
-        val writing = writingRepository.findByAssignmentAndStudentId(
-            assignment = assignment,
-            studentId = studentId
-        )
-
-        val studentGetRes = StudentGetRes(
-            assignmentId = assignmentId,
-            content = if(writing.isPresent) writing.get().content else ""
-        )
-
-        return CoBoResponse(studentGetRes, CoBoResponseStatus.SUCCESS).getResponseEntity()
+        return CoBoResponse(this.getWriting(studentId, assignmentId), CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 
     override fun assignmentPatchWriting(assignmentPatchWritingReq: AssignmentPatchWritingReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
@@ -146,5 +135,29 @@ class WritingServiceImpl(
         )
 
         return coboResponse.getResponseEntity()
+    }
+
+    override fun professorGetWriting(
+        assignmentId: Int,
+        studentId: String
+    ): ResponseEntity<CoBoResponseDto<ProfessorGetWriting>> {
+        val writing = this.getWriting(studentId, assignmentId)
+        TODO("Not yet implemented")
+    }
+
+    private fun getWriting(studentId: String, assignmentId: Int): StudentGetRes{
+        val assignment = Assignment(id = assignmentId)
+
+        val writing = writingRepository.findByAssignmentAndStudentId(
+            assignment = assignment,
+            studentId = studentId
+        )
+
+        val studentGetRes = StudentGetRes(
+            assignmentId = assignmentId,
+            content = if(writing.isPresent) writing.get().content else ""
+        )
+
+        return studentGetRes
     }
 }
