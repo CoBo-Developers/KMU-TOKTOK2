@@ -83,4 +83,16 @@ class ProfessorPresentation(
     ): ResponseEntity<CoBoResponseDto<ProfessorGetWritingListRes>> {
         return writingService.professorGetWritingList(assignmentId, page, pageSize)
     }
+
+    @GetMapping("/writing")
+    @Operation(summary = "교수가 해당 글쓰기를 조회")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공")
+    )
+    fun getWriting(
+        @RequestParam assignmentId: Int,
+        @RequestParam studentId: String
+    ): ResponseEntity<CoBoResponseDto<ProfessorGetWriting>>{
+        return writingService.professorGetWriting(assignmentId, studentId)
+    }
 }

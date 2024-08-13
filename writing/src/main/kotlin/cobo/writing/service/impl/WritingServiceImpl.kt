@@ -4,6 +4,7 @@ import cobo.writing.config.response.CoBoResponse
 import cobo.writing.config.response.CoBoResponseDto
 import cobo.writing.config.response.CoBoResponseStatus
 import cobo.writing.data.dto.professor.AssignmentPatchWritingReq
+import cobo.writing.data.dto.professor.ProfessorGetWriting
 import cobo.writing.data.dto.professor.ProfessorGetWritingListElementRes
 import cobo.writing.data.dto.professor.ProfessorGetWritingListRes
 import cobo.writing.data.dto.student.StudentGetRes
@@ -20,6 +21,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.*
 import java.util.concurrent.CompletableFuture
 
 @Service
@@ -79,12 +81,7 @@ class WritingServiceImpl(
 
         val studentId = authentication.name
 
-        val assignment = Assignment(id = assignmentId)
-
-        val writing = writingRepository.findByAssignmentAndStudentId(
-            assignment = assignment,
-            studentId = studentId
-        )
+        val writing = this.getWriting(studentId, assignmentId)
 
         val studentGetRes = StudentGetRes(
             assignmentId = assignmentId,
@@ -146,5 +143,29 @@ class WritingServiceImpl(
         )
 
         return coboResponse.getResponseEntity()
+    }
+
+    override fun professorGetWriting(
+        assignmentId: Int,
+        studentId: String
+    ): ResponseEntity<CoBoResponseDto<ProfessorGetWriting>> {
+        val writing = this.getWriting(studentId, assignmentId)
+
+        val professorGetWriting = ProfessorGetWriting(
+            content = if(writing.isPresent) writing.get().content else ""
+        )
+
+        return CoBoResponse(professorGetWriting, CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
+    private fun getWriting(studentId: String, assignmentId: Int): Optional<Writing> {
+        val assignment = Assignment(id = assignmentId)
+
+        val writing = writingRepository.findByAssignmentAndStudentIdWithJDBC(
+            assignment = assignment,
+            studentId = studentId
+        )
+
+        return writing
     }
 }

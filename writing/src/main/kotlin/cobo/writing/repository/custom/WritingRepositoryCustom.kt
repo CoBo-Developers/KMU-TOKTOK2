@@ -1,6 +1,8 @@
 package cobo.writing.repository.custom
 
+import cobo.writing.data.entity.Assignment
 import cobo.writing.data.entity.Writing
+import java.util.*
 
 interface WritingRepositoryCustom {
 
@@ -8,4 +10,5 @@ interface WritingRepositoryCustom {
     fun updateStateByAssignmentIdAndStudentIdWithJDBC(writingState: Short, assignmentId: Int, studentId: String): Int
     fun findByAssignmentIdOrderByStatePagingWithJDBC(assignmentId: Int, page: Int, pageSize: Int): List<Writing>
     fun countByAssignmentIdWithJDBC(assignmentId: Int): Long
+    fun findByAssignmentAndStudentIdWithJDBC(assignment: Assignment, studentId: String): Optional<Writing>
 }
