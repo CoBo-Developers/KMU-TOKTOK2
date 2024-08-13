@@ -26,6 +26,20 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+	//JPA
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	//MYSQL
+	runtimeOnly("com.mysql:mysql-connector-j")
+
+	//SWAGGER
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
+
+	//jwt
+	implementation("io.jsonwebtoken:jjwt:0.9.1")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
 }
 
 kotlin {
