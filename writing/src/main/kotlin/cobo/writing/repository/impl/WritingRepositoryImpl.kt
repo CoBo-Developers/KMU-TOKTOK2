@@ -44,8 +44,8 @@ class WritingRepositoryImpl(
     override fun findByAssignmentAndStudentIdWithJDBC(assignment: Assignment, studentId: String): Optional<Writing> {
         return try {
             Optional.ofNullable(jdbcTemplate.queryForObject(
-                "SELECT writing.id, writing.student_id, writing.assignment_id, writing.content, writing.state, writing.created_at, writing.updated_at, writing.submitted_at" +
-                        " FROM writing " +
+                "SELECT writing.id, writing.student_id, writing.assignment_id, writing.content, writing.state, writing.score, writing.created_at, writing.updated_at, writing.submitted_at " +
+                        "FROM writing " +
                         "WHERE writing.assignment_id = ? AND writing.student_id = ?",
                 { rs, _ -> writingRowMapper(rs) },
                 assignment.id,
@@ -57,7 +57,7 @@ class WritingRepositoryImpl(
     }
 
     override fun findByAssignmentIdOrderByStatePagingWithJDBC(assignmentId: Int, page: Int, pageSize: Int): List<Writing> {
-        val sql = "SELECT writing.id, writing.student_id, writing.assignment_id, writing.content, writing.state, writing.created_at, writing.updated_at, writing.submitted_at " +
+        val sql = "SELECT writing.id, writing.student_id, writing.assignment_id, writing.content, writing.state, writing.score, writing.created_at, writing.updated_at, writing.submitted_at " +
                 "FROM writing WHERE writing.assignment_id = ? ORDER BY writing.state, writing.id LIMIT ?, ?"
         return jdbcTemplate.query(
             sql, {rs, _ -> writingRowMapper(rs)}, assignmentId, page, pageSize
@@ -76,6 +76,7 @@ class WritingRepositoryImpl(
             assignment = Assignment(resultSet.getInt("assignment_id")),
             content = resultSet.getString("content"),
             state = WritingStateEnum.from(resultSet.getShort("state"))!!,
+            score = resultSet.getInt("score"),
             createdAt = resultSet.getTimestamp("created_at").toLocalDateTime(),
             updatedAt = resultSet.getTimestamp("updated_at").toLocalDateTime(),
             submittedAt = resultSet.getTimestamp("submitted_at").toLocalDateTime()

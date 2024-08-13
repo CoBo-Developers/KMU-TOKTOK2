@@ -39,7 +39,7 @@ data class ProfessorGetWritingListElementRes(
 
     val writingState: Short,
 
-    val score: Int
+    val writingScore: Int
 )
 
 data class ProfessorGetWriting(

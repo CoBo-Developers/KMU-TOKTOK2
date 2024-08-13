@@ -125,7 +125,8 @@ class WritingServiceImpl(
                     studentId = it.studentId,
                     createdAt = it.createdAt!!,
                     updatedAt = it.updatedAt!!,
-                    writingState = it.state.value
+                    writingState = it.state.value,
+                    writingScore = it.score ?: 0
                 )
             }
         }
