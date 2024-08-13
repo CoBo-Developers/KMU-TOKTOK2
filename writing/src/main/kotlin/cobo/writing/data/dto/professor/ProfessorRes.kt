@@ -37,7 +37,9 @@ data class ProfessorGetWritingListElementRes(
 
     val updatedAt: LocalDateTime,
 
-    val writingState: Short
+    val writingState: Short,
+
+    val score: Int
 )
 
 data class ProfessorGetWriting(
