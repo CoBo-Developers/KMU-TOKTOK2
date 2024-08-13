@@ -37,3 +37,7 @@ data class ProfessorGetWritingListElementRes(
 
     val writingState: Short
 )
+
+data class ProfessorGetWriting(
+    val content: String
+)
