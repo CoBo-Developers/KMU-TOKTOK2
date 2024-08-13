@@ -6,6 +6,7 @@ import cobo.writing.data.dto.professor.AssignmentPatchWritingReq
 import cobo.writing.data.dto.professor.ProfessorGetWriting
 import cobo.writing.data.dto.professor.ProfessorGetWritingListRes
 import cobo.writing.data.dto.student.StudentGetRes
+import cobo.writing.data.dto.student.StudentPostFeedBackReq
 import cobo.writing.data.dto.student.StudentPostReq
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
@@ -25,4 +26,5 @@ interface WritingService {
     ): ResponseEntity<CoBoResponseDto<ProfessorGetWritingListRes>>
 
     fun professorGetWriting(assignmentId: Int, studentId: String): ResponseEntity<CoBoResponseDto<ProfessorGetWriting>>
+    fun postFeedback(studentPostFeedBackReq: StudentPostFeedBackReq): ResponseEntity<CoBoResponseDto<StudentPostFeedBackReq>>
 }

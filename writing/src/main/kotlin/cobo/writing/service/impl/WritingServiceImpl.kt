@@ -8,6 +8,7 @@ import cobo.writing.data.dto.professor.ProfessorGetWriting
 import cobo.writing.data.dto.professor.ProfessorGetWritingListElementRes
 import cobo.writing.data.dto.professor.ProfessorGetWritingListRes
 import cobo.writing.data.dto.student.StudentGetRes
+import cobo.writing.data.dto.student.StudentPostFeedBackReq
 import cobo.writing.data.dto.student.StudentPostReq
 import cobo.writing.data.entity.Assignment
 import cobo.writing.data.entity.Writing
@@ -108,6 +109,10 @@ class WritingServiceImpl(
         }catch(e: DataIntegrityViolationException){
             CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.BAD_STATE_REQUEST).getResponseEntityWithLog()
         }
+    }
+
+    override fun postFeedback(studentPostFeedBackReq: StudentPostFeedBackReq): ResponseEntity<CoBoResponseDto<StudentPostFeedBackReq>> {
+        TODO("Not yet implemented")
     }
 
     override fun professorGetWritingList(
