@@ -30,3 +30,7 @@ data class StudentGetRes(
 
     val content: String
 )
+
+data class StudentPostFeedbackRes(
+    val feedback: String
+)

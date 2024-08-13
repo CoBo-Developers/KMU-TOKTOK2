@@ -11,3 +11,11 @@ data class StudentPostReq(
     @Schema(description = "글쓰기 내용")
     val content: String
 )
+
+data class StudentPostFeedbackReq(
+    @Schema(description = "과제의 아이디")
+    val assignmentId: Int,
+
+    @Schema(description = "학생이 작성한 글의 내용")
+    val content: String
+)
