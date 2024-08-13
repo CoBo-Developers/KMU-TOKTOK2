@@ -121,9 +121,6 @@ class ProfessorGetWritingListTest @Autowired constructor(
         //when
         val professorGetWritingListRes = writingService.professorGetWritingList(assignment.id!!, 0, randomCount)
 
-        println(professorGetWritingListRes)
-        println(writingList)
-
         //then
 
         assertEquals(HttpStatus.OK, professorGetWritingListRes.statusCode)
@@ -196,5 +193,48 @@ class ProfessorGetWritingListTest @Autowired constructor(
             professorGetWritingListRes.body!!.data!!.writings[0])
     }
 
+    @Test
+    fun testGetWritingListPaging(){
+        //given
+        val assignment = makeTestAssignment()
+        assignmentRepository.save(assignment)
+        assignmentList.add(assignment)
 
+        val randomCount = (5..7).random()
+        for(i in 1..randomCount) {
+            val writing = makeTestWriting(assignment, (1..3).random().toShort(), "${studentId}${i}")
+            writingRepository.save(writing)
+            writingList.add(writing)
+        }
+
+        writingList.sortBy{ it.state }
+
+        //then
+        for (i in 0..<randomCount) {
+            val professorGetWritingListRes = writingService.professorGetWritingList(assignment.id!!, i, 1)
+
+            //then
+
+            assertEquals(HttpStatus.OK, professorGetWritingListRes.statusCode)
+
+            assertEquals(professorGetWritingListRes.body!!.data!!.totalElements, randomCount.toLong())
+
+            assertEquals(professorGetWritingListRes.body!!.data!!.writings.size, 1)
+
+            val expectedProfessorGetWritingListElementRes =
+                ProfessorGetWritingListElementRes(
+                    studentId = writingList[i].studentId,
+                    createdAt = writingList[i].createdAt!!,
+                    updatedAt = writingList[i].updatedAt!!,
+                    writingState = writingList[i].state.value
+                )
+
+
+            assertEquals(
+                expectedProfessorGetWritingListElementRes,
+                professorGetWritingListRes.body!!.data!!.writings.last()
+            )
+        }
+
+    }
 }
