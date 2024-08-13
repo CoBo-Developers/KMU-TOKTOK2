@@ -16,7 +16,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import java.util.*
+import kotlin.math.roundToInt
 import kotlin.test.assertTrue
 
 @SpringBootTest
@@ -41,6 +43,14 @@ class ProfessorGetWritingListTest @Autowired constructor(
         assignmentList.clear()
     }
 
+    fun roundTo6Digits(localDateTime: LocalDateTime): LocalDateTime {
+        val nano = localDateTime.nano
+        val roundedNano = ((nano / 1_000.0).roundToInt() * 1_000)
+
+        return localDateTime
+            .truncatedTo(ChronoUnit.SECONDS)
+            .plusNanos(roundedNano.toLong())
+    }
 
     private fun makeTestAssignment(): Assignment {
         return Assignment(
@@ -93,8 +103,8 @@ class ProfessorGetWritingListTest @Autowired constructor(
 
         val expectedProfessorGetWritingListElementRes = ProfessorGetWritingListElementRes(
             studentId = writing.studentId,
-            createdAt = writing.createdAt!!,
-            updatedAt = writing.updatedAt!!,
+            createdAt = roundTo6Digits(writing.createdAt!!),
+            updatedAt = roundTo6Digits(writing.updatedAt!!),
             writingState = writing.state.value,
             writingScore = writing.score!!
         )
@@ -135,8 +145,8 @@ class ProfessorGetWritingListTest @Autowired constructor(
             val expectedProfessorGetWritingListElementRes =
                 ProfessorGetWritingListElementRes(
                     studentId = writingList[i].studentId,
-                    createdAt = writingList[i].createdAt!!,
-                    updatedAt = writingList[i].updatedAt!!,
+                    createdAt = roundTo6Digits(writingList[i].createdAt!!),
+                    updatedAt = roundTo6Digits(writingList[i].updatedAt!!),
                     writingState = writingList[i].state.value,
                     writingScore = writingList[i].score!!
                 )
@@ -178,16 +188,16 @@ class ProfessorGetWritingListTest @Autowired constructor(
 
         val expectedProfessorGetWritingListElementRes1 = ProfessorGetWritingListElementRes(
             studentId = student1,
-            createdAt = writing1.createdAt!!,
-            updatedAt = writing1.updatedAt!!,
+            createdAt = roundTo6Digits(writing1.createdAt!!),
+            updatedAt = roundTo6Digits(writing1.updatedAt!!),
             writingState = writing1.state.value,
             writingScore = writing1.score!!
         )
 
         val expectedProfessorGetWritingListElementRes2 = ProfessorGetWritingListElementRes(
             studentId = student2,
-            createdAt = writing2.createdAt!!,
-            updatedAt = writing2.updatedAt!!,
+            createdAt = roundTo6Digits(writing2.createdAt!!),
+            updatedAt = roundTo6Digits(writing2.updatedAt!!),
             writingState = writing2.state.value,
             writingScore = writing2.score!!
         )
@@ -229,8 +239,8 @@ class ProfessorGetWritingListTest @Autowired constructor(
             val expectedProfessorGetWritingListElementRes =
                 ProfessorGetWritingListElementRes(
                     studentId = writingList[i].studentId,
-                    createdAt = writingList[i].createdAt!!,
-                    updatedAt = writingList[i].updatedAt!!,
+                    createdAt = roundTo6Digits(writingList[i].createdAt!!),
+                    updatedAt = roundTo6Digits(writingList[i].updatedAt!!),
                     writingState = writingList[i].state.value,
                     writingScore = writingList[i].score!!
                 )
