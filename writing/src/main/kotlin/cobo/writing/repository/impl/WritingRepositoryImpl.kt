@@ -30,15 +30,16 @@ class WritingRepositoryImpl(
         )
     }
 
-    override fun updateStateByAssignmentIdAndStudentIdWithJDBC(
+    override fun updateStateAndScoreByAssignmentIdAndStudentIdWithJDBC(
         writingState: Short,
+        score: Int,
         assignmentId: Int,
         studentId: String
     ): Int {
         return jdbcTemplate.update(
-            "UPDATE writing SET writing.state = ? " +
+            "UPDATE writing SET writing.state = ?, writing.score = ? " +
                     "WHERE assignment_id = ? AND student_id = ?",
-            writingState, assignmentId, studentId)
+            writingState, score, assignmentId, studentId)
     }
 
     override fun findByAssignmentAndStudentIdWithJDBC(assignment: Assignment, studentId: String): Optional<Writing> {
