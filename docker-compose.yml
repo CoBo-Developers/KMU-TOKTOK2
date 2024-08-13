@@ -22,6 +22,13 @@ services:
       - "12042:12042"
     networks:
       - cobo
+  file-server:
+    container_name: file-server
+    build: ./file
+    ports:
+      - "12043:12043"
+    networks:
+      - cobo
 
   nginx:
     build: ./nginx
@@ -34,6 +41,7 @@ services:
       - auth-server
       - chat-server
       - writing-server
+      - file-server
     networks:
       - cobo
 
