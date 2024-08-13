@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.*
 import java.util.concurrent.CompletableFuture
 
 @Service
@@ -80,7 +81,14 @@ class WritingServiceImpl(
 
         val studentId = authentication.name
 
-        return CoBoResponse(this.getWriting(studentId, assignmentId), CoBoResponseStatus.SUCCESS).getResponseEntity()
+        val writing = this.getWriting(studentId, assignmentId)
+
+        val studentGetRes = StudentGetRes(
+            assignmentId = assignmentId,
+            content = if(writing.isPresent) writing.get().content else ""
+        )
+
+        return CoBoResponse(studentGetRes, CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 
     override fun assignmentPatchWriting(assignmentPatchWritingReq: AssignmentPatchWritingReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
@@ -142,10 +150,11 @@ class WritingServiceImpl(
         studentId: String
     ): ResponseEntity<CoBoResponseDto<ProfessorGetWriting>> {
         val writing = this.getWriting(studentId, assignmentId)
+
         TODO("Not yet implemented")
     }
 
-    private fun getWriting(studentId: String, assignmentId: Int): StudentGetRes{
+    private fun getWriting(studentId: String, assignmentId: Int): Optional<Writing> {
         val assignment = Assignment(id = assignmentId)
 
         val writing = writingRepository.findByAssignmentAndStudentId(
@@ -153,11 +162,6 @@ class WritingServiceImpl(
             studentId = studentId
         )
 
-        val studentGetRes = StudentGetRes(
-            assignmentId = assignmentId,
-            content = if(writing.isPresent) writing.get().content else ""
-        )
-
-        return studentGetRes
+        return writing
     }
 }
