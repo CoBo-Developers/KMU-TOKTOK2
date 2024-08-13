@@ -1,4 +1,4 @@
-package cobo.chat.data.dto.chatGPT
+package cobo.writing.data.dto.chatGPT
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

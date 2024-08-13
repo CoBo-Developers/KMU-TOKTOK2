@@ -1,8 +1,8 @@
 package cobo.writing.config
 
-import cobo.chat.data.dto.chatGPT.ChatGPTReq
-import cobo.chat.data.dto.chatGPT.ChatGPTReqMessage
-import cobo.chat.data.dto.chatGPT.ChatGPTRes
+import cobo.writing.data.dto.chatGPT.ChatGPTReq
+import cobo.writing.data.dto.chatGPT.ChatGPTReqMessage
+import cobo.writing.data.dto.chatGPT.ChatGPTRes
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
