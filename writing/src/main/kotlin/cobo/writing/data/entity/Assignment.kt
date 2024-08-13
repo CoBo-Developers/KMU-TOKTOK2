@@ -19,6 +19,9 @@ data class Assignment(
     @Column(length = 500)
     var description: String?,
 
+    @Column(length = 400)
+    var prompt: String?,
+
     var score: Int?,
 
     var startDate: LocalDate?,
@@ -28,6 +31,6 @@ data class Assignment(
     var deleted: Boolean = false,
 ){
     constructor(id: Int?): this(
-        id = id, title = null, description = null, score = null, startDate = null, endDate = null
+        id = id, title = null, description = null, prompt = null, score = null, startDate = null, endDate = null
     )
 }

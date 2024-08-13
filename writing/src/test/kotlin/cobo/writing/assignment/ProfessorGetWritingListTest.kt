@@ -50,6 +50,7 @@ class ProfessorGetWritingListTest @Autowired constructor(
             score = (1..20).random(),
             startDate = LocalDate.of(2024, (1..7).random(), (1..20).random()),
             endDate = LocalDate.of(2024, (8..12).random(), (1..20).random()),
+            prompt = UUID.randomUUID().toString()
         )
     }
 

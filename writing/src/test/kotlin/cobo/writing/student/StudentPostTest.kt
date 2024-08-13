@@ -54,21 +54,10 @@ class StudentPostTest @Autowired constructor(
             score = (1..20).random(),
             startDate = LocalDate.of(2024, (1..7).random(), (1..20).random()),
             endDate = LocalDate.of(2024, (8..12).random(), (1..20).random()),
+            prompt = UUID.randomUUID().toString()
         )
     }
 
-    private fun makeTestWriting(assignment: Assignment, state: Short):Writing {
-        return Writing(
-            id = null,
-            studentId = studentId,
-            assignment = assignment,
-            content = UUID.randomUUID().toString(),
-            state = WritingStateEnum.from(state) ?: WritingStateEnum.NOT_SUBMITTED,
-            createdAt = LocalDateTime.now(),
-            updatedAt = LocalDateTime.now(),
-            submittedAt = LocalDateTime.now()
-        )
-    }
 
     private fun makeTestStudent(studentId: String): SecurityContext {
         val securityContextHolder = SecurityContextHolder.getContext()

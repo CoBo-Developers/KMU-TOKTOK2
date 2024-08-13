@@ -37,6 +37,7 @@ class AssignmentGetListTest @Autowired constructor(
             score = (1..20).random(),
             startDate = LocalDate.of(2024, (1..7).random(), (1..20).random()),
             endDate = LocalDate.of(2024, (8..12).random(), (1..20).random()),
+            prompt = UUID.randomUUID().toString()
         )
     }
 
@@ -64,6 +65,7 @@ class AssignmentGetListTest @Autowired constructor(
         assertEquals(assignment.score, assignmentGetListRes.body!!.data!!.assignments.last().score)
         assertEquals(assignment.startDate, assignmentGetListRes.body!!.data!!.assignments.last().startDate)
         assertEquals(assignment.endDate, assignmentGetListRes.body!!.data!!.assignments.last().endDate)
+        assertEquals(assignment.prompt, assignmentGetListRes.body!!.data!!.assignments.last().prompt)
     }
 
     @Test
@@ -99,6 +101,7 @@ class AssignmentGetListTest @Autowired constructor(
             assertEquals(assignmentList[i].score, it.score)
             assertEquals(assignmentList[i].startDate, it.startDate)
             assertEquals(assignmentList[i].endDate, it.endDate)
+            assertEquals(assignmentList[i].prompt, it.prompt)
 
             i++
         }

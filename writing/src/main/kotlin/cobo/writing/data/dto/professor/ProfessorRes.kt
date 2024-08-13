@@ -16,7 +16,9 @@ data class AssignmentGetListElementRes(
     @Schema(description = "시작일", example = "2024-08-05")
     var startDate: LocalDate,
     @Schema(description = "마감일", example = "2024-08-06")
-    var endDate: LocalDate
+    var endDate: LocalDate,
+    @Schema(description = "프롬프팅")
+    var prompt: String
 )
 
 data class AssignmentGetListRes(
