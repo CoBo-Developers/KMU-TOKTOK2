@@ -161,7 +161,7 @@ class WritingServiceImpl(
     private fun getWriting(studentId: String, assignmentId: Int): Optional<Writing> {
         val assignment = Assignment(id = assignmentId)
 
-        val writing = writingRepository.findByAssignmentAndStudentId(
+        val writing = writingRepository.findByAssignmentAndStudentIdWithJDBC(
             assignment = assignment,
             studentId = studentId
         )
