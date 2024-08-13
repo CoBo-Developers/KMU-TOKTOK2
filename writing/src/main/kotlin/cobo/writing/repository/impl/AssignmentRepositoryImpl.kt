@@ -14,8 +14,8 @@ class AssignmentRepositoryImpl(
 
     override fun findByUserWithJDBC(studentId: String?): List<StudentGetListResElement> {
 
-        val sql = "SELECT assignment.id, assignment.title, assignment.description, assignment.score, assignment.start_date, assignment.end_date, " +
-                "writing.state FROM assignment " +
+        val sql = "SELECT assignment.id, assignment.title, assignment.description, assignment.score, assignment.start_date, assignment.end_date, writing.state, writing.score AS writing_score " +
+                "FROM assignment " +
                 "LEFT JOIN writing ON assignment.id = writing.assignment_id " +
                 "AND writing.student_id = ? " +
                 "WHERE assignment.deleted = false"
@@ -32,7 +32,8 @@ class AssignmentRepositoryImpl(
             score = resultSet.getInt("score"),
             startDate = resultSet.getTimestamp("start_date").toLocalDateTime().toLocalDate(),
             endDate = resultSet.getTimestamp("end_date").toLocalDateTime().toLocalDate(),
-            writingState = resultSet.getShort("state")
+            writingState = resultSet.getShort("state"),
+            writingScore = resultSet.getInt("writing_score"),
         )
     }
 }

@@ -37,5 +37,7 @@ data class AssignmentPatchWritingReq(
 
     val studentId: String,
 
-    val writingState: Short
+    val writingState: Short,
+
+    val score: Int
 )

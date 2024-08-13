@@ -7,7 +7,11 @@ import java.util.*
 interface WritingRepositoryCustom {
 
     fun ifExistsUpdateElseInsert(writing: Writing): Int
-    fun updateStateByAssignmentIdAndStudentIdWithJDBC(writingState: Short, assignmentId: Int, studentId: String): Int
+    fun updateStateAndScoreByAssignmentIdAndStudentIdWithJDBC(
+        writingState: Short,
+        score: Int,
+        assignmentId: Int,
+        studentId: String): Int
     fun findByAssignmentIdOrderByStatePagingWithJDBC(assignmentId: Int, page: Int, pageSize: Int): List<Writing>
     fun countByAssignmentIdWithJDBC(assignmentId: Int): Long
     fun findByAssignmentAndStudentIdWithJDBC(assignment: Assignment, studentId: String): Optional<Writing>

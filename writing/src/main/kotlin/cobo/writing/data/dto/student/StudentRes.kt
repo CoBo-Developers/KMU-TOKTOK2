@@ -19,7 +19,9 @@ data class StudentGetListResElement(
 
     val endDate: LocalDate,
 
-    val writingState: Short
+    val writingState: Short,
+
+    val writingScore: Int
 )
 
 data class StudentGetRes(

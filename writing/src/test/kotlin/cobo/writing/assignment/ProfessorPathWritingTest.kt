@@ -68,7 +68,8 @@ class ProfessorPathWritingTest @Autowired constructor(
 
     private fun patchWritingWithState(
         startWritingState: WritingStateEnum,
-        endWritingState: WritingStateEnum){
+        endWritingState: WritingStateEnum,
+        score: Int){
         //given
         val assignment = makeTestAssignment()
         assignmentRepository.save(assignment)
@@ -82,7 +83,8 @@ class ProfessorPathWritingTest @Autowired constructor(
         val assignmentPatchReq = AssignmentPatchWritingReq(
             assignmentId = assignment.id!!,
             studentId = studentId,
-            writingState = endWritingState.value
+            writingState = endWritingState.value,
+            score = score
         )
         val patchWritingRes = writingService.assignmentPatchWriting(assignmentPatchReq)
 
@@ -92,13 +94,15 @@ class ProfessorPathWritingTest @Autowired constructor(
         val savedWriting = writingRepository.findTopByOrderByIdDesc().orElseThrow()
 
         assertEquals(endWritingState, savedWriting.state)
+        assertEquals(savedWriting.score, savedWriting.score)
     }
 
     @Test
     fun testPatchWritingWithSubmittedToSubmitted(){
         patchWritingWithState(
             startWritingState = WritingStateEnum.SUBMITTED,
-            endWritingState = WritingStateEnum.SUBMITTED
+            endWritingState = WritingStateEnum.SUBMITTED,
+            score = (1..20).random()
         )
     }
 
@@ -106,7 +110,8 @@ class ProfessorPathWritingTest @Autowired constructor(
     fun testPatchWritingWithSubmittedToApproved(){
         patchWritingWithState(
             startWritingState = WritingStateEnum.SUBMITTED,
-            endWritingState = WritingStateEnum.APPROVED
+            endWritingState = WritingStateEnum.APPROVED,
+            score = (1..20).random()
         )
     }
 
@@ -114,7 +119,8 @@ class ProfessorPathWritingTest @Autowired constructor(
     fun testPatchWritingWithSubmittedToNotApproved(){
         patchWritingWithState(
             startWritingState = WritingStateEnum.SUBMITTED,
-            endWritingState = WritingStateEnum.NOT_APPROVED
+            endWritingState = WritingStateEnum.NOT_APPROVED,
+            score = (1..20).random()
         )
     }
 
@@ -122,7 +128,8 @@ class ProfessorPathWritingTest @Autowired constructor(
     fun testPatchWritingWithApprovedToSubmitted(){
         patchWritingWithState(
             startWritingState = WritingStateEnum.APPROVED,
-            endWritingState = WritingStateEnum.SUBMITTED
+            endWritingState = WritingStateEnum.SUBMITTED,
+            score = (1..20).random()
         )
     }
 
@@ -130,7 +137,8 @@ class ProfessorPathWritingTest @Autowired constructor(
     fun testPatchWritingWithApprovedToApproved(){
         patchWritingWithState(
             startWritingState = WritingStateEnum.APPROVED,
-            endWritingState = WritingStateEnum.APPROVED
+            endWritingState = WritingStateEnum.APPROVED,
+            score = (1..20).random()
         )
     }
 
@@ -138,7 +146,8 @@ class ProfessorPathWritingTest @Autowired constructor(
     fun testPatchWritingWithApprovedToNotApproved(){
         patchWritingWithState(
             startWritingState = WritingStateEnum.APPROVED,
-            endWritingState = WritingStateEnum.NOT_APPROVED
+            endWritingState = WritingStateEnum.NOT_APPROVED,
+            score = (1..20).random()
         )
     }
 
@@ -146,7 +155,8 @@ class ProfessorPathWritingTest @Autowired constructor(
     fun testPatchWritingWithNotApprovedToSubmitted(){
         patchWritingWithState(
             startWritingState = WritingStateEnum.NOT_APPROVED,
-            endWritingState = WritingStateEnum.SUBMITTED
+            endWritingState = WritingStateEnum.SUBMITTED,
+            score = (1..20).random()
         )
     }
 
@@ -154,7 +164,8 @@ class ProfessorPathWritingTest @Autowired constructor(
     fun testPatchWritingWithNotApprovedToApproved(){
         patchWritingWithState(
             startWritingState = WritingStateEnum.NOT_APPROVED,
-            endWritingState = WritingStateEnum.APPROVED
+            endWritingState = WritingStateEnum.APPROVED,
+            score = (1..20).random()
         )
     }
 
@@ -162,7 +173,8 @@ class ProfessorPathWritingTest @Autowired constructor(
     fun testPatchWritingWithNotApprovedToNotApproved(){
         patchWritingWithState(
             startWritingState = WritingStateEnum.NOT_APPROVED,
-            endWritingState = WritingStateEnum.NOT_APPROVED
+            endWritingState = WritingStateEnum.NOT_APPROVED,
+            score = (1..20).random()
         )
     }
 
@@ -176,7 +188,8 @@ class ProfessorPathWritingTest @Autowired constructor(
         val assignmentPatchReq = AssignmentPatchWritingReq(
             assignmentId = Int.MAX_VALUE,
             studentId = studentId,
-            writingState = WritingStateEnum.SUBMITTED.value
+            writingState = WritingStateEnum.SUBMITTED.value,
+            score = (1..20).random()
         )
         val patchWritingRes = writingService.assignmentPatchWriting(assignmentPatchReq)
 
@@ -200,7 +213,8 @@ class ProfessorPathWritingTest @Autowired constructor(
         val assignmentPatchReq = AssignmentPatchWritingReq(
             assignmentId = assignment.id!!,
             studentId = studentId,
-            writingState = Short.MAX_VALUE
+            writingState = Short.MAX_VALUE,
+            score = (1..20).random()
         )
         val patchWritingRes = writingService.assignmentPatchWriting(assignmentPatchReq)
 

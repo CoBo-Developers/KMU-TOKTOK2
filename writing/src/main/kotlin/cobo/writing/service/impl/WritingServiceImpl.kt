@@ -94,8 +94,9 @@ class WritingServiceImpl(
     override fun assignmentPatchWriting(assignmentPatchWritingReq: AssignmentPatchWritingReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         return try {
             CoBoResponse<CoBoResponseStatus>(
-                if (writingRepository.updateStateByAssignmentIdAndStudentIdWithJDBC(
+                if (writingRepository.updateStateAndScoreByAssignmentIdAndStudentIdWithJDBC(
                         writingState = assignmentPatchWritingReq.writingState,
+                        score = assignmentPatchWritingReq.score,
                         assignmentId = assignmentPatchWritingReq.assignmentId,
                         studentId = assignmentPatchWritingReq.studentId
                     ) > 0
@@ -125,7 +126,8 @@ class WritingServiceImpl(
                     studentId = it.studentId,
                     createdAt = it.createdAt!!,
                     updatedAt = it.updatedAt!!,
-                    writingState = it.state.value
+                    writingState = it.state.value,
+                    writingScore = it.score ?: 0
                 )
             }
         }

@@ -119,7 +119,8 @@ class StudentPostTest @Autowired constructor(
             state = WritingStateEnum.SUBMITTED,
             createdAt = writing.createdAt,
             updatedAt = writing.updatedAt,
-            submittedAt = writing.submittedAt
+            submittedAt = writing.submittedAt,
+            score = writing.score,
         )
 
         assertEquals(expectedWriting, writing)
@@ -199,7 +200,8 @@ class StudentPostTest @Autowired constructor(
             state = WritingStateEnum.SUBMITTED,
             createdAt = writing.createdAt,
             updatedAt = writing.updatedAt,
-            submittedAt = writing.submittedAt
+            submittedAt = writing.submittedAt,
+            score = writing.score
         )
 
         assertEquals(expectedWriting, writing)
@@ -247,7 +249,8 @@ class StudentPostTest @Autowired constructor(
             state = WritingStateEnum.SUBMITTED,
             createdAt = writing.createdAt,
             updatedAt = writing.updatedAt,
-            submittedAt = writing.submittedAt
+            submittedAt = writing.submittedAt,
+            score = writing.score
         )
 
         assertEquals(expectedWriting, writing)
