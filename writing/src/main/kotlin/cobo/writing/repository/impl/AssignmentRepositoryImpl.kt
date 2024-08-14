@@ -31,12 +31,25 @@ class AssignmentRepositoryImpl(
 
     @Transactional
     override fun save(assignment: Assignment): Assignment {
-        val savedAssignment = this.saveInDB(assignment)
-        if(!assignment.deleted) {
-            this.assignmentHashMap[savedAssignment.id!!] = savedAssignment
+        if(assignment.deleted) {
+            val savedAssignment = this.saveInDB(assignment)
+            return savedAssignment
         }
-        return savedAssignment
+        //INSERT
+        else if(assignment.id == null || !assignmentHashMap.containsKey(assignment.id)) {
+            val savedAssignment = this.saveInDB(assignment)
+            assignmentHashMap[savedAssignment.id!!] = savedAssignment
+            return savedAssignment
+        }
+        //UPDATE
+        else{
+            val savedAssignment = this.updateInDB(assignment)
+            assignmentHashMap[savedAssignment.id!!] = savedAssignment
+            return savedAssignment
+        }
     }
+
+
 
     override fun findAll(): List<Assignment> {
         return assignmentHashMap
@@ -88,10 +101,20 @@ class AssignmentRepositoryImpl(
 
     override fun saveAll(assignmentList: List<Assignment>): List<Assignment> {
         return assignmentList.map{
-            val savedAssignment = this.saveInDB(it)
-            if(!it.deleted)
-                this.assignmentHashMap[savedAssignment.id!!] = savedAssignment
-            savedAssignment
+            if(it.deleted) {
+                val savedAssignment = this.saveInDB(it)
+                savedAssignment
+            }
+            else if(assignmentHashMap.containsKey(it.id!!)) {
+                val savedAssignment = this.updateInDB(it)
+                assignmentHashMap[savedAssignment.id!!] = savedAssignment
+                savedAssignment
+            }
+            else{
+                val savedAssignment = this.saveInDB(it)
+                assignmentHashMap.plus(Pair(savedAssignment.id, savedAssignment))
+                savedAssignment
+            }
         }
     }
 
@@ -158,6 +181,25 @@ class AssignmentRepositoryImpl(
 
 
         assignment.id = keyHolder.key!!.toInt()
+
+        return assignment
+    }
+
+    private fun updateInDB(assignment: Assignment): Assignment {
+        val sql = "UPDATE assignment SET title = ?, description = ?, prompt = ?, score = ?, start_date = ?, end_date = ?, deleted = ? " +
+                "WHERE id = ?"
+
+        jdbcTemplate.update(
+            sql,
+            assignment.title,
+            assignment.description,
+            assignment.prompt,
+            assignment.score,
+            assignment.startDate,
+            assignment.endDate,
+            assignment.deleted,
+            assignment.id
+        )
 
         return assignment
     }

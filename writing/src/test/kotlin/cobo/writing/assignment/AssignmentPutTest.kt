@@ -49,6 +49,8 @@ class AssignmentPutTest @Autowired constructor(
         assignmentRepository.save(assignment)
         assignmentList.add(assignment)
 
+        val previousCount = assignmentRepository.count()
+
         val assignmentPutReq = AssignmentPutReq(
             id = assignment.id ?: throw NullPointerException("id"),
             title = UUID.randomUUID().toString(),
@@ -65,6 +67,8 @@ class AssignmentPutTest @Autowired constructor(
         //then
         assertEquals(HttpStatus.OK, putAssignment.statusCode)
 
+        val afterCount = assignmentRepository.count()
+
         val newAssignment = assignmentRepository.findById(assignment.id!!).orElseThrow()
         assertEquals(assignment.id, newAssignment.id)
         assertEquals(assignmentPutReq.title, newAssignment.title)
@@ -73,6 +77,8 @@ class AssignmentPutTest @Autowired constructor(
         assertEquals(assignmentPutReq.startDate, newAssignment.startDate)
         assertEquals(assignmentPutReq.endDate, newAssignment.endDate)
         assertEquals(assignmentPutReq.prompt, newAssignment.prompt)
+
+        assertEquals(previousCount, afterCount)
     }
 
     @Test
