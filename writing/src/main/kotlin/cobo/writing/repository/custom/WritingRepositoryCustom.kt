@@ -15,4 +15,5 @@ interface WritingRepositoryCustom {
     fun findByAssignmentIdOrderByStatePagingWithJDBC(assignmentId: Int, page: Int, pageSize: Int): List<Writing>
     fun countByAssignmentIdWithJDBC(assignmentId: Int): Long
     fun findByAssignmentAndStudentIdWithJDBC(assignment: Assignment, studentId: String): Optional<Writing>
+    fun findByStudentIdWithJDBC(studentId: String?): List<Writing>
 }

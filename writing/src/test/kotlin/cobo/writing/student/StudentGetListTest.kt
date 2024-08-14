@@ -82,6 +82,7 @@ class StudentGetListTest @Autowired constructor(
 
     private fun testStudentGetListWithState(state: Short){
         //given
+        val startTime = System.currentTimeMillis()
         val assignment = makeTestAssignment()
         assignmentRepository.save(assignment)
         assignmentList.add(assignment)
@@ -114,6 +115,7 @@ class StudentGetListTest @Autowired constructor(
             )
 
         assertEquals(expectedStudentGetListResElement, studentGetListRes.body!!.data!!.assignmentList.last())
+        println("TIME: ${System.currentTimeMillis() - startTime}")
     }
 
     @Test
@@ -163,7 +165,7 @@ class StudentGetListTest @Autowired constructor(
     @Test
     fun testStudentGetListMoreThanOneElement(){
         //given
-        val randomCount = (5..7).random()
+        val randomCount = 10
         val writingFlagList = mutableListOf<Boolean>()
         for(i in 1 .. randomCount) {
             val writingFlag = Random().nextBoolean()
