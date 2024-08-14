@@ -165,7 +165,6 @@ class StudentGetListTest @Autowired constructor(
     @Test
     fun testStudentGetListMoreThanOneElement(){
         //given
-        val startTime = System.currentTimeMillis()
         val randomCount = 10
         val writingFlagList = mutableListOf<Boolean>()
         for(i in 1 .. randomCount) {
@@ -220,7 +219,6 @@ class StudentGetListTest @Autowired constructor(
             )
             assertEquals(expectedStudentGetListResElement, studentGetList[i])
         }
-        println("TIME: ${System.currentTimeMillis() - startTime}")
     }
 
     @Test
