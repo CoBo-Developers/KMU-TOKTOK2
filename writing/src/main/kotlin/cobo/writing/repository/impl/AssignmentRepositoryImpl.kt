@@ -105,14 +105,16 @@ class AssignmentRepositoryImpl(
                 val savedAssignment = this.saveInDB(it)
                 savedAssignment
             }
-            else if(assignmentHashMap.containsKey(it.id!!)) {
-                val savedAssignment = this.updateInDB(it)
+            //INSERT
+            else if(it.id == null || !assignmentHashMap.containsKey(it.id)) {
+                val savedAssignment = this.saveInDB(it)
                 assignmentHashMap[savedAssignment.id!!] = savedAssignment
                 savedAssignment
             }
+            //UPDATE
             else{
-                val savedAssignment = this.saveInDB(it)
-                assignmentHashMap.plus(Pair(savedAssignment.id, savedAssignment))
+                val savedAssignment = this.updateInDB(it)
+                assignmentHashMap[savedAssignment.id!!] = savedAssignment
                 savedAssignment
             }
         }

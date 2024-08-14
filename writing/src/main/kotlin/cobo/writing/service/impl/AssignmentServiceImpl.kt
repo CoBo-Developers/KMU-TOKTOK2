@@ -8,17 +8,22 @@ import cobo.writing.data.dto.professor.AssignmentGetListRes
 import cobo.writing.data.dto.professor.AssignmentPostReq
 import cobo.writing.data.dto.professor.AssignmentPutReq
 import cobo.writing.data.dto.student.StudentGetListRes
+import cobo.writing.data.dto.student.StudentGetListResElement
 import cobo.writing.data.entity.Assignment
+import cobo.writing.data.enums.WritingStateEnum
 import cobo.writing.repository.AssignmentRepository
+import cobo.writing.repository.WritingRepository
 import cobo.writing.service.AssignmentService
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 @Service
 class AssignmentServiceImpl(
-    private val assignmentRepository: AssignmentRepository
+    private val assignmentRepository: AssignmentRepository,
+    private val writingRepository: WritingRepository
 ): AssignmentService {
 
     override fun post(assignmentPostReq: AssignmentPostReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
@@ -75,11 +80,33 @@ class AssignmentServiceImpl(
 
         val studentId = authentication.name
 
-        val assignmentList = assignmentRepository.findByUserWithJDBC(studentId)
+        val writingList = writingRepository.findByStudentIdWithJDBC(studentId).associateBy { it.assignment.id!! }
+
+        val assignments = assignmentRepository.findAll().map {
+            val writing = writingList[it.id]
+
+            val studentGetListResElement = StudentGetListResElement(
+                id = it.id!!,
+                title = it.title ?: "",
+                description = it.description ?: "",
+                score = it.score ?: 0,
+                startDate = it.startDate ?: LocalDate.now(),
+                endDate = it.endDate ?: LocalDate.now(),
+                writingState = WritingStateEnum.NOT_SUBMITTED.value,
+                writingScore = 0
+            )
+
+            if(writing != null){
+                studentGetListResElement.writingState = writing.state.value
+                studentGetListResElement.writingScore = writing.score ?: 0
+            }
+
+            studentGetListResElement
+        }
 
         return CoBoResponse(
             StudentGetListRes(
-                assignmentList = assignmentList,
+                assignmentList = assignments,
             ), CoBoResponseStatus.SUCCESS
         ).getResponseEntity()
     }

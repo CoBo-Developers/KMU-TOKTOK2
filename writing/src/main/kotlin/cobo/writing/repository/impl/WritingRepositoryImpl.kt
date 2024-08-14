@@ -57,6 +57,14 @@ class WritingRepositoryImpl(
 
     }
 
+    override fun findByStudentIdWithJDBC(studentId: String?): List<Writing> {
+        val sql = "SELECT writing.id, writing.student_id, writing.assignment_id, writing.content, writing.state, writing.score, writing.created_at, writing.updated_at, writing.submitted_at " +
+                "FROM writing WHERE writing.student_id = ?"
+        return jdbcTemplate.query(
+            sql, {rs, _ -> writingRowMapper(rs)}, studentId
+        )
+    }
+
     override fun findByAssignmentIdOrderByStatePagingWithJDBC(assignmentId: Int, page: Int, pageSize: Int): List<Writing> {
         val sql = "SELECT writing.id, writing.student_id, writing.assignment_id, writing.content, writing.state, writing.score, writing.created_at, writing.updated_at, writing.submitted_at " +
                 "FROM writing WHERE writing.assignment_id = ? ORDER BY writing.state, writing.id LIMIT ?, ?"
