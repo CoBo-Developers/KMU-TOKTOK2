@@ -28,6 +28,6 @@ class ProfessorCategoryPresentation(
         ApiResponse(responseCode = "201", description = "생성")
     )
     fun post(@RequestBody professorPostCategoryReq: ProfessorPostCategoryReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+        return categoryService.professorPost(professorPostCategoryReq)
     }
 }
