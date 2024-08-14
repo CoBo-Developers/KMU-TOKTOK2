@@ -2,6 +2,7 @@ package cobo.file.presentation
 
 import cobo.file.config.response.CoBoResponseDto
 import cobo.file.config.response.CoBoResponseStatus
+import cobo.file.data.dto.professorCategory.ProfessorPostCategoryReq
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -24,7 +26,7 @@ class ProfessorCategoryPresentation(
     @ApiResponses(
         ApiResponse(responseCode = "201", description = "생성")
     )
-    fun post(): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+    fun post(@RequestBody professorPostCategoryReq: ProfessorPostCategoryReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }
