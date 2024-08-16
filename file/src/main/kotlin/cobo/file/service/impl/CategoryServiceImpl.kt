@@ -4,6 +4,7 @@ import cobo.file.config.response.CoBoResponse
 import cobo.file.config.response.CoBoResponseDto
 import cobo.file.config.response.CoBoResponseStatus
 import cobo.file.data.dto.professorCategory.ProfessorPostCategoryReq
+import cobo.file.data.dto.professorCategory.ProfessorPutCategoryRes
 import cobo.file.data.entity.Category
 import cobo.file.repository.CategoryRepository
 import cobo.file.service.CategoryService
@@ -24,5 +25,15 @@ class CategoryServiceImpl(
         categoryRepository.save(category)
 
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.CREATED).getResponseEntity()
+    }
+
+    override fun professorPut(professorPutCategoryReq: ProfessorPutCategoryRes): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        val category = categoryRepository.findByName(professorPutCategoryReq.oldCategory).orElseThrow()
+
+        category.name = professorPutCategoryReq.newCategory
+
+        categoryRepository.save(category)
+
+        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 }
