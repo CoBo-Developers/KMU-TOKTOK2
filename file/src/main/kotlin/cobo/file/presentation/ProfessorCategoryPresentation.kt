@@ -10,11 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/professor/category")
@@ -39,5 +35,14 @@ class ProfessorCategoryPresentation(
     )
     fun put(@RequestBody professorPutCategoryReq: ProfessorPutCategoryRes): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         return categoryService.professorPut(professorPutCategoryReq)
+    }
+
+    @DeleteMapping
+    @Operation(summary = "카테고리 삭제 API")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "삭제 성공")
+    )
+    fun delete(@RequestParam category: String): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
+        return categoryService.professorDelete(category)
     }
 }
