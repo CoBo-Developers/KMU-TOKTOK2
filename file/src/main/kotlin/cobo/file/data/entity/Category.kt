@@ -1,7 +1,6 @@
 package cobo.file.data.entity
 
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
+import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 
@@ -10,7 +9,12 @@ import org.hibernate.annotations.SQLRestriction
 @SQLDelete(sql = "UPDATE assignment SET deleted = true where id = ?")
 data class Category(
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Int? = null,
+
+    @Column(unique = true)
     var name: String,
+
     var deleted: Boolean
 
 )
