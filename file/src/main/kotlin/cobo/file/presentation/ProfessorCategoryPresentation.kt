@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -44,6 +43,6 @@ class ProfessorCategoryPresentation(
         ApiResponse(responseCode = "200", description = "삭제 성공")
     )
     fun delete(@RequestParam category: String): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+        return categoryService.professorDelete(category)
     }
 }

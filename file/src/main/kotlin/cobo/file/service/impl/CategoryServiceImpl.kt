@@ -27,6 +27,11 @@ class CategoryServiceImpl(
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.CREATED).getResponseEntity()
     }
 
+    override fun professorDelete(category: String): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        categoryRepository.deleteByName(category)
+        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
     override fun professorPut(professorPutCategoryReq: ProfessorPutCategoryRes): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         val category = categoryRepository.findByName(professorPutCategoryReq.oldCategory).orElseThrow()
 

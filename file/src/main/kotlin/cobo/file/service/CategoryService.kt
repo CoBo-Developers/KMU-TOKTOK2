@@ -9,4 +9,5 @@ import org.springframework.http.ResponseEntity
 interface CategoryService {
     fun professorPost(professorPostCategoryReq: ProfessorPostCategoryReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>
     fun professorPut(professorPutCategoryReq: ProfessorPutCategoryRes): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>
+    fun professorDelete(category: String): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>
 }
