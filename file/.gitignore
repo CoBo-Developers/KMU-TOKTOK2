@@ -40,3 +40,6 @@ out/
 .kotlin
 
 src/main/resources/application.yml
+
+### file directory ###
+files/**
