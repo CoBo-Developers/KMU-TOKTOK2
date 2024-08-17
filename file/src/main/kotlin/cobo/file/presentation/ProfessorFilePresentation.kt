@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/professor/category")
+@RequestMapping("/api/professor/file")
 @Tag(name = "파일 관련 API(교수, 개발자만 사용 가능)")
 class ProfessorFilePresentation(
     private val fileService: FileService
