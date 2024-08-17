@@ -2,7 +2,7 @@ package cobo.file.data.dto.professorFile
 
 import org.springframework.web.multipart.MultipartFile
 
-data class ProfessorFileReq(
+data class ProfessorFilePostReq(
 
     val fileName: String,
 
