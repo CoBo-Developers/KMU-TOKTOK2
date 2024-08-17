@@ -3,6 +3,8 @@ package cobo.file.service.impl
 import cobo.file.config.response.CoBoResponse
 import cobo.file.config.response.CoBoResponseDto
 import cobo.file.config.response.CoBoResponseStatus
+import cobo.file.data.dto.category.CategoryGetListRes
+import cobo.file.data.dto.category.CategoryGetListResElement
 import cobo.file.data.dto.professorCategory.ProfessorPostCategoryReq
 import cobo.file.data.dto.professorCategory.ProfessorPutCategoryRes
 import cobo.file.data.entity.Category
@@ -30,6 +32,17 @@ class CategoryServiceImpl(
     override fun professorDelete(category: String): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         categoryRepository.deleteByName(category)
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
+    override fun getList(): ResponseEntity<CoBoResponseDto<CategoryGetListRes>> {
+        val categories = categoryRepository.findAll().map{
+            CategoryGetListResElement(
+                id = it.id!!,
+                name = it.name
+            )
+        }
+
+        return CoBoResponse(CategoryGetListRes(categories), CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 
     override fun professorPut(professorPutCategoryReq: ProfessorPutCategoryRes): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
