@@ -1,5 +1,7 @@
 package cobo.file.presentation
 
+import cobo.file.data.dto.professorFile.ProfessorFilePostReq
+import cobo.file.service.FileService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/professor/category")
 @Tag(name = "파일 관련 API(교수, 개발자만 사용 가능)")
 class ProfessorFilePresentation(
+    private val fileService: FileService
 ) {
 
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
@@ -21,7 +24,7 @@ class ProfessorFilePresentation(
     @ApiResponses(
         ApiResponse(responseCode = "201", description = "업로드 성공", content = arrayOf(Content()))
     )
-    private fun post(): ResponseEntity<HttpStatus> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+    private fun post(@ModelAttribute professorFilePostReq: ProfessorFilePostReq): ResponseEntity<HttpStatus> {
+        return fileService.professorPost(professorFilePostReq)
     }
 }
