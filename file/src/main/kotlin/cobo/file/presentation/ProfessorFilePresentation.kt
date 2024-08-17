@@ -1,5 +1,7 @@
 package cobo.file.presentation
 
+import cobo.file.config.response.CoBoResponseDto
+import cobo.file.config.response.CoBoResponseStatus
 import cobo.file.data.dto.professorFile.ProfessorFilePostReq
 import cobo.file.service.FileService
 import io.swagger.v3.oas.annotations.Operation
@@ -7,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -24,7 +25,7 @@ class ProfessorFilePresentation(
     @ApiResponses(
         ApiResponse(responseCode = "201", description = "업로드 성공", content = arrayOf(Content()))
     )
-    private fun post(@ModelAttribute professorFilePostReq: ProfessorFilePostReq): ResponseEntity<HttpStatus> {
+    private fun post(@ModelAttribute professorFilePostReq: ProfessorFilePostReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         return fileService.professorPost(professorFilePostReq)
     }
 }
