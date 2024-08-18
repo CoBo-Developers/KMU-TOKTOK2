@@ -53,4 +53,11 @@ class FileServiceImpl(
 
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
+
+    override fun delete(fileId: List<Int>): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+
+        fileRepository.deleteAllById(fileId)
+
+        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
 }
