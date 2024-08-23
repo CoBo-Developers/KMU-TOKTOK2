@@ -25,6 +25,8 @@ services:
   file-server:
     container_name: file-server
     build: ./file
+    volumes:
+      - files:${FILE_PATH}
     ports:
       - "12043:12043"
     networks:
@@ -47,3 +49,6 @@ services:
 
 networks:
   cobo:
+
+volumes:
+  files:
