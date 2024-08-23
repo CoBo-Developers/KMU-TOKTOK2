@@ -7,4 +7,5 @@ import org.springframework.http.ResponseEntity
 
 interface FileService {
     fun professorPost(professorFilePostReq: ProfessorFilePostReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>
+    fun delete(fileId: List<Int>): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>
 }

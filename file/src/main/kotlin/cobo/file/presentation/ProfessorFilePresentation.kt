@@ -28,4 +28,15 @@ class ProfessorFilePresentation(
     private fun post(@ModelAttribute professorFilePostReq: ProfessorFilePostReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         return fileService.professorPost(professorFilePostReq)
     }
+
+    @DeleteMapping
+    @Operation(summary = "파일 삭제 API")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공", content = arrayOf(Content())),
+        ApiResponse(responseCode = "403", description = "인증 실패", content = arrayOf(Content()))
+    )
+    fun delete(@RequestParam fileId: List<Int>): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
+        return fileService.delete(fileId)
+    }
+
 }
