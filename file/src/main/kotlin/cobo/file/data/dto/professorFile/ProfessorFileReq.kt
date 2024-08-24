@@ -11,3 +11,9 @@ data class ProfessorFilePostReq(
     val multipartFile: MultipartFile
 
 )
+
+data class ProfessorFilePatchReq(
+    val fileId: Int,
+
+    val name: String
+)

@@ -2,6 +2,7 @@ package cobo.file.presentation
 
 import cobo.file.config.response.CoBoResponseDto
 import cobo.file.config.response.CoBoResponseStatus
+import cobo.file.data.dto.professorFile.ProfessorFilePatchReq
 import cobo.file.data.dto.professorFile.ProfessorFilePostReq
 import cobo.file.service.FileService
 import io.swagger.v3.oas.annotations.Operation
@@ -36,7 +37,16 @@ class ProfessorFilePresentation(
         ApiResponse(responseCode = "403", description = "인증 실패", content = arrayOf(Content()))
     )
     fun delete(@RequestParam fileId: List<Int>): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
-        return fileService.delete(fileId)
+        return fileService.professorDelete(fileId)
+    }
+
+    @PatchMapping
+    @Operation(summary = "파일 수정 API")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공")
+    )
+    fun patch(@RequestBody professorFilePatchReq: ProfessorFilePatchReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
+        return fileService.professorPatch(professorFilePatchReq)
     }
 
 }
