@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -38,7 +37,7 @@ class ProfessorFilePresentation(
         ApiResponse(responseCode = "403", description = "인증 실패", content = arrayOf(Content()))
     )
     fun delete(@RequestParam fileId: List<Int>): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
-        return fileService.delete(fileId)
+        return fileService.professorDelete(fileId)
     }
 
     @PatchMapping
@@ -47,7 +46,7 @@ class ProfessorFilePresentation(
         ApiResponse(responseCode = "200", description = "성공")
     )
     fun patch(@RequestBody professorFilePatchReq: ProfessorFilePatchReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+        return fileService.professorPatch(professorFilePatchReq)
     }
 
 }
