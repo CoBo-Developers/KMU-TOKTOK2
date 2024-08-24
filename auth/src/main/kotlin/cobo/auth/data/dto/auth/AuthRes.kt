@@ -12,5 +12,8 @@ data class GetAuthLoginRes(
     val refreshToken: String,
 
     @Schema(description = "회원가입 상태", example = "ACTIVE")
-    val registerStateEnum: RegisterStateEnum
+    val registerStateEnum: RegisterStateEnum,
+
+    @Schema(description = "학번")
+    val studentId: String?
 )
