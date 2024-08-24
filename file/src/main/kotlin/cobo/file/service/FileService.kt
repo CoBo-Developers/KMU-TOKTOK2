@@ -5,6 +5,7 @@ import cobo.file.config.response.CoBoResponseStatus
 import cobo.file.data.dto.file.FileGetListRes
 import cobo.file.data.dto.professorFile.ProfessorFilePatchReq
 import cobo.file.data.dto.professorFile.ProfessorFilePostReq
+import org.springframework.core.io.Resource
 import org.springframework.http.ResponseEntity
 
 interface FileService {
@@ -12,4 +13,5 @@ interface FileService {
     fun professorDelete(fileId: List<Int>): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>
     fun professorPatch(professorFilePatchReq: ProfessorFilePatchReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>
     fun getList(categoryId: Int?): ResponseEntity<CoBoResponseDto<FileGetListRes>>
+    fun get(fileId: Int): ResponseEntity<Resource>
 }

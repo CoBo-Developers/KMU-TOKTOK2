@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.core.io.Resource
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -44,7 +43,7 @@ class FilePresentation(
         ApiResponse(responseCode = "403", description = "인증 실패"),
         ApiResponse(responseCode = "404", description = "파일을 찾을 수 없음")
     )
-    fun get(@RequestParam("fileId") fileId: Int): ResponseEntity<Resource>{
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+    fun get(@RequestParam fileId: Int): ResponseEntity<Resource>{
+        return fileService.get(fileId)
     }
 }

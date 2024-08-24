@@ -13,9 +13,16 @@ import cobo.file.repository.CategoryRepository
 import cobo.file.repository.FileRepository
 import cobo.file.service.FileService
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.io.ByteArrayResource
+import org.springframework.core.io.Resource
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
@@ -98,5 +105,25 @@ class FileServiceImpl(
             FileGetListRes(
                 files = fileGetListResElements),
             CoBoResponseStatus.SUCCESS).getResponseEntity()
+    }
+
+    override fun get(fileId: Int): ResponseEntity<Resource> {
+
+        val optionalFile = fileRepository.findById(fileId)
+
+        if(optionalFile.isEmpty)
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+
+        val file = java.io.File(optionalFile.get().path)
+
+        val fileContent = Files.readAllBytes(file.toPath())
+
+        val resource = ByteArrayResource(fileContent)
+        val encodedFileName = URLEncoder.encode(optionalFile.get().fileName, StandardCharsets.UTF_8.toString())
+
+        return ResponseEntity.ok()
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"$encodedFileName\"")
+            .body(resource)
     }
 }
