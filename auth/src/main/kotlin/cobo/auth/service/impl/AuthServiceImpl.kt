@@ -46,7 +46,7 @@ class AuthServiceImpl(
 
         val tokenList = getAccessTokenAndRefreshTokenByUser(user)
 
-        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState), CoBoResponseStatus.SUCCESS)
+        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState, user.studentId), CoBoResponseStatus.SUCCESS)
 
         return coBoResponse.getResponseEntityWithLog()
     }
@@ -57,7 +57,7 @@ class AuthServiceImpl(
 
         val tokenList = getAccessTokenAndRefreshTokenByUser(user)
 
-        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState), CoBoResponseStatus.SUCCESS)
+        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState, user.studentId), CoBoResponseStatus.SUCCESS)
 
         return coBoResponse.getResponseEntityWithLog()
     }
@@ -67,7 +67,7 @@ class AuthServiceImpl(
 
         val tokenList = getAccessTokenAndRefreshTokenByUser(user)
 
-        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState), CoBoResponseStatus.SUCCESS)
+        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState, user.studentId), CoBoResponseStatus.SUCCESS)
 
         return coBoResponse.getResponseEntityWithLog()
     }
@@ -103,7 +103,7 @@ class AuthServiceImpl(
             tokenList = getAccessTokenAndRefreshTokenByUser(User(userId, postAuthRegisterReq.studentId))
         }
 
-        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], RegisterStateEnum.ACTIVE), CoBoResponseStatus.SUCCESS)
+        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], RegisterStateEnum.ACTIVE, postAuthRegisterReq.studentId), CoBoResponseStatus.SUCCESS)
 
         return coBoResponse.getResponseEntityWithLog()
     }
@@ -120,7 +120,8 @@ class AuthServiceImpl(
             GetAuthLoginRes(
                 accessToken = jwtTokenProvider.getAccessToken(userId, studentId, roleEnum ?: RoleEnum.STUDENT),
                 refreshToken = token,
-                userRepository.findById(userId).orElseThrow{NullPointerException()}.registerState),
+                registerStateEnum = userRepository.findById(userId).orElseThrow{NullPointerException()}.registerState,
+                studentId = studentId),
             CoBoResponseStatus.SUCCESS).getResponseEntityWithLog()
     }
 
@@ -129,7 +130,7 @@ class AuthServiceImpl(
 
         val tokenList = getAccessTokenAndRefreshTokenByUser(user)
 
-        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState), CoBoResponseStatus.SUCCESS)
+        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState, user.studentId), CoBoResponseStatus.SUCCESS)
 
         return coBoResponse.getResponseEntityWithLog()
     }
@@ -139,7 +140,7 @@ class AuthServiceImpl(
 
         val tokenList = getAccessTokenAndRefreshTokenByUser(user)
 
-        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState), CoBoResponseStatus.SUCCESS)
+        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState, user.studentId), CoBoResponseStatus.SUCCESS)
 
         return coBoResponse.getResponseEntityWithLog()
     }
