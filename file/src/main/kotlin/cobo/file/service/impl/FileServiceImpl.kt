@@ -3,8 +3,11 @@ package cobo.file.service.impl
 import cobo.file.config.response.CoBoResponse
 import cobo.file.config.response.CoBoResponseDto
 import cobo.file.config.response.CoBoResponseStatus
+import cobo.file.data.dto.file.FileGetListRes
+import cobo.file.data.dto.file.FileGetListResElement
 import cobo.file.data.dto.professorFile.ProfessorFilePatchReq
 import cobo.file.data.dto.professorFile.ProfessorFilePostReq
+import cobo.file.data.entity.Category
 import cobo.file.data.entity.File
 import cobo.file.repository.CategoryRepository
 import cobo.file.repository.FileRepository
@@ -77,5 +80,23 @@ class FileServiceImpl(
         else{
             return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.NOT_FOUND_FILE).getResponseEntity()
         }
+    }
+
+    override fun getList(categoryId: Int?): ResponseEntity<CoBoResponseDto<FileGetListRes>> {
+        val category = Category(id = categoryId, name = "")
+        val fileGetListResElements = fileRepository.findByCategory(category).map{
+            FileGetListResElement(
+                id = it.id,
+                name = it.name,
+                fileName = it.fileName,
+                size = it.size,
+                createdAt = it.createdAt
+            )
+        }
+
+        return CoBoResponse(
+            FileGetListRes(
+                files = fileGetListResElements),
+            CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 }
