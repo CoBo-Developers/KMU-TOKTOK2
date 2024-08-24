@@ -1,5 +1,7 @@
 package cobo.file.presentation
 
+import cobo.file.config.response.CoBoResponseDto
+import cobo.file.data.dto.file.FileGetListRes
 import cobo.file.service.FileService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -30,7 +32,7 @@ class FilePresentation(
         ApiResponse(responseCode = "400", description = "잘못된 파라미터 전달"),
         ApiResponse(responseCode = "403", description = "인증 실패")
     )
-    fun getList(@RequestParam category: String?): ResponseEntity<HttpStatus> {
+    fun getList(@RequestParam category: String?): ResponseEntity<CoBoResponseDto<FileGetListRes>> {
         return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 }
