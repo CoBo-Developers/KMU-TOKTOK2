@@ -2,6 +2,7 @@ package cobo.file.presentation
 
 import cobo.file.config.response.CoBoResponseDto
 import cobo.file.config.response.CoBoResponseStatus
+import cobo.file.data.dto.professorFile.ProfessorFilePatchReq
 import cobo.file.data.dto.professorFile.ProfessorFilePostReq
 import cobo.file.service.FileService
 import io.swagger.v3.oas.annotations.Operation
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -37,6 +39,15 @@ class ProfessorFilePresentation(
     )
     fun delete(@RequestParam fileId: List<Int>): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
         return fileService.delete(fileId)
+    }
+
+    @PatchMapping
+    @Operation(summary = "파일 수정 API")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공")
+    )
+    fun patch(@RequestBody professorFilePatchReq: ProfessorFilePatchReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
+        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
     }
 
 }
