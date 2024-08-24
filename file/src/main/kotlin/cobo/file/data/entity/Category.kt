@@ -15,6 +15,6 @@ data class Category(
     @Column(unique = true)
     var name: String,
 
-    var deleted: Boolean
+    var deleted: Boolean? = false
 
 )

@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Parameters
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -25,14 +24,14 @@ class FilePresentation(
     @GetMapping("/list")
     @Operation(summary = "파일리스트 조회 API")
     @Parameters(
-        Parameter(name = "category", description = "검색할 카테고리")
+        Parameter(name = "categoryId", description = "검색할 카테고리 아이디")
     )
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "성공"),
         ApiResponse(responseCode = "400", description = "잘못된 파라미터 전달"),
         ApiResponse(responseCode = "403", description = "인증 실패")
     )
-    fun getList(@RequestParam category: String?): ResponseEntity<CoBoResponseDto<FileGetListRes>> {
-        return ResponseEntity(HttpStatus.NOT_IMPLEMENTED)
+    fun getList(@RequestParam categoryId: Int?): ResponseEntity<CoBoResponseDto<FileGetListRes>> {
+        return fileService.getList(categoryId)
     }
 }
