@@ -10,6 +10,7 @@ import cobo.file.data.dto.professorCategory.ProfessorPutCategoryRes
 import cobo.file.data.entity.Category
 import cobo.file.repository.CategoryRepository
 import cobo.file.service.CategoryService
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
@@ -24,7 +25,11 @@ class CategoryServiceImpl(
             deleted = false
         )
 
-        categoryRepository.save(category)
+        try{
+            categoryRepository.save(category)
+        }catch(dataIntegrityViolationException: DataIntegrityViolationException){
+            return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.EXIST_DATA).getResponseEntity()
+        }
 
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.CREATED).getResponseEntity()
     }
