@@ -8,10 +8,10 @@ data class ProfessorPostCategoryReq(
     val category: String
 )
 
-data class ProfessorPutCategoryRes(
-    @Schema(description = "수정할 카테고리 명")
-    val oldCategory: String,
+data class ProfessorPutCategoryReq(
+    @Schema(description = "수정할 카테고리 아이디")
+    val categoryId: Int,
 
     @Schema(description = "해당 카테고리의 새로운 이름")
-    val newCategory: String
+    val name: String
 )

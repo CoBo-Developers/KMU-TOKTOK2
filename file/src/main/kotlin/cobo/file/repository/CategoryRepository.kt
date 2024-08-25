@@ -9,4 +9,5 @@ interface CategoryRepository: JpaRepository<Category, Int> {
     fun findByName(oldCategory: String): Optional<Category>
     @Transactional
     fun deleteByName(category: String)
+    fun findTopByOrderByIdDesc(): Optional<Category>
 }
