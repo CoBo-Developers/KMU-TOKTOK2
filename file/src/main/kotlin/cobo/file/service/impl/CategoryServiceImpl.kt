@@ -34,8 +34,8 @@ class CategoryServiceImpl(
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.CREATED).getResponseEntity()
     }
 
-    override fun professorDelete(category: String): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
-        categoryRepository.deleteByName(category)
+    override fun professorDelete(categoryId: Int): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        categoryRepository.deleteById(categoryId)
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 

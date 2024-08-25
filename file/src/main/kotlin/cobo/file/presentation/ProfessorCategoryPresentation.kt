@@ -42,7 +42,7 @@ class ProfessorCategoryPresentation(
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "삭제 성공")
     )
-    fun delete(@RequestParam category: String): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
-        return categoryService.professorDelete(category)
+    fun delete(@RequestParam categoryId: Int): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>{
+        return categoryService.professorDelete(categoryId)
     }
 }
