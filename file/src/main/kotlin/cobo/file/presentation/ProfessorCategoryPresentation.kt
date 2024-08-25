@@ -3,7 +3,7 @@ package cobo.file.presentation
 import cobo.file.config.response.CoBoResponseDto
 import cobo.file.config.response.CoBoResponseStatus
 import cobo.file.data.dto.professorCategory.ProfessorPostCategoryReq
-import cobo.file.data.dto.professorCategory.ProfessorPutCategoryRes
+import cobo.file.data.dto.professorCategory.ProfessorPutCategoryReq
 import cobo.file.service.CategoryService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -33,7 +33,7 @@ class ProfessorCategoryPresentation(
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "수정 성공")
     )
-    fun put(@RequestBody professorPutCategoryReq: ProfessorPutCategoryRes): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+    fun put(@RequestBody professorPutCategoryReq: ProfessorPutCategoryReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         return categoryService.professorPut(professorPutCategoryReq)
     }
 

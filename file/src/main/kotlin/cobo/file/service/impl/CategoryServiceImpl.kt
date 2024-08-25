@@ -6,7 +6,7 @@ import cobo.file.config.response.CoBoResponseStatus
 import cobo.file.data.dto.category.CategoryGetListRes
 import cobo.file.data.dto.category.CategoryGetListResElement
 import cobo.file.data.dto.professorCategory.ProfessorPostCategoryReq
-import cobo.file.data.dto.professorCategory.ProfessorPutCategoryRes
+import cobo.file.data.dto.professorCategory.ProfessorPutCategoryReq
 import cobo.file.data.entity.Category
 import cobo.file.repository.CategoryRepository
 import cobo.file.service.CategoryService
@@ -50,13 +50,17 @@ class CategoryServiceImpl(
         return CoBoResponse(CategoryGetListRes(categories), CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 
-    override fun professorPut(professorPutCategoryReq: ProfessorPutCategoryRes): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
-        val category = categoryRepository.findByName(professorPutCategoryReq.oldCategory).orElseThrow()
+    override fun professorPut(professorPutCategoryReq: ProfessorPutCategoryReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        try{
+            val category = categoryRepository.findById(professorPutCategoryReq.categoryId).orElseThrow{NullPointerException()}
 
-        category.name = professorPutCategoryReq.newCategory
+            category.name = professorPutCategoryReq.name
 
-        categoryRepository.save(category)
+            categoryRepository.save(category)
 
-        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+            return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+        }catch(nullPointerException: NullPointerException){
+            return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.NOT_FOUND_CATEGORY).getResponseEntity()
+        }
     }
 }
