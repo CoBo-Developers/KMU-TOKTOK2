@@ -166,11 +166,20 @@ class WritingServiceImpl(
         assignmentId: Int,
         studentId: String
     ): ResponseEntity<CoBoResponseDto<ProfessorGetWriting>> {
-        val writing = this.getWriting(studentId, assignmentId)
+        val optionalWriting = this.getWriting(studentId, assignmentId)
 
-        val professorGetWriting = ProfessorGetWriting(
-            content = if(writing.isPresent) writing.get().content else ""
-        )
+        val professorGetWriting: ProfessorGetWriting = if(optionalWriting.isPresent){
+            val writing = optionalWriting.get()
+            ProfessorGetWriting(
+                content = writing.content,
+                score = writing.score,
+                createdAt = writing.createdAt!!,
+                writingState = writing.state.value
+            )
+        }
+        else{
+            ProfessorGetWriting()
+        }
 
         return CoBoResponse(professorGetWriting, CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
