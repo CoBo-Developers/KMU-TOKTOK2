@@ -14,11 +14,11 @@ import cobo.auth.data.enums.RoleEnum
 import cobo.auth.repository.OauthRepository
 import cobo.auth.repository.UserRepository
 import cobo.auth.service.AuthService
-import cobo.auth.service.oauth.impl.GoogleOauthServiceImpl
 import cobo.auth.service.oauth.impl.KakaoOauthServiceImpl
 import cobo.auth.service.oauth.impl.NaverOauthServiceImpl
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
@@ -30,8 +30,13 @@ class AuthServiceImpl(
     private val userRepository: UserRepository,
     private val oauthRepository: OauthRepository,
     private val kakaoOauthServiceImpl: KakaoOauthServiceImpl,
-    private val googleOauthServiceImpl: GoogleOauthServiceImpl,
-    private val naverOauthServiceImpl: NaverOauthServiceImpl
+    private val naverOauthServiceImpl: NaverOauthServiceImpl,
+    @Value("\${kakao.auth.redirect_uri}")
+    private val kakaoRedirectUri: String,
+    @Value("\${kakao.auth.local_redirect_uri}")
+    private val kakaoLocalRedirectUri: String,
+    @Value("\${kakao.auth.admin_redirect_uri}")
+    private val kakaoAdminRedirectUri: String,
 ) : AuthService {
 
     companion object {
@@ -41,29 +46,12 @@ class AuthServiceImpl(
     override fun getKakaoLogin(
         code: String
     ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
-
-        val user = getUserByOauthCode(code, OauthTypeEnum.KAKAO, true)
-
-        val tokenList = getAccessTokenAndRefreshTokenByUser(user)
-
-        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState, user.studentId), CoBoResponseStatus.SUCCESS)
-
-        return coBoResponse.getResponseEntityWithLog()
+        return this.kakaoLogin(code, kakaoRedirectUri)
     }
 
     override fun getNaverLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
 
-        val user = getUserByOauthCode(code, OauthTypeEnum.NAVER, true)
-
-        val tokenList = getAccessTokenAndRefreshTokenByUser(user)
-
-        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState, user.studentId), CoBoResponseStatus.SUCCESS)
-
-        return coBoResponse.getResponseEntityWithLog()
-    }
-
-    override fun getGoogleLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
-        val user = getUserByOauthCode(code, OauthTypeEnum.GOOGLE, true)
+        val user = getUserByOauthCode(code, OauthTypeEnum.NAVER, "")
 
         val tokenList = getAccessTokenAndRefreshTokenByUser(user)
 
@@ -125,31 +113,18 @@ class AuthServiceImpl(
             CoBoResponseStatus.SUCCESS).getResponseEntityWithLog()
     }
 
-    override fun getKakaoLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
-        val user = getUserByOauthCode(code, OauthTypeEnum.KAKAO, false)
-
-        val tokenList = getAccessTokenAndRefreshTokenByUser(user)
-
-        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState, user.studentId), CoBoResponseStatus.SUCCESS)
-
-        return coBoResponse.getResponseEntityWithLog()
+    override fun getLocalKakaoLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
+        return this.kakaoLogin(code, kakaoLocalRedirectUri)
     }
 
-    override fun getGoogleLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
-        val user = getUserByOauthCode(code, OauthTypeEnum.GOOGLE, false)
-
-        val tokenList = getAccessTokenAndRefreshTokenByUser(user)
-
-        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState, user.studentId), CoBoResponseStatus.SUCCESS)
-
-        return coBoResponse.getResponseEntityWithLog()
+    override fun getAdminKakaoLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
+        return this.kakaoLogin(code, kakaoAdminRedirectUri)
     }
 
-    private fun getUserByOauthCode(code: String, oauthTypeEnum: OauthTypeEnum, isRemote: Boolean): User {
+    private fun getUserByOauthCode(code: String, oauthTypeEnum: OauthTypeEnum, redirectUri: String): User {
         val oauth = when(oauthTypeEnum) {
-            OauthTypeEnum.KAKAO -> kakaoOauthServiceImpl.getOauth(code, isRemote)
-            OauthTypeEnum.NAVER -> naverOauthServiceImpl.getOauth(code, isRemote)
-            OauthTypeEnum.GOOGLE -> googleOauthServiceImpl.getOauth(code, isRemote)
+            OauthTypeEnum.KAKAO -> kakaoOauthServiceImpl.getOauth(code, redirectUri)
+            OauthTypeEnum.NAVER -> naverOauthServiceImpl.getOauth(code, redirectUri)
         }
 
         if (oauth.user != null) {
@@ -179,6 +154,16 @@ class AuthServiceImpl(
             jwtTokenProvider.getAccessToken(user.id ?: throw NullPointerException(), user.studentId, user.role),
             jwtTokenProvider.getRefreshToken(user.id ?: throw NullPointerException(), user.studentId, user.role)
         )
+    }
+
+    private fun kakaoLogin(code: String, redirectUri: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
+        val user = getUserByOauthCode(code, OauthTypeEnum.KAKAO, redirectUri)
+
+        val tokenList = getAccessTokenAndRefreshTokenByUser(user)
+
+        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState, user.studentId), CoBoResponseStatus.SUCCESS)
+
+        return coBoResponse.getResponseEntityWithLog()
     }
 
 }
