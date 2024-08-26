@@ -4,6 +4,9 @@ services:
   auth-server:
     container_name: auth-server
     build: ./auth
+    volumes:
+      - auth_log:${AUTH_LOG_PATH}
+      - auth_logs:${AUTH_LOGS_PATH}
     ports:
       - "8080:8080"
     networks:
@@ -11,6 +14,9 @@ services:
   chat-server:
     container_name: chat-server
     build: ./chat
+    volumes:
+      - chat_log:${CHAT_LOG_PATH}
+      - chat_logs:${CHAT_LOGS_PATH}
     ports:
       - "12041:12041"
     networks:
@@ -18,6 +24,10 @@ services:
   writing-server:
     container_name: writing-server
     build: ./writing
+    volumes:
+      - files:${FILE_PATH}
+      - writing_log:${WRITING_LOG_PATH}
+      - writing_logs:${WRITING_LOGS_PATH}
     ports:
       - "12042:12042"
     networks:
@@ -27,6 +37,8 @@ services:
     build: ./file
     volumes:
       - files:${FILE_PATH}
+      - file_log:${FILE_LOG_PATH}
+      - file_logs:${FILE_LOGS_PATH}
     ports:
       - "12043:12043"
     networks:
@@ -52,3 +64,11 @@ networks:
 
 volumes:
   files:
+  auth_log:
+  auth_logs:
+  chat_log:
+  chat_logs:
+  writing_log:
+  writing_logs:
+  file_log:
+  file_logs:
