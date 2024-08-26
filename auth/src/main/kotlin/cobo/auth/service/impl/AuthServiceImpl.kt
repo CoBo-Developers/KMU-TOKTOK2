@@ -16,6 +16,7 @@ import cobo.auth.repository.UserRepository
 import cobo.auth.service.AuthService
 import cobo.auth.service.oauth.impl.KakaoOauthServiceImpl
 import cobo.auth.service.oauth.impl.NaverOauthServiceImpl
+import jakarta.security.auth.message.AuthException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -46,18 +47,11 @@ class AuthServiceImpl(
     override fun getKakaoLogin(
         code: String
     ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
-        return this.kakaoLogin(code, kakaoRedirectUri)
+        return this.login(OauthTypeEnum.KAKAO, code, kakaoRedirectUri, false)
     }
 
     override fun getNaverLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
-
-        val user = getUserByOauthCode(code, OauthTypeEnum.NAVER, "")
-
-        val tokenList = getAccessTokenAndRefreshTokenByUser(user)
-
-        val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState, user.studentId), CoBoResponseStatus.SUCCESS)
-
-        return coBoResponse.getResponseEntityWithLog()
+        return this.login(OauthTypeEnum.NAVER, code, "", false)
     }
 
     override fun postRegister(
@@ -114,11 +108,11 @@ class AuthServiceImpl(
     }
 
     override fun getLocalKakaoLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
-        return this.kakaoLogin(code, kakaoLocalRedirectUri)
+        return this.login(OauthTypeEnum.KAKAO, code, kakaoLocalRedirectUri, false)
     }
 
     override fun getAdminKakaoLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
-        return this.kakaoLogin(code, kakaoAdminRedirectUri)
+        return this.login(OauthTypeEnum.KAKAO, code, kakaoAdminRedirectUri, true)
     }
 
     private fun getUserByOauthCode(code: String, oauthTypeEnum: OauthTypeEnum, redirectUri: String): User {
@@ -156,14 +150,21 @@ class AuthServiceImpl(
         )
     }
 
-    private fun kakaoLogin(code: String, redirectUri: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
-        val user = getUserByOauthCode(code, OauthTypeEnum.KAKAO, redirectUri)
+    private fun login(oauthTypeEnum: OauthTypeEnum, code: String, redirectUri: String, isAdmin: Boolean): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
+        val user = getUserByOauthCode(code, oauthTypeEnum, redirectUri)
+
+        if(isAdmin && user.role == RoleEnum.STUDENT)
+            throw AuthException("NOT AUTHENTICATE")
 
         val tokenList = getAccessTokenAndRefreshTokenByUser(user)
 
         val coBoResponse = CoBoResponse(GetAuthLoginRes(tokenList[0], tokenList[1], user.registerState, user.studentId), CoBoResponseStatus.SUCCESS)
 
         return coBoResponse.getResponseEntityWithLog()
+    }
+
+    override fun getAdminNaverLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
+        return this.login(OauthTypeEnum.NAVER, code, "", true)
     }
 
 }

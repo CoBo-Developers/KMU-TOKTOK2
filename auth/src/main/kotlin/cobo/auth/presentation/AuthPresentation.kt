@@ -46,6 +46,7 @@ class AuthPresentation(
     }
 
     @GetMapping("/admin-kakao-login")
+    @Operation(summary = "카카오 관리자 로그인 API")
     @Parameters(
         Parameter(name = "code", description = "카카오 로그인 code")
     )
@@ -64,6 +65,17 @@ class AuthPresentation(
         @RequestParam code: String
     ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
         return authService.getNaverLogin(code)
+    }
+
+    @GetMapping("/admin-naver-login")
+    @Operation(summary = "네이버 관리자 로그인 API")
+    @Parameters(
+        Parameter(name = "code", description = "네이버 로그인 code")
+    )
+    fun getAdminNaverLogin(
+        @RequestParam code: String
+    ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
+        return authService.getAdminNaverLogin(code)
     }
 
     @PatchMapping("/login")
