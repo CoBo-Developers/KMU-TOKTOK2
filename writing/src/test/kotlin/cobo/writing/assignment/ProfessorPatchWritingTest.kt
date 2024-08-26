@@ -20,7 +20,7 @@ import kotlin.test.assertEquals
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class ProfessorPathWritingTest @Autowired constructor(
+class ProfessorPatchWritingTest @Autowired constructor(
     private val assignmentRepository : AssignmentRepository,
     private val writingRepository : WritingRepository,
     private val writingService: WritingService

@@ -15,7 +15,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import java.util.*
+import kotlin.math.roundToInt
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -65,6 +67,15 @@ class ProfessorGetWritingTest @Autowired constructor(
         )
     }
 
+    private fun roundTo6Digits(localDateTime: LocalDateTime): LocalDateTime {
+        val nano = localDateTime.nano
+        val roundedNano = ((nano / 1_000.0).roundToInt() * 1_000)
+
+        return localDateTime
+            .truncatedTo(ChronoUnit.SECONDS)
+            .plusNanos(roundedNano.toLong())
+    }
+
     @Test
     fun testGetWritingValid(){
         //then
@@ -86,7 +97,7 @@ class ProfessorGetWritingTest @Autowired constructor(
         val expectedProfessorGetWriting = ProfessorGetWriting(
             content = testWriting.content,
             score = testWriting.score,
-            createdAt = testWriting.createdAt,
+            createdAt = roundTo6Digits(testWriting.createdAt!!),
             writingState = WritingStateEnum.SUBMITTED.value
         )
 
