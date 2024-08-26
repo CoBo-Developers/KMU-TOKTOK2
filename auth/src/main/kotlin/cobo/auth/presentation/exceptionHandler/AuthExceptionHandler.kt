@@ -5,7 +5,6 @@ import cobo.auth.config.response.CoBoResponseDto
 import cobo.auth.config.response.CoBoResponseStatus
 import cobo.auth.presentation.AuthPresentation
 import jakarta.security.auth.message.AuthException
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -26,5 +25,10 @@ class AuthExceptionHandler {
     @ExceptionHandler(IndexOutOfBoundsException::class)
     fun indexOutOfBoundsExceptionHandler(): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.NOT_AUTHORIZATION).getResponseEntityWithLog()
+    }
+
+    @ExceptionHandler(AuthException::class)
+    fun authExceptionHandler(): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.NOT_PERMITTED_ROLE).getResponseEntityWithLog()
     }
 }

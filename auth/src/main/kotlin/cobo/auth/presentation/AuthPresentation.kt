@@ -39,10 +39,21 @@ class AuthPresentation(
     @Parameters(
         Parameter(name = "code", description = "카카오 로그인 code")
     )
-    fun getKakaoLocalLogin(
+    fun getLocalKakaoLogin(
         @RequestParam code: String
     ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
-        return authService.getKakaoLocalLogin(code)
+        return authService.getLocalKakaoLogin(code)
+    }
+
+    @GetMapping("/admin-kakao-login")
+    @Operation(summary = "카카오 관리자 로그인 API")
+    @Parameters(
+        Parameter(name = "code", description = "카카오 로그인 code")
+    )
+    fun getAdminKakaoLogin(
+        @RequestParam code: String
+    ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
+        return authService.getAdminKakaoLogin(code)
     }
 
     @GetMapping("/naver-login")
@@ -56,26 +67,15 @@ class AuthPresentation(
         return authService.getNaverLogin(code)
     }
 
-    @GetMapping("/google-login")
-    @Operation(summary = "구글 로그인 API")
+    @GetMapping("/admin-naver-login")
+    @Operation(summary = "네이버 관리자 로그인 API")
     @Parameters(
-        Parameter(name = "code", description = "구글 로그인 code")
+        Parameter(name = "code", description = "네이버 로그인 code")
     )
-    fun getGoogleLogin(
+    fun getAdminNaverLogin(
         @RequestParam code: String
     ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
-        return authService.getGoogleLogin(code)
-    }
-
-    @GetMapping("/google-local-login")
-    @Operation(summary = "구글 로그인 API")
-    @Parameters(
-        Parameter(name = "code", description = "구글 로그인 code")
-    )
-    fun getGoogleLocalLogin(
-        @RequestParam code: String
-    ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>{
-        return authService.getGoogleLocalLogin(code)
+        return authService.getAdminNaverLogin(code)
     }
 
     @PatchMapping("/login")

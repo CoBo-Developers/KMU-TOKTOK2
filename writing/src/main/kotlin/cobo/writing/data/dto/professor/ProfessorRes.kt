@@ -43,5 +43,11 @@ data class ProfessorGetWritingListElementRes(
 )
 
 data class ProfessorGetWriting(
-    val content: String
+    val content: String = "",
+
+    val score: Int? = null,
+
+    val createdAt: LocalDateTime? = null,
+
+    val writingState: Short = 0
 )

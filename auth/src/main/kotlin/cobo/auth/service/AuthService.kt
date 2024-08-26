@@ -9,12 +9,12 @@ import org.springframework.security.core.Authentication
 interface AuthService {
     fun getKakaoLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
     fun getNaverLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
-    fun getGoogleLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
     fun postRegister(
         postAuthRegisterReq: PostAuthRegisterReq,
         authentication: Authentication
     ): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
-    fun getKakaoLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
-    fun getGoogleLocalLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
+    fun getLocalKakaoLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
+    fun getAdminKakaoLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
+    fun getAdminNaverLogin(code: String): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
     fun patchLogin(authorization: String?): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>>
 }
