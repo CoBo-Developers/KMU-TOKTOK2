@@ -43,13 +43,6 @@ class AuthPostRegisterTest(
         registerState = RegisterStateEnum.INACTIVE
     )
 
-    private val googleUser = User(
-        id = null,
-        studentId = null,
-        role = RoleEnum.STUDENT,
-        registerState = RegisterStateEnum.INACTIVE
-    )
-
     private val kakaoOauth = Oauth(
         id = null,
         user = kakaoUser,
@@ -64,34 +57,27 @@ class AuthPostRegisterTest(
         oauthType = OauthTypeEnum.NAVER
     )
 
-    private val googleOauth = Oauth(
-        id = null,
-        user = googleUser,
-        oauthId = "testGoogleUser",
-        oauthType = OauthTypeEnum.GOOGLE
-    )
 
     @BeforeEach
     fun init(){
-        userRepository.saveAll(listOf(kakaoUser, googleUser, naverUser))
-        oauthRepository.saveAll(listOf(kakaoOauth, googleOauth, naverOauth))
+        userRepository.saveAll(listOf(kakaoUser, naverUser))
+        oauthRepository.saveAll(listOf(kakaoOauth, naverOauth))
     }
 
 
     @AfterEach
     fun afterEach() {
         kakaoOauth.user = null
-        googleOauth.user = null
         naverOauth.user = null
-        oauthRepository.deleteAll(listOf(kakaoOauth, googleOauth, naverOauth))
-        userRepository.deleteAll(listOf(kakaoUser, googleUser, naverUser))
+        oauthRepository.deleteAll(listOf(kakaoOauth, naverOauth))
+        userRepository.deleteAll(listOf(kakaoUser, naverUser))
     }
 
 
     @Test
     fun isChangedRegisterState(){
 
-        listOf(kakaoUser, naverUser, googleUser).map{
+        listOf(kakaoUser, naverUser).map{
             //given
             val securityContextHolder = SecurityContextHolder.getContext()
             securityContextHolder.authentication = UsernamePasswordAuthenticationToken(
@@ -115,28 +101,8 @@ class AuthPostRegisterTest(
     }
 
     @Test
-    fun combineWithKakaoAndGoogle(){
-        combineTwoSocial(kakaoUser, googleUser)
-    }
-
-    @Test
     fun combineWithNaverAndKakao(){
         combineTwoSocial(naverUser, kakaoUser)
-    }
-
-    @Test
-    fun combineWithNaverAndGoogle(){
-        combineTwoSocial(naverUser, googleUser)
-    }
-
-    @Test
-    fun combineWithGoogleAndKakao(){
-        combineTwoSocial(googleUser, kakaoUser)
-    }
-
-    @Test
-    fun combineWithGoogleAndNaver(){
-        combineTwoSocial(googleUser, naverUser)
     }
 
 
@@ -152,36 +118,26 @@ class AuthPostRegisterTest(
             naverUser.id, null, listOf(
                 SimpleGrantedAuthority("USER")))
 
-        val securityContextHolder3 = SecurityContextHolder.createEmptyContext()
-        securityContextHolder3.authentication = UsernamePasswordAuthenticationToken(
-            googleUser.id, null, listOf(
-                SimpleGrantedAuthority("USER")
-            )
-        )
+
 
         val sameStudentId = "test_studentId"
 
         val postAuthRegisterReq1 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "test"), securityContextHolder1.authentication)
         val postAuthRegisterReq2 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "test"), securityContextHolder2.authentication)
-        val postAuthRegisterReq3 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "test"), securityContextHolder3.authentication)
 
         //then
         val findUser1 = userRepository.findById(kakaoUser.id ?: throw NullPointerException("User Not Found")).orElseThrow()
         val findUser2 = userRepository.findById(naverUser.id ?: throw NullPointerException("User Not Found"))
-        val findUser3 = userRepository.findById(googleUser.id ?: throw NullPointerException("User Not Found"))
 
         assert(findUser2.isEmpty)
-        assert(findUser3.isEmpty)
         assert(findUser1.registerState == RegisterStateEnum.ACTIVE)
         assert(findUser1.studentId == sameStudentId)
 
         assert(postAuthRegisterReq1.statusCode == HttpStatus.OK)
         assert(postAuthRegisterReq2.statusCode == HttpStatus.OK)
-        assert(postAuthRegisterReq3.statusCode == HttpStatus.OK)
 
         assert(jwtTokenProvider.getId(postAuthRegisterReq1.body?.data?.accessToken ?: "").toInt() == kakaoUser.id)
         assert(jwtTokenProvider.getId(postAuthRegisterReq2.body?.data?.accessToken ?: "").toInt() == kakaoUser.id)
-        assert(jwtTokenProvider.getId(postAuthRegisterReq3.body?.data?.accessToken ?: "").toInt() == kakaoUser.id)
     }
 
     fun combineTwoSocial(user1: User, user2: User){
