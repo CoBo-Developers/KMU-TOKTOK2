@@ -6,7 +6,7 @@ data class ProfessorFilePostReq(
 
     val fileName: String,
 
-    val category: String,
+    val categoryId: Int,
 
     val multipartFile: MultipartFile
 

@@ -36,7 +36,7 @@ class FileServiceImpl(
 ): FileService {
     override fun professorPost(professorFilePostReq: ProfessorFilePostReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
 
-        val category = categoryRepository.findByName(professorFilePostReq.category).orElseThrow()
+        val category = Category(id = professorFilePostReq.categoryId, name = "")
 
         val originalFileName = professorFilePostReq.multipartFile.originalFilename
 
