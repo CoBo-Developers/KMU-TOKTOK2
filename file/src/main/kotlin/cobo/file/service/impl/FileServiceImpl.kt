@@ -78,7 +78,7 @@ class FileServiceImpl(
         if(optionalFile.isPresent){
             val file = optionalFile.get()
 
-            file.name = file.fileName
+            file.name = professorFilePatchReq.name
 
             fileRepository.save(file)
 
