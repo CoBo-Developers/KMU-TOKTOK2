@@ -15,6 +15,7 @@ import cobo.file.service.FileService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.core.io.Resource
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -60,7 +61,12 @@ class FileServiceImpl(
 
         Files.copy(professorFilePostReq.multipartFile.inputStream, filePath)
 
-        fileRepository.save(file)
+        try {
+            fileRepository.save(file)
+        }
+        catch(dataIntegrityViolationException: DataIntegrityViolationException) {
+            return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.BAD_REQUEST).getResponseEntity()
+        }
 
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
