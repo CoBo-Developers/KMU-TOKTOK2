@@ -12,8 +12,10 @@ data class ProfessorFilePostReq(
 
 )
 
-data class ProfessorFilePatchReq(
+data class ProfessorFilePutReq(
     val fileId: Int,
 
-    val name: String
+    val name: String,
+
+    val categoryId:Int
 )

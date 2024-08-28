@@ -5,7 +5,7 @@ import cobo.file.config.response.CoBoResponseDto
 import cobo.file.config.response.CoBoResponseStatus
 import cobo.file.data.dto.file.FileGetListRes
 import cobo.file.data.dto.file.FileGetListResElement
-import cobo.file.data.dto.professorFile.ProfessorFilePatchReq
+import cobo.file.data.dto.professorFile.ProfessorFilePutReq
 import cobo.file.data.dto.professorFile.ProfessorFilePostReq
 import cobo.file.data.entity.Category
 import cobo.file.data.entity.File
@@ -72,13 +72,14 @@ class FileServiceImpl(
         return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 
-    override fun professorPatch(professorFilePatchReq: ProfessorFilePatchReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
-        val optionalFile = fileRepository.findById(professorFilePatchReq.fileId)
+    override fun professorPut(professorFilePutReq: ProfessorFilePutReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        val optionalFile = fileRepository.findById(professorFilePutReq.fileId)
 
         if(optionalFile.isPresent){
             val file = optionalFile.get()
 
-            file.name = professorFilePatchReq.name
+            file.name = professorFilePutReq.name
+            file.category = Category(id = professorFilePutReq.categoryId, name = "")
 
             fileRepository.save(file)
 
