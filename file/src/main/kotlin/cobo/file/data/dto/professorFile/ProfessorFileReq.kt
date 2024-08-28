@@ -6,14 +6,16 @@ data class ProfessorFilePostReq(
 
     val fileName: String,
 
-    val category: String,
+    val categoryId: Int,
 
     val multipartFile: MultipartFile
 
 )
 
-data class ProfessorFilePatchReq(
+data class ProfessorFilePutReq(
     val fileId: Int,
 
-    val name: String
+    val name: String,
+
+    val categoryId:Int
 )
