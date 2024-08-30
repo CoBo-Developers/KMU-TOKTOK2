@@ -89,6 +89,10 @@ class AuthPresentation(
 
     @PostMapping("/register")
     @Operation(summary = "회원가입 API", description = "회원의 상태가 INACTIVE -> ACTIVE, 발급되는 토큰으로 다시 넣어줘야 합니다.")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공"),
+        ApiResponse(responseCode = "404", description = "유효하지 않은 학생")
+    )
     fun postRegister(@Valid @RequestBody postAuthRegisterReq: PostAuthRegisterReq, @Parameter(hidden = true) authentication: Authentication): ResponseEntity<CoBoResponseDto<GetAuthLoginRes>> {
         return authService.postRegister(postAuthRegisterReq, authentication)
     }
