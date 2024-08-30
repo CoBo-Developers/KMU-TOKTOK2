@@ -11,7 +11,7 @@ import jakarta.persistence.*
 data class StudentInfo(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int,
+    var id: Int?,
 
     @Column(length = 30)
     var studentId:String,

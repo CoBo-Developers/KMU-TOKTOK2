@@ -3,14 +3,17 @@ package cobo.auth.auth
 import cobo.auth.config.jwt.JwtTokenProvider
 import cobo.auth.data.dto.auth.PostAuthRegisterReq
 import cobo.auth.data.entity.Oauth
+import cobo.auth.data.entity.StudentInfo
 import cobo.auth.data.entity.User
 import cobo.auth.data.enums.OauthTypeEnum
 import cobo.auth.data.enums.RegisterStateEnum
 import cobo.auth.data.enums.RoleEnum
 import cobo.auth.repository.OauthRepository
+import cobo.auth.repository.StudentInfoRepository
 import cobo.auth.repository.UserRepository
 import cobo.auth.service.AuthService
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions.assertNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
@@ -18,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.annotation.DirtiesContext
+import java.util.*
 import kotlin.test.assertEquals
 
 @SpringBootTest
@@ -26,19 +30,23 @@ class AuthPostRegisterTest(
     @Autowired private val jwtTokenProvider: JwtTokenProvider,
     @Autowired private val authService: AuthService,
     @Autowired private val oauthRepository: OauthRepository,
-    @Autowired private val userRepository: UserRepository
+    @Autowired private val userRepository: UserRepository,
+    @Autowired private val studentInfoRepository: StudentInfoRepository
 ) {
+
+    private final val kakaoStudentId = UUID.randomUUID().toString().substring(0, 10)
+    private final val naverStudentId = UUID.randomUUID().toString().substring(0, 10)
 
     private val kakaoUser = User(
         id = null,
-        studentId = null,
+        studentId = kakaoStudentId,
         role = RoleEnum.STUDENT,
         registerState = RegisterStateEnum.INACTIVE
     )
 
     private val naverUser = User(
         id = null,
-        studentId = null,
+        studentId = naverStudentId,
         role = RoleEnum.STUDENT,
         registerState = RegisterStateEnum.INACTIVE
     )
@@ -62,6 +70,12 @@ class AuthPostRegisterTest(
     fun init(){
         userRepository.saveAll(listOf(kakaoUser, naverUser))
         oauthRepository.saveAll(listOf(kakaoOauth, naverOauth))
+        studentInfoRepository.saveAll(
+            listOf(
+                StudentInfo(id = null, studentId = kakaoStudentId, name = "KAKAO"),
+                StudentInfo(id = null, studentId = naverStudentId, name = "NAVER")
+            )
+        )
     }
 
 
@@ -71,6 +85,8 @@ class AuthPostRegisterTest(
         naverOauth.user = null
         oauthRepository.deleteAll(listOf(kakaoOauth, naverOauth))
         userRepository.deleteAll(listOf(kakaoUser, naverUser))
+        studentInfoRepository.deleteByStudentIdAndName(studentId = kakaoStudentId, name = "KAKAO")
+        studentInfoRepository.deleteByStudentIdAndName(studentId = naverStudentId, name = "NAVER")
     }
 
 
@@ -85,7 +101,13 @@ class AuthPostRegisterTest(
                     SimpleGrantedAuthority("USER")))
 
             //when
-            val postAuthRegisterReq = authService.postRegister(PostAuthRegisterReq(it.id.toString(), "test"), securityContextHolder.authentication)
+            val postAuthRegisterReq = authService.postRegister(
+                PostAuthRegisterReq(it.id.toString(), if(it == kakaoUser){
+                    "KAKAO"
+                }else{
+                    "NAVER"
+                }),
+                securityContextHolder.authentication)
 
             //then
             val user = userRepository.findById(it.id ?: throw NullPointerException("User Not Found")).orElseThrow ()
@@ -119,11 +141,10 @@ class AuthPostRegisterTest(
                 SimpleGrantedAuthority("USER")))
 
 
+        val sameStudentId = kakaoStudentId
 
-        val sameStudentId = "test_studentId"
-
-        val postAuthRegisterReq1 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "test"), securityContextHolder1.authentication)
-        val postAuthRegisterReq2 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "test"), securityContextHolder2.authentication)
+        val postAuthRegisterReq1 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "KAKAO"), securityContextHolder1.authentication)
+        val postAuthRegisterReq2 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "KAKAO"), securityContextHolder2.authentication)
 
         //then
         val findUser1 = userRepository.findById(kakaoUser.id ?: throw NullPointerException("User Not Found")).orElseThrow()
@@ -152,12 +173,12 @@ class AuthPostRegisterTest(
             user2.id, null, listOf(
                 SimpleGrantedAuthority("USER")))
 
-        val sameStudentId = "test_studentId"
+        val sameStudentId = "NAVER"
 
 
         //when
-        val postAuthRegisterReq1 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "test"), securityContextHolder1.authentication)
-        val postAuthRegisterReq2 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "test"), securityContextHolder2.authentication)
+        val postAuthRegisterReq1 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "NAVER"), securityContextHolder1.authentication)
+        val postAuthRegisterReq2 = authService.postRegister(PostAuthRegisterReq(sameStudentId, "NAVER"), securityContextHolder2.authentication)
 
         //then
         val findUser1 = userRepository.findById(user1.id ?: throw NullPointerException("User Not Found")).orElseThrow()
@@ -192,5 +213,26 @@ class AuthPostRegisterTest(
             assert(true)
         }
 
+    }
+
+    @Test
+    fun invalidStudentRegister(){
+        //given
+        val securityContextHolder = SecurityContextHolder.getContext()
+        securityContextHolder.authentication = UsernamePasswordAuthenticationToken(
+            kakaoUser.id, null, listOf(
+                SimpleGrantedAuthority("USER")))
+
+        //when
+        val postAuthRegisterReq = authService.postRegister(
+            PostAuthRegisterReq(kakaoUser.id.toString(), UUID.randomUUID().toString().substring(0, 10)), securityContextHolder.authentication)
+
+        //then
+        assertEquals(HttpStatus.NOT_FOUND, postAuthRegisterReq.statusCode)
+
+        val user:User = userRepository.findById(kakaoUser.id ?: throw NullPointerException("User Not Found")).orElseThrow()
+
+        assertNull(user.studentId)
+        assertEquals(RegisterStateEnum.INACTIVE, user.registerState)
     }
 }
