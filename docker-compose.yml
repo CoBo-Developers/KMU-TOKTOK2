@@ -4,19 +4,25 @@ services:
   auth-server:
     container_name: auth-server
     build: ./auth
+    environment:
+      - AUTH_LOG_PATH=${AUTH_LOG_PATH}
+      - AUTH_LOGS_PATH=${AUTH_LOGS_PATH}
     volumes:
-      - auth_log:${AUTH_LOG_PATH}
-      - auth_logs:${AUTH_LOGS_PATH}
+      - ${AUTH_LOG_PATH}:${AUTH_LOG_PATH}
+      - ${AUTH_LOGS_PATH}:${AUTH_LOGS_PATH}
     ports:
-      - "8080:8080"
+      - "12040:12040"
     networks:
       - cobo
   chat-server:
     container_name: chat-server
     build: ./chat
+    environment:
+      - CHAT_LOG_PATH=${CHAT_LOG_PATH}
+      - CHAT_LOGS_PATH=${CHAT_LOGS_PATH}
     volumes:
-      - chat_log:${CHAT_LOG_PATH}
-      - chat_logs:${CHAT_LOGS_PATH}
+      - ${CHAT_LOG_PATH}:${CHAT_LOG_PATH}
+      - ${CHAT_LOGS_PATH}:${CHAT_LOGS_PATH}
     ports:
       - "12041:12041"
     networks:
@@ -24,10 +30,12 @@ services:
   writing-server:
     container_name: writing-server
     build: ./writing
+    environment:
+      - WRITING_LOG_PATH=${WRITING_LOG_PATH}
+      - WRITING_LOGS_PATH=${WRITING_LOGS_PATH}
     volumes:
-      - files:${FILE_PATH}
-      - writing_log:${WRITING_LOG_PATH}
-      - writing_logs:${WRITING_LOGS_PATH}
+      - ${WRITING_LOG_PATH}:${WRITING_LOG_PATH}
+      - ${WRITING_LOGS_PATH}:${WRITING_LOGS_PATH}
     ports:
       - "12042:12042"
     networks:
@@ -35,10 +43,14 @@ services:
   file-server:
     container_name: file-server
     build: ./file
+    environment:
+      - FILE_PATH=${FILE_PATH}
+      - FILE_LOG_PATH=${FILE_LOG_PATH}
+      - FILE_LOGS_PATH=${FILE_LOGS_PATH}
     volumes:
-      - files:${FILE_PATH}
-      - file_log:${FILE_LOG_PATH}
-      - file_logs:${FILE_LOGS_PATH}
+      - ${FILE_PATH}:${FILE_PATH}
+      - ${FILE_LOG_PATH}:${FILE_LOG_PATH}
+      - ${FILE_LOGS_PATH}:${FILE_LOGS_PATH}
     ports:
       - "12043:12043"
     networks:
@@ -61,14 +73,3 @@ services:
 
 networks:
   cobo:
-
-volumes:
-  files:
-  auth_log:
-  auth_logs:
-  chat_log:
-  chat_logs:
-  writing_log:
-  writing_logs:
-  file_log:
-  file_logs:
