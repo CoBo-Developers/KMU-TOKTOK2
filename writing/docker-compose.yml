@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  writing-server:
+    container_name: writing-server
+    build: ./writing
+    environment:
+      - WRITING_LOG_PATH=${WRITING_LOG_PATH}
+      - WRITING_LOGS_PATH=${WRITING_LOGS_PATH}
+      - TZ=Asia/Seoul
+    volumes:
+      - ${WRITING_LOG_PATH}:${WRITING_LOG_PATH}
+      - ${WRITING_LOGS_PATH}:${WRITING_LOGS_PATH}
+    ports:
+      - "12042:12042"

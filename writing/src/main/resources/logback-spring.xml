@@ -2,7 +2,7 @@
 <configuration>
 
     <property name="LOG_PATH" value="${WRITING_LOG_PATH}"/>
-    <property name="LOGS_PATH" value="${WRITING_INFO_LOGS_PATH}"/>
+    <property name="LOGS_PATH" value="${WRITING_LOGS_PATH}"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">

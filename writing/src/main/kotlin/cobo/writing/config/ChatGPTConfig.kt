@@ -28,19 +28,14 @@ class ChatGPTConfig(
         httpHeaders.set(HttpHeaders.AUTHORIZATION, "Bearer $apiKey")
         httpHeaders.contentType = MediaType.APPLICATION_JSON
 
-        val chatGPTSystemMessage = ChatGPTReqMessage(
-            role = "system",
-            content = systemContent,
-        )
-
         val chatGPTUserReqMessage = ChatGPTReqMessage(
             role = "user",
-            content = userContent
+            content = "Constraints: $systemContent Content: $userContent",
         )
 
         val chatGPTReq = ChatGPTReq(
             model = model,
-            messages = listOf(chatGPTSystemMessage, chatGPTUserReqMessage),
+            messages = listOf(chatGPTUserReqMessage),
             stream = false
         )
 

@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  auth-server:
+    container_name: auth-server
+    build: .
+    environment:
+      - AUTH_LOG_PATH=${AUTH_LOG_PATH}
+      - AUTH_LOGS_PATH=${AUTH_LOGS_PATH}
+      - TZ=Asia/Seoul
+    volumes:
+      - ${AUTH_LOG_PATH}:${AUTH_LOG_PATH}
+      - ${AUTH_LOGS_PATH}:${AUTH_LOGS_PATH}
+    ports:
+      - "12040:12040"
