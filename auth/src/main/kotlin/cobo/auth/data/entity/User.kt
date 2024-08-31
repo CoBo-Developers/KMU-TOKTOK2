@@ -9,7 +9,7 @@ data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int?,
-    @Column(unique = true)
+    @Column(unique = true, length = 30)
     var studentId: String?,
     @Enumerated(EnumType.ORDINAL)
     var role: RoleEnum,

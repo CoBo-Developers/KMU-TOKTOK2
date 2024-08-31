@@ -12,6 +12,7 @@ import cobo.auth.data.enums.OauthTypeEnum
 import cobo.auth.data.enums.RegisterStateEnum
 import cobo.auth.data.enums.RoleEnum
 import cobo.auth.repository.OauthRepository
+import cobo.auth.repository.StudentInfoRepository
 import cobo.auth.repository.UserRepository
 import cobo.auth.service.AuthService
 import cobo.auth.service.oauth.impl.KakaoOauthServiceImpl
@@ -30,6 +31,7 @@ class AuthServiceImpl(
     private val jwtTokenProvider: JwtTokenProvider,
     private val userRepository: UserRepository,
     private val oauthRepository: OauthRepository,
+    private val studentInfoRepository: StudentInfoRepository,
     private val kakaoOauthServiceImpl: KakaoOauthServiceImpl,
     private val naverOauthServiceImpl: NaverOauthServiceImpl,
     @Value("\${kakao.auth.redirect_uri}")
@@ -64,6 +66,8 @@ class AuthServiceImpl(
         if (userRepository.findById(userId).orElseThrow{NullPointerException()}.registerState == RegisterStateEnum.ACTIVE)
             throw IllegalAccessException("ALREADY_REGISTERED")
 
+        if (!studentInfoRepository.existsByStudentIdAndName(postAuthRegisterReq.studentId, postAuthRegisterReq.name))
+            throw NullPointerException()
 
         val user = userRepository.findByStudentIdWithJDBC(postAuthRegisterReq.studentId)
 
