@@ -154,6 +154,7 @@ class WritingServiceImpl(
         val coboResponse = CoBoResponse(
             data = ProfessorGetWritingListRes(
                 totalElements = totalElementsCompletableFuture.get(),
+                score = assignmentRepository.findById(assignmentId).orElseThrow { NullPointerException() }.score ?: 0,
                 writings = writingsCompletableFuture.get()
             ),
             coBoResponseStatus = CoBoResponseStatus.SUCCESS

@@ -27,6 +27,7 @@ data class AssignmentGetListRes(
 
 data class ProfessorGetWritingListRes(
     val totalElements: Long,
+    val score: Int,
     val writings: List<ProfessorGetWritingListElementRes>
 )
 
