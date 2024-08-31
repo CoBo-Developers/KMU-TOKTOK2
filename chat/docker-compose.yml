@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  chat-server:
+    container_name: chat-server
+    build: .
+    environment:
+      - CHAT_LOG_PATH=${CHAT_LOG_PATH}
+      - CHAT_LOGS_PATH=${CHAT_LOGS_PATH}
+      - TZ=Asia/Seoul
+    volumes:
+      - ${CHAT_LOG_PATH}:${CHAT_LOG_PATH}
+      - ${CHAT_LOGS_PATH}:${CHAT_LOGS_PATH}
+    ports:
+      - "12041:12041"
