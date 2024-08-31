@@ -30,7 +30,7 @@ class ChatGPTConfig(
 
         val chatGPTUserReqMessage = ChatGPTReqMessage(
             role = "user",
-            content = userContent
+            content = "Constraints: $systemContent Content: $userContent",
         )
 
         val chatGPTReq = ChatGPTReq(
