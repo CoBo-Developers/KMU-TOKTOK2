@@ -30,7 +30,7 @@ class SecurityConfig (
             .authorizeHttpRequests { authorize ->
                 authorize
                     .requestMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/api/auth/**").permitAll()
-                    .requestMatchers("/api/prof**").hasAnyAuthority(RoleEnum.PROFESSOR.name, RoleEnum.DEVELOPER.name)
+                    .requestMatchers("/api/prof**", "/api/chat/student**").hasAnyAuthority(RoleEnum.PROFESSOR.name, RoleEnum.DEVELOPER.name)
                     .anyRequest().authenticated()
 
             }
