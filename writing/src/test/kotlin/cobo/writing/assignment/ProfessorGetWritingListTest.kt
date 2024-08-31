@@ -111,6 +111,7 @@ class ProfessorGetWritingListTest @Autowired constructor(
 
         assertEquals(expectedProfessorGetWritingListElementRes,
             professorGetWritingListRes.body!!.data!!.writings.last())
+        assertEquals(assignment.score, professorGetWritingListRes.body!!.data!!.score)
     }
 
     @Test
