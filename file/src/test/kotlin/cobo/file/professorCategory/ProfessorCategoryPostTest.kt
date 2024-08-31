@@ -44,6 +44,8 @@ class ProfessorCategoryPostTest @Autowired constructor(
         assertEquals(previousCount + 1, afterCount)
         assertEquals(categoryName, category.name)
         assertEquals(false, category.deleted)
+
+        categoryRepository.delete(category)
     }
 
     @Test
