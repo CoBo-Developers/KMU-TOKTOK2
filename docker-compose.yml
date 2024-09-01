@@ -55,6 +55,17 @@ services:
       - "12043:12043"
     networks:
       - cobo
+  fastapi:
+    image: fastapi
+    build: /Users/hanseung-gyu/Desktop/semester/24-1/kmutoktok-chatgpt
+    container_name: fastapi
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    networks:
+      - cobo
+    env_file:
+      - ${FAST_API_ENV}
 
   nginx:
     build: ./nginx
@@ -68,6 +79,7 @@ services:
       - chat-server
       - writing-server
       - file-server
+      - fastapi
     networks:
       - cobo
 
