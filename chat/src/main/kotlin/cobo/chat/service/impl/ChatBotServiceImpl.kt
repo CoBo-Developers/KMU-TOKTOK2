@@ -1,6 +1,5 @@
 package cobo.chat.service.impl
 
-import cobo.chat.data.exception.chatGPT.InvalidChatGPTResException
 import cobo.chat.config.ChatGPTConfig
 import cobo.chat.config.response.CoBoResponse
 import cobo.chat.config.response.CoBoResponseDto
@@ -11,8 +10,6 @@ import cobo.chat.data.dto.chatBot.ChatBotPostRes
 import cobo.chat.data.entity.ChatBotChat
 import cobo.chat.repository.ChatBotChatRepository
 import cobo.chat.service.ChatBotService
-import com.fasterxml.jackson.databind.exc.InvalidNullException
-import org.hibernate.validator.internal.constraintvalidators.hv.ru.INNValidator
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
@@ -60,8 +57,9 @@ class ChatBotServiceImpl(
     }
 
     private fun getAnswerFromChatGPT(question: String): String{
-        val chatGPTRes = chatGPTConfig.requestChatGPT(question) ?: throw InvalidChatGPTResException("Answer not contain in Response")
-        return chatGPTRes.choices[0].message.content
+//        val chatGPTRes = chatGPTConfig.requestChatGPT(question) ?: throw InvalidChatGPTResException("Answer not contain in Response")
+//        return chatGPTRes.choices[0].message.content
+        return chatGPTConfig.requestAssistant(content = question)
     }
 
 }

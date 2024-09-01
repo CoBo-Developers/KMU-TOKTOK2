@@ -13,3 +13,7 @@ data class ChatGPTReqMessage(
     val role: String,
     val content: String
 )
+
+data class AssistantReq(
+    val content: String
+)

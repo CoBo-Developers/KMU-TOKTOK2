@@ -1,5 +1,6 @@
 package cobo.chat.config
 
+import cobo.chat.data.dto.chatGPT.AssistantReq
 import cobo.chat.data.dto.chatGPT.ChatGPTReq
 import cobo.chat.data.dto.chatGPT.ChatGPTReqMessage
 import cobo.chat.data.dto.chatGPT.ChatGPTRes
@@ -19,6 +20,8 @@ class ChatGPTConfig(
     private val model: String,
     @Value("\${open-ai.role}")
     private val role: String,
+    @Value("\${open-ai.fast-api}")
+    private val fastApiUrl: String
 ) {
 
     private val chatGPTUrl = "https://api.openai.com/v1/chat/completions"
@@ -46,5 +49,21 @@ class ChatGPTConfig(
             chatGPTUrl, HttpMethod.POST, HttpEntity(chatGPTReq, httpHeaders), ChatGPTRes::class.java)
 
         return response.body
+    }
+
+    fun requestAssistant(content: String): String{
+        val restTemplate = RestTemplate()
+
+        val httpHeaders = HttpHeaders()
+        httpHeaders.contentType = MediaType.APPLICATION_JSON
+
+        val assistantReq = AssistantReq(
+            content = content
+        )
+
+        val response = restTemplate.exchange(
+            fastApiUrl, HttpMethod.POST, HttpEntity(assistantReq, httpHeaders), String::class.java)
+
+        return response.body!!
     }
 }
