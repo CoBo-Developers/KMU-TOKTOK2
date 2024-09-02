@@ -1,5 +1,7 @@
 package cobo.chat.data.dto.chatGPT
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 data class ChatGPTReq(
 
     val model: String,
@@ -15,5 +17,7 @@ data class ChatGPTReqMessage(
 )
 
 data class AssistantReq(
-    val content: String
+    val content: String,
+    @JsonProperty("assistant_id")
+    val assistantId: String
 )

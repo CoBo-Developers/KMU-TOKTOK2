@@ -197,7 +197,12 @@ class WritingServiceImpl(
     }
 
     private fun getAnswerFromChatGPT(userContent: String, systemContent: String): String{
-        val chatGPTRes = chatGPTConfig.requestChatGPT(userContent = userContent, systemContent = systemContent) ?: throw NoSuchElementException()
-        return chatGPTRes.choices[0].message.content
+//        val chatGPTRes = chatGPTConfig.requestChatGPT(makeContent(userContent, systemContent)) ?: throw NoSuchElementException()
+//        return chatGPTRes.choices[0].message.content
+        return chatGPTConfig.requestAssistant(makeContent(userContent, systemContent))
+    }
+
+    private fun makeContent(userContent: String, systemContent: String): String{
+        return "Constraints: $systemContent Content: $userContent"
     }
 }

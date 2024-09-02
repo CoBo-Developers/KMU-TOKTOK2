@@ -27,6 +27,8 @@ services:
       - "12041:12041"
     networks:
       - cobo
+    depends_on:
+      - fastapi
   writing-server:
     container_name: writing-server
     build: ./writing
@@ -40,6 +42,8 @@ services:
       - "12042:12042"
     networks:
       - cobo
+    depends_on:
+      - fastapi
   file-server:
     container_name: file-server
     build: ./file
@@ -57,7 +61,7 @@ services:
       - cobo
   fastapi:
     image: fastapi
-    build: /Users/hanseung-gyu/Desktop/semester/24-1/kmutoktok-chatgpt
+    build: ${FAST_API_PATH}
     container_name: fastapi
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     ports:
@@ -79,7 +83,6 @@ services:
       - chat-server
       - writing-server
       - file-server
-      - fastapi
     networks:
       - cobo
 
