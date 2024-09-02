@@ -14,4 +14,4 @@ services:
       - ${FILE_LOG_PATH}:${FILE_LOG_PATH}
       - ${FILE_LOGS_PATH}:${FILE_LOGS_PATH}
     ports:
-      - "12042:12042"
+      - "12043:12043"
