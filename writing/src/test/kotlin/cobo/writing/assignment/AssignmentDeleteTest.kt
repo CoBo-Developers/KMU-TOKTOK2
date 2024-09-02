@@ -46,6 +46,7 @@ class AssignmentDeleteTest @Autowired constructor(
         //given
         val previousAssignment = makeTestAssignment()
         assignmentRepository.save(previousAssignment)
+        assignmentList.add(previousAssignment)
         val previousCount = assignmentRepository.count()
 
         //when
