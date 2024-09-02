@@ -16,6 +16,8 @@ import org.springframework.web.client.RestTemplate
 class ChatGPTConfig(
     @Value("\${open-ai.api-key}")
     private val apiKey: String,
+    @Value("\${open-ai.assistant_id}")
+    private val assistantId: String,
     @Value("\${open-ai.model}")
     private val model: String,
     @Value("\${open-ai.role}")
@@ -58,7 +60,8 @@ class ChatGPTConfig(
         httpHeaders.contentType = MediaType.APPLICATION_JSON
 
         val assistantReq = AssistantReq(
-            content = content
+            content = content,
+            assistantId = assistantId,
         )
 
         val response = restTemplate.exchange(
