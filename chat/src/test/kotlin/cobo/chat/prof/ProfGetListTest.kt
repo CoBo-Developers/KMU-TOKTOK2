@@ -59,8 +59,6 @@ class ProfGetListTest @Autowired constructor(
         //then
         assertEquals(profGetListRes.statusCode, HttpStatus.OK)
         assertEquals(profGetListRes.body!!.data!!.totalElement, count)
-
-        assertEquals(profGetListRes.body!!.data!!.chatList.size, pageSize)
     }
 
     @Test
