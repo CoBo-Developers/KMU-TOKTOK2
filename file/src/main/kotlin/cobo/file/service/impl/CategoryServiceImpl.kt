@@ -20,18 +20,30 @@ class CategoryServiceImpl(
 ): CategoryService {
 
     override fun professorPost(professorPostCategoryReq: ProfessorPostCategoryReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
-        val category = Category(
-            name = professorPostCategoryReq.category,
-            deleted = false
-        )
 
-        try{
-            categoryRepository.save(category)
-        }catch(dataIntegrityViolationException: DataIntegrityViolationException){
-            return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.EXIST_DATA).getResponseEntity()
+        val optionalCategory = categoryRepository.findByName(professorPostCategoryReq.category)
+
+        if (optionalCategory.isPresent) {
+            val category = optionalCategory.get()
+
+            if(category.deleted != false){
+                category.deleted = false
+                categoryRepository.save(category)
+                return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.CREATED).getResponseEntity()
+            }
+            else{
+                return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.EXIST_DATA).getResponseEntity()
+            }
         }
+        else{
+            val category = Category(
+                name = professorPostCategoryReq.category,
+                deleted = false
+            )
+            categoryRepository.save(category)
 
-        return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.CREATED).getResponseEntity()
+            return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.CREATED).getResponseEntity()
+        }
     }
 
     override fun professorDelete(categoryId: Int): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {

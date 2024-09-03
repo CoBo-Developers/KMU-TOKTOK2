@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 interface CategoryRepository: JpaRepository<Category, Int> {
-    fun findByName(oldCategory: String): Optional<Category>
+    fun findByName(name: String): Optional<Category>
     @Transactional
     fun deleteByName(category: String)
     fun findTopByOrderByIdDesc(): Optional<Category>
