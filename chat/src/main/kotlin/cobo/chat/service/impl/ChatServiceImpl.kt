@@ -72,6 +72,17 @@ class ChatServiceImpl(
         }, CoBoResponseStatus.SUCCESS).getResponseEntity()
     }
 
+    override fun profPatch(studentId: String): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        val chatRoom = ChatRoom(id = studentId, chatStateEnum = ChatStateEnum.COMPLETE)
+
+        if(chatRoomRepository.update(chatRoom) <= 0){
+            return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.SUCCESS).getResponseEntity()
+        }
+        else{
+            return CoBoResponse<CoBoResponseStatus>(CoBoResponseStatus.NOT_FOUND_STUDENT).getResponseEntity()
+        }
+    }
+
     override fun profPost(profPostReq: ProfPostReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
 
         this.post(
