@@ -82,8 +82,8 @@ class AssignmentPostTest @Autowired constructor(
             title = UUID.randomUUID().toString(),
             description = UUID.randomUUID().toString(),
             score = (1..10).random(),
-            startDate = LocalDate.of(2024, (1..6).random(), (1..30).random()),
-            endDate = LocalDate.of(2024, (7..12).random(), (1..30).random()),
+            startDate = LocalDate.of(2024, (1..6).random(), (1..25).random()),
+            endDate = LocalDate.of(2024, (7..12).random(), (1..25).random()),
             prompt = UUID.randomUUID().toString(),
         )
 

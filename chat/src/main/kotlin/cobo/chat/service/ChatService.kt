@@ -20,4 +20,5 @@ interface ChatService {
     fun profPost(profPostReq: ProfPostReq): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>
     fun profGetList(page: Int, pageSize: Int): ResponseEntity<CoBoResponseDto<ProfGetListRes>>
     fun profGet(studentId: String): ResponseEntity<CoBoResponseDto<List<ProfGetElementRes>>>
+    fun profPatch(studentId: String): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>>
 }
