@@ -56,4 +56,13 @@ class ProfPresentation(
         return chatService.profPost(profPostReq)
     }
 
+    @PatchMapping
+    @Operation(summary = "해당 채팅 읽음으로 변경")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "성공"),
+        ApiResponse(responseCode = "404", description = "일치하는 학번이 존재하지 않음"),
+    )
+    fun patch(@RequestParam studentId: String): ResponseEntity<CoBoResponseDto<CoBoResponseStatus>> {
+        return chatService.profPatch(studentId)
+    }
 }
