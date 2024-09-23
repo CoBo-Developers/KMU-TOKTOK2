@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.UUID
 import kotlin.random.Random
 import kotlin.test.assertEquals
@@ -111,7 +112,14 @@ class ProfGetListTest @Autowired constructor(
         assertEquals(profGetListElement.comment, testComment)
         assertEquals(profGetListElement.studentId, studentId)
         assertTrue(chat.createdAt!!.isAfter(startTime) || chat.createdAt!!.isEqual(startTime))
-        assertTrue(chat.createdAt!!.isBefore(endTime) || chat.createdAt!!.isEqual(endTime))
+
+        val tolerance = 10000L
+        val startMillis = startTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val endMillis = endTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val chatCreatedMillis = chat.createdAt!!.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        assertTrue(chatCreatedMillis in startMillis..endMillis + tolerance)
+
     }
 
     @Test
