@@ -19,14 +19,14 @@ class WritingRepositoryImpl(
     @Transactional
     override fun ifExistsUpdateElseInsert(writing: Writing): Int {
         return jdbcTemplate.update(
-            "INSERT INTO writing (student_id, assignment_id, content, state, created_at, updated_at, submitted_at)" +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?) " +
+            "INSERT INTO writing (student_id, assignment_id, content, state, created_at, updated_at, submitted_at, score)" +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
                     "ON DUPLICATE KEY UPDATE " +
                     "content = VALUES(content), " +
                     "state = VALUES(state), " +
                     "updated_at = VALUES(updated_at)," +
                     "submitted_at = VALUES(submitted_at) ",
-            writing.studentId, writing.assignment.id, writing.content, writing.state.value, writing.createdAt, writing.updatedAt, writing.submittedAt
+            writing.studentId, writing.assignment.id, writing.content, writing.state.value, writing.createdAt, writing.updatedAt, writing.submittedAt, writing.score
         )
     }
 

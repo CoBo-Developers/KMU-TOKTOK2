@@ -68,6 +68,7 @@ class WritingServiceImpl(
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now(),
             submittedAt = LocalDateTime.now(),
+            score = optionalAssignment.get().score ?: 0
         )
 
         return if(writingRepository.ifExistsUpdateElseInsert(writing) == 1){
@@ -142,7 +143,7 @@ class WritingServiceImpl(
                     createdAt = it.createdAt!!,
                     updatedAt = it.updatedAt!!,
                     writingState = it.state.value,
-                    writingScore = it.score ?: 0
+                    writingScore = it.score
                 )
             }
         }

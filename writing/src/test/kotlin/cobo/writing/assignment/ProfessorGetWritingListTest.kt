@@ -73,7 +73,8 @@ class ProfessorGetWritingListTest @Autowired constructor(
             state = WritingStateEnum.from(state) ?: WritingStateEnum.NOT_SUBMITTED,
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now(),
-            submittedAt = LocalDateTime.now()
+            submittedAt = LocalDateTime.now(),
+            score = assignment.score ?: 0
         )
     }
 
@@ -106,7 +107,7 @@ class ProfessorGetWritingListTest @Autowired constructor(
             createdAt = roundTo6Digits(writing.createdAt!!),
             updatedAt = roundTo6Digits(writing.updatedAt!!),
             writingState = writing.state.value,
-            writingScore = writing.score!!
+            writingScore = writing.score
         )
 
         assertEquals(expectedProfessorGetWritingListElementRes,
@@ -149,7 +150,7 @@ class ProfessorGetWritingListTest @Autowired constructor(
                     createdAt = roundTo6Digits(writingList[i].createdAt!!),
                     updatedAt = roundTo6Digits(writingList[i].updatedAt!!),
                     writingState = writingList[i].state.value,
-                    writingScore = writingList[i].score!!
+                    writingScore = writingList[i].score
                 )
             println(expectedProfessorGetWritingListElementRes)
 
@@ -192,7 +193,7 @@ class ProfessorGetWritingListTest @Autowired constructor(
             createdAt = roundTo6Digits(writing1.createdAt!!),
             updatedAt = roundTo6Digits(writing1.updatedAt!!),
             writingState = writing1.state.value,
-            writingScore = writing1.score!!
+            writingScore = writing1.score
         )
 
         val expectedProfessorGetWritingListElementRes2 = ProfessorGetWritingListElementRes(
@@ -200,7 +201,7 @@ class ProfessorGetWritingListTest @Autowired constructor(
             createdAt = roundTo6Digits(writing2.createdAt!!),
             updatedAt = roundTo6Digits(writing2.updatedAt!!),
             writingState = writing2.state.value,
-            writingScore = writing2.score!!
+            writingScore = writing2.score
         )
 
         assertEquals(expectedProfessorGetWritingListElementRes1,
@@ -243,7 +244,7 @@ class ProfessorGetWritingListTest @Autowired constructor(
                     createdAt = roundTo6Digits(writingList[i].createdAt!!),
                     updatedAt = roundTo6Digits(writingList[i].updatedAt!!),
                     writingState = writingList[i].state.value,
-                    writingScore = writingList[i].score!!
+                    writingScore = writingList[i].score
                 )
 
 

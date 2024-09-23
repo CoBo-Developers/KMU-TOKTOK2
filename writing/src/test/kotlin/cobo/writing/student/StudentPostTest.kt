@@ -160,6 +160,45 @@ class StudentPostTest @Autowired constructor(
         }
     }
 
+
+    @Test
+    fun testStudentPostWithValidScore(){
+        //given
+        val assignment = makeTestAssignment()
+        val targetScore = assignment.score!!
+
+        assignment.startDate = LocalDate.now().minusDays(1)
+        assignment.endDate = LocalDate.now().plusDays(1)
+
+
+        assignmentRepository.save(assignment)
+        assignmentList.add(assignment)
+
+        val securityContext = makeTestStudent(studentId = studentId)
+
+        val testContent = UUID.randomUUID().toString()
+
+
+        //when
+        val studentPostReq = StudentPostReq(
+            assignmentId = assignment.id!!,
+            content = testContent,
+            writingState = WritingStateEnum.SUBMITTED.value,
+        )
+
+        val studentPostRes = writingService.studentPost(studentPostReq, securityContext.authentication)
+
+        assertEquals(HttpStatus.CREATED, studentPostRes.statusCode)
+
+        //then
+        val optionalWriting = writingRepository.findTopByOrderByIdDesc()
+
+        assertTrue(optionalWriting.isPresent)
+
+        assertEquals(targetScore, optionalWriting.get().score)
+
+    }
+
     @Test
     fun testStudentPostWithStartDateToday(){
         //given

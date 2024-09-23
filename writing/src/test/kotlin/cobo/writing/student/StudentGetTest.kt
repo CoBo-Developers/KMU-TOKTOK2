@@ -66,7 +66,8 @@ class StudentGetTest @Autowired constructor(
             state = WritingStateEnum.from(state) ?: WritingStateEnum.NOT_SUBMITTED,
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now(),
-            submittedAt = LocalDateTime.now()
+            submittedAt = LocalDateTime.now(),
+            score = assignment.score ?: 0,
         )
     }
 
