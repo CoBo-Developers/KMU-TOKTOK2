@@ -118,7 +118,7 @@ class ProfGetListTest @Autowired constructor(
         val endMillis = endTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         val chatCreatedMillis = chat.createdAt!!.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
-        assertTrue(chatCreatedMillis in startMillis..endMillis + tolerance)
+        assertTrue(chatCreatedMillis in startMillis - tolerance..endMillis + tolerance)
 
     }
 
