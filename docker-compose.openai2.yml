@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  chat-server:
+    container_name: chat-server
+    build: ./chat
+    environment:
+      - CHAT_LOG_PATH=${CHAT_LOG_PATH}
+      - CHAT_LOGS_PATH=${CHAT_LOGS_PATH}
+    volumes:
+      - ${CHAT_LOG_PATH}:${CHAT_LOG_PATH}
+      - ${CHAT_LOGS_PATH}:${CHAT_LOGS_PATH}
+    ports:
+      - "12041:12041"
+    networks:
+      - cobo
+    depends_on:
+      - chat-gpt-server
+  writing-server:
+    container_name: writing-server
+    build: ./writing
+    environment:
+      - WRITING_LOG_PATH=${WRITING_LOG_PATH}
+      - WRITING_LOGS_PATH=${WRITING_LOGS_PATH}
+    volumes:
+      - ${WRITING_LOG_PATH}:${WRITING_LOG_PATH}
+      - ${WRITING_LOGS_PATH}:${WRITING_LOGS_PATH}
+    ports:
+      - "12042:12042"
+    networks:
+      - cobo
+    depends_on:
+      - chat-gpt-server
+
+  chat-gpt-server:
+    container_name: chat-gpt-server
+    build: ${CHAT_GPT_SERVER}
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    networks:
+      - cobo
+
+networks:
+  cobo:
