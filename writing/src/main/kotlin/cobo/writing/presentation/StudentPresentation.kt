@@ -55,7 +55,7 @@ class StudentPresentation(
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "OK")
     )
-    fun postFeedback(@RequestBody studentPostFeedBackReq: StudentPostFeedbackReq): ResponseEntity<CoBoResponseDto<StudentPostFeedbackRes>>{
-        return writingService.postFeedback(studentPostFeedBackReq)
+    fun postFeedback(@RequestBody studentPostFeedBackReq: StudentPostFeedbackReq, @Parameter(hidden = true) authentication: Authentication): ResponseEntity<CoBoResponseDto<StudentPostFeedbackRes>>{
+        return writingService.postFeedback(studentPostFeedBackReq, authentication)
     }
 }

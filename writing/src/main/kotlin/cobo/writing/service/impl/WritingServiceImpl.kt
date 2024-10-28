@@ -13,9 +13,11 @@ import cobo.writing.data.dto.student.StudentPostFeedbackReq
 import cobo.writing.data.dto.student.StudentPostFeedbackRes
 import cobo.writing.data.dto.student.StudentPostReq
 import cobo.writing.data.entity.Assignment
+import cobo.writing.data.entity.Feedback
 import cobo.writing.data.entity.Writing
 import cobo.writing.data.enums.WritingStateEnum
 import cobo.writing.repository.AssignmentRepository
+import cobo.writing.repository.FeedbackRepository
 import cobo.writing.repository.WritingRepository
 import cobo.writing.service.WritingService
 import org.springframework.dao.DataIntegrityViolationException
@@ -31,7 +33,8 @@ import java.util.concurrent.CompletableFuture
 class WritingServiceImpl(
     private val writingRepository : WritingRepository,
     private val assignmentRepository : AssignmentRepository,
-    private val chatGPTConfig: ChatGPTConfig
+    private val chatGPTConfig: ChatGPTConfig,
+    private val feedbackRepository: FeedbackRepository,
 ): WritingService {
 
     override fun studentPost(
@@ -115,12 +118,21 @@ class WritingServiceImpl(
         }
     }
 
-    override fun postFeedback(studentPostFeedBackReq: StudentPostFeedbackReq): ResponseEntity<CoBoResponseDto<StudentPostFeedbackRes>> {
+    override fun postFeedback(studentPostFeedBackReq: StudentPostFeedbackReq, authentication: Authentication): ResponseEntity<CoBoResponseDto<StudentPostFeedbackRes>> {
         val assignment = assignmentRepository.findById(studentPostFeedBackReq.assignmentId).orElseThrow()
         val feedback = this.getAnswerFromChatGPT(
             userContent = studentPostFeedBackReq.content,
             systemContent = assignment.prompt ?: ""
         )
+        CompletableFuture.runAsync {
+            feedbackRepository.save(
+                Feedback(
+                    request = studentPostFeedBackReq.content,
+                    response = feedback,
+                    studentId = authentication.name
+                )
+            )
+        }
         return CoBoResponse(
             StudentPostFeedbackRes(feedback = feedback), CoBoResponseStatus.SUCCESS
         ).getResponseEntity()

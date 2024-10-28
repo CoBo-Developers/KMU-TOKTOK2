@@ -27,5 +27,5 @@ interface WritingService {
     ): ResponseEntity<CoBoResponseDto<ProfessorGetWritingListRes>>
 
     fun professorGetWriting(assignmentId: Int, studentId: String): ResponseEntity<CoBoResponseDto<ProfessorGetWriting>>
-    fun postFeedback(studentPostFeedBackReq: StudentPostFeedbackReq): ResponseEntity<CoBoResponseDto<StudentPostFeedbackRes>>
+    fun postFeedback(studentPostFeedBackReq: StudentPostFeedbackReq, authentication: Authentication): ResponseEntity<CoBoResponseDto<StudentPostFeedbackRes>>
 }
