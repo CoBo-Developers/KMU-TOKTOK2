@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  file-server:
+    container_name: file-server
+    build: .
+    environment:
+      - FILE_PATH=${FILE_PATH}
+      - FILE_LOG_PATH=${FILE_LOG_PATH}
+      - FILE_LOGS_PATH=${FILE_LOGS_PATH}
+      - TZ=Asia/Seoul
+    volumes:
+      - ${FILE_PATH}:${FILE_PATH}
+      - ${FILE_LOG_PATH}:${FILE_LOG_PATH}
+      - ${FILE_LOGS_PATH}:${FILE_LOGS_PATH}
+    ports:
+      - "12043:12043"

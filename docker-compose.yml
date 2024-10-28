@@ -1,0 +1,90 @@
+version: '3'
+
+services:
+  auth-server:
+    container_name: auth-server
+    build: ./auth
+    environment:
+      - AUTH_LOG_PATH=${AUTH_LOG_PATH}
+      - AUTH_LOGS_PATH=${AUTH_LOGS_PATH}
+    volumes:
+      - ${AUTH_LOG_PATH}:${AUTH_LOG_PATH}
+      - ${AUTH_LOGS_PATH}:${AUTH_LOGS_PATH}
+    ports:
+      - "12040:12040"
+    networks:
+      - cobo
+  chat-server:
+    container_name: chat-server
+    build: ./chat
+    environment:
+      - CHAT_LOG_PATH=${CHAT_LOG_PATH}
+      - CHAT_LOGS_PATH=${CHAT_LOGS_PATH}
+    volumes:
+      - ${CHAT_LOG_PATH}:${CHAT_LOG_PATH}
+      - ${CHAT_LOGS_PATH}:${CHAT_LOGS_PATH}
+    ports:
+      - "12041:12041"
+    networks:
+      - cobo
+    depends_on:
+      - fastapi
+  writing-server:
+    container_name: writing-server
+    build: ./writing
+    environment:
+      - WRITING_LOG_PATH=${WRITING_LOG_PATH}
+      - WRITING_LOGS_PATH=${WRITING_LOGS_PATH}
+    volumes:
+      - ${WRITING_LOG_PATH}:${WRITING_LOG_PATH}
+      - ${WRITING_LOGS_PATH}:${WRITING_LOGS_PATH}
+    ports:
+      - "12042:12042"
+    networks:
+      - cobo
+    depends_on:
+      - fastapi
+  file-server:
+    container_name: file-server
+    build: ./file
+    environment:
+      - FILE_PATH=${FILE_PATH}
+      - FILE_LOG_PATH=${FILE_LOG_PATH}
+      - FILE_LOGS_PATH=${FILE_LOGS_PATH}
+    volumes:
+      - ${FILE_PATH}:${FILE_PATH}
+      - ${FILE_LOG_PATH}:${FILE_LOG_PATH}
+      - ${FILE_LOGS_PATH}:${FILE_LOGS_PATH}
+    ports:
+      - "12043:12043"
+    networks:
+      - cobo
+  fastapi:
+    image: fastapi
+    build: ${FAST_API_PATH}
+    container_name: fastapi
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    networks:
+      - cobo
+    env_file:
+      - ${FAST_API_ENV}
+
+  nginx:
+    build: ./nginx
+    image: nginx:stable-perl
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/config/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - auth-server
+      - chat-server
+      - writing-server
+      - file-server
+    networks:
+      - cobo
+
+networks:
+  cobo:
